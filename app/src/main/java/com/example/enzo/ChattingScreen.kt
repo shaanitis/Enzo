@@ -1,0 +1,149 @@
+package com.example.enzo
+
+import android.graphics.Path
+import android.icu.text.RelativeDateTimeFormatter
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.*
+import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.*
+import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
+import org.w3c.dom.Text
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+
+class ChattingScreen : AppCompatActivity() {
+    lateinit var uploaderImgChatting: ImageView
+    lateinit var uploaderNameChatting:TextView
+    lateinit var auth: FirebaseAuth
+    lateinit var fStore:FirebaseFirestore
+    lateinit var msgList: ArrayList<MessageModel>
+    lateinit var chatRView: RecyclerView
+    lateinit var sendTextBtn: ImageButton
+    lateinit var chatText: EditText
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_chatting_screen)
+
+
+        this.supportActionBar?.hide()
+/////initializing
+
+        auth= FirebaseAuth.getInstance()
+        fStore= FirebaseFirestore.getInstance()
+
+        uploaderImgChatting= findViewById(R.id.uploaderImgChatting)
+        uploaderNameChatting= findViewById(R.id.uploaderNameChatting)
+        sendTextBtn= findViewById(R.id.sendText)
+
+/////getting uploader id by same intent from AdView and AllChats activity and displaying it////////
+
+        val idOfUserChatClicked= intent.getStringExtra("idOfUploaderChatting")
+        val recieverID= intent.getStringExtra("idOfUploaderChatting")
+        fStore.collection("users").document(intent.getStringExtra("idOfUploaderChatting").toString()).get().addOnSuccessListener {
+            uploaderNameChatting.text = it.getString("profileName")
+            val uploaderImgChattingUrl: String = it.getString("profileUrl").toString()
+            Picasso.get().load(uploaderImgChattingUrl).into(uploaderImgChatting)
+        }
+
+
+//////////setting chatting adapter///
+        chatRView= findViewById(R.id.chatRView)
+        msgList= arrayListOf<MessageModel>()
+
+        chatRView.layoutManager= LinearLayoutManager(applicationContext)
+        chatRView.setHasFixedSize(true)
+
+        var chattingAdapter = ChattingAdapter(applicationContext, msgList)
+        chatRView.adapter = chattingAdapter
+
+
+        val senderId= auth.currentUser!!.uid.toString()
+        val senderRoom= senderId+ recieverID
+        val recieverRoom= recieverID+ senderId
+
+
+
+////getting messages from firestore
+        fStore.collection("chats").document(senderId).collection(senderRoom).orderBy("timeStamp")
+            .get()
+            .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
+                override fun onSuccess(qs: QuerySnapshot?) {
+                    msgList.clear()
+                    for (qds: QueryDocumentSnapshot in qs!!) {
+                        val msg: String=qds.getString ("messageText").toString()
+                        val userId: String=qds.getString("userID").toString()
+                        val timeOfText: String= qds.getString("timeOfText").toString()
+                        val recieverIde: String= qds.getString("recieverID").toString()
+                        val timeStmap: String= qds.getString("timeStamp").toString()
+                        msgList.add(MessageModel(userId, msg, timeOfText,recieverIde, timeStmap))
+
+                    }
+                    chattingAdapter.notifyDataSetChanged()
+                }
+            })
+
+
+///////clicking send message button and uploading msg
+        sendTextBtn.setOnClickListener {
+
+
+
+             chatText= findViewById(R.id.chatText)
+
+           var chatTextString:String?=  chatText.text.toString()
+            val currentUserId: String= auth.currentUser?.uid.toString()
+
+            val calendar: Calendar = Calendar.getInstance()
+            val format : SimpleDateFormat = SimpleDateFormat("hh:mm a")
+            val timeOfText: String = format.format(calendar.time)
+            val recieverIde:String= recieverID.toString()
+//////creating Time stamp
+            val tsLong = System.currentTimeMillis()
+            val timeStamp = tsLong.toString()
+///making object of model MessageModel and adding values to it
+            val msgModel: MessageModel= MessageModel(currentUserId, chatTextString, timeOfText, recieverIde, timeStamp)
+
+
+//////with firestore
+                     msgList.add(MessageModel(currentUserId, chatText.text.toString(), timeOfText, recieverIde, timeStamp))
+                     chattingAdapter.notifyDataSetChanged()
+
+
+            val sR: DocumentReference = fStore.collection("chats")
+                .document(currentUserId).collection(senderRoom).document()
+
+            sR.set(msgModel)
+
+            val rR: DocumentReference = fStore.collection("chats")
+                .document(recieverID.toString()).collection(recieverRoom).document()
+
+            rR.set(msgModel)
+            chatText.setText("")
+
+
+
+
+
+
+
+
+
+
+        }
+
+    }
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <ImageView
+        android:id="@+id/profilePic"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/google"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        />
+
+    <TextView
+        android:id="@+id/profileName"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:text="Hiiiiiiiiiii"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="10dp"/>
+
+
+
+
+</RelativeLayout>

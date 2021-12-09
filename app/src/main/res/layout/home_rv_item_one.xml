@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dp"
+    android:layout_height="200dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="170dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="5dp"
+        app:cardCornerRadius="10dp">
+        <ImageView
+            android:id="@+id/displayAdImage"
+            android:layout_width="170dp"
+            android:layout_height="120dp"
+            android:scaleType="fitCenter"/>
+
+    </androidx.cardview.widget.CardView>
+    <TextView
+        android:layout_marginTop="4dp"
+        android:id="@+id/displayAdTitle"
+        android:text="Pubg Account"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_marginStart="5dp"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:maxWidth="150dp"/>
+    <TextView
+        android:layout_marginTop="4dp"
+        android:id="@+id/displayAdPrice"
+        android:maxWidth="150dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_marginStart="5dp"
+        android:layout_width="150dp"
+        android:layout_height="30dp"/>
+
+
+</LinearLayout>

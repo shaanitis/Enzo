@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "140690257898",
+    "project_id": "enzo-1ecc3",
+    "storage_bucket": "enzo-1ecc3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140690257898:android:3a46470334e1895e5d2493",
+        "android_client_info": {
+          "package_name": "com.example.enzo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140690257898-naotia5a1unbkrm3mbhsph9nk4dsse2g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.enzo",
+            "certificate_hash": "7253f5c12a1f8b104080e99a84b4a9fb5df55c14"
+          }
+        },
+        {
+          "client_id": "140690257898-boea5v2iov3kh08lasue82jmesdnvo4j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPcnlxF9MDHMul9-UegcxzuUW-slGl0NI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140690257898-boea5v2iov3kh08lasue82jmesdnvo4j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

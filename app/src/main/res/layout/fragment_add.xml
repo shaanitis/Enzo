@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddFrag">
+
+
+    <TextView
+        android:id="@+id/uploadAdText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/acme"
+        android:text="Upload your own ad"
+        android:textColor="#0C81F4"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/adTitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        app:layout_constraintTop_toBottomOf="@id/uploadAdText"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"/>
+    <TextView
+        android:id="@+id/genreText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/acme"
+        android:text="Genre"
+        android:textColor="#0C81F4"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adTitle" />
+
+
+    <ScrollView
+        android:id="@+id/scrollViewRadio"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        app:layout_constraintTop_toBottomOf="@+id/genreText"
+        android:layout_marginTop="10dp">
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RadioButton
+                android:id="@+id/gaming"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gaming"/>
+            <RadioButton
+                android:id="@+id/socialMedia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Social Media"/>
+            <RadioButton
+                android:id="@+id/streaming"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Streaming platform"/>
+
+        </RadioGroup>
+    </ScrollView>
+    <EditText
+        android:id="@+id/adDetail"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintTop_toBottomOf="@+id/scrollViewRadio"
+        android:hint="Add Detail of your account"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"/>
+    <EditText
+        android:id="@+id/adPrice"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@+id/adDetail"
+        android:layout_marginTop="15dp"
+        android:inputType="number"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:hint="Price"/>
+    <Button
+        android:id="@+id/adImage"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@+id/adPrice"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="20dp"
+        android:textAllCaps="false"
+        android:text="Add Image"
+        android:backgroundTint="@color/purple_200"/>
+    <TextView
+        android:id="@+id/noOfImages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/adImage"
+        android:text="0 files attached"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:flow_horizontalBias="0.5"
+        android:layout_marginTop="5dp"/>
+    <ImageView
+        android:id="@+id/testImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="180dp"
+        android:layout_marginRight="20dp"/>
+    <Button
+        android:id="@+id/adUploadBtn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="80dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:text="Upload"
+        android:textAllCaps="false"
+        android:backgroundTint="#0C81F4"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

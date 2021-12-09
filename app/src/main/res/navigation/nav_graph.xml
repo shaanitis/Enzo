@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFrag">
+
+    <fragment
+        android:id="@+id/homeFrag"
+        android:name="com.example.enzo.HomeFrag"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/chatFrag"
+        android:name="com.example.enzo.ChatFrag"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/addFrag"
+        android:name="com.example.enzo.AddFrag"
+        android:label="fragment_add"
+        tools:layout="@layout/fragment_add" />
+    <fragment
+        android:id="@+id/notifyFrag"
+        android:name="com.example.enzo.NotifyFrag"
+        android:label="fragment_notify"
+        tools:layout="@layout/fragment_notify" />
+    <fragment
+        android:id="@+id/profileFrag"
+        android:name="com.example.enzo.ProfileFrag"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>
