@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Enzo">
         <activity
+            android:name=".PaymentActivity"
+            android:exported="false" />
+        <activity
             android:name=".ChattingScreen"
             android:exported="false" />
         <activity
