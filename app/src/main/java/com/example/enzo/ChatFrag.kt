@@ -13,6 +13,7 @@ import com.example.enzo.R
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
@@ -23,6 +24,7 @@ class ChatFrag : Fragment() {
     lateinit var db:FirebaseDatabase
     lateinit  var allChatsRV: RecyclerView
     lateinit var allChatsList: ArrayList<AllChatsModel>
+
 lateinit var testText: TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +40,7 @@ lateinit var testText: TextView
 
         allChatsRV= view.findViewById(R.id.allChatsRV)
         allChatsList= arrayListOf<AllChatsModel>()
+        var idsOfChats= ArrayList<String>()
 
         allChatsRV.layoutManager= LinearLayoutManager(requireContext())
         allChatsRV.setHasFixedSize(true)
@@ -48,7 +51,48 @@ lateinit var testText: TextView
 
         allChatsList.clear()
 
+
+
+
+///////getting ids of uploaders with whom user chatted and saving ids in array list idsOfChats
         fStore.collection("users")
+            .document(auth.currentUser!!.uid)
+            .collection("idOfUploaderChats")
+            .get()
+            .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot>{
+                override fun onSuccess(qs: QuerySnapshot?) {
+                    for (qds: QueryDocumentSnapshot in qs!!) {
+                        val idOfUploaderChats: String =
+                            qds.getString("idOfUploaderChats").toString()
+                        idsOfChats.add("$idOfUploaderChats")
+
+
+                    }
+////////looping through array of ids and getting info of each id and displaying chats overall
+for (i in idsOfChats) {
+
+    val documentReference: DocumentReference= fStore.collection("users").document(i)
+        documentReference.get()
+        .addOnSuccessListener{
+
+                    var nameOfUserChatclicked:String= it.getString("profileName").toString()
+                    var imgUrlOfUserChatClicked:String= it.getString("profileUrl").toString()
+                    var idOfUserChatClicked:String=it.id
+                    var lastMsg:String=""
+                    allChatsList.add(AllChatsModel(nameOfUserChatclicked, imgUrlOfUserChatClicked,lastMsg, idOfUserChatClicked))
+
+            allChatsAdapter.notifyDataSetChanged()
+                }
+
+            }
+
+
+}
+
+            })
+
+////////////getting all users in database
+      /*  fStore.collection("users")
             .get()
             .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot>{
                 override fun onSuccess(qs: QuerySnapshot?) {
@@ -67,11 +111,11 @@ lateinit var testText: TextView
 
             })
 
+*/
 
 
 
-
-/////////checking if document contains some text and displaying it//////
+/////////checking if document fields contains some specific text and displaying it//////
      /*   testText=view.findViewById(R.id.check)
         val userId= auth.currentUser?.uid
         fStore.collection("ads")

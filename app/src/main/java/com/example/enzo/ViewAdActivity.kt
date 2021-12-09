@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
@@ -58,8 +59,17 @@ class ViewAdActivity : AppCompatActivity() {
             val picUrl:String= it.getString("profileUrl").toString()
             Picasso.get().load(picUrl).into(imageOfUploader)
         }
-
+//////////on clicking chat button, going to chatting screen and also adding id of this uploader as collection in current user's id
         chatWithUploaderBtn.setOnClickListener {
+
+            val user = hashMapOf(
+                "idOfUploaderChats" to idOfUploader
+            )
+            val sR: DocumentReference = fStore.collection("users")
+                .document(auth.currentUser!!.uid).collection("idOfUploaderChats").document(idOfUploader.toString())
+
+            sR.set(user)
+
             val intent= Intent(this, ChattingScreen::class.java)
             intent.putExtra("idOfUploaderChatting", idOfUploader )
             startActivity(intent)

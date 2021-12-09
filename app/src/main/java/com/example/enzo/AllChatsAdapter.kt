@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
@@ -34,6 +35,8 @@ class AllChatsAdapter(var context: android.content.Context, private var allChats
         Picasso.get().load(currentItem.imgOfUserChatClicked).placeholder(R.drawable.blankuser).into(holder.image)
         holder.name.text= currentItem.nameOfUserChatClicked
         holder.lastMsg.text= currentItem.lastMessage
+
+
 
         //////on click listener used and ad details sent to next activity//////////
         holder.clickListenerView?.setOnClickListener {
