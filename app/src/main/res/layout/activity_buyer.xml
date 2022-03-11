@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BuyerActivity">
+
+    <TextView
+        android:id="@+id/accountInfoAppear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="30dp"
+        android:fontFamily="sans-serif"
+        android:maxHeight="300dp"
+        android:text="Account Details will apear her after payment is done!"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="28sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/revBtnsLayout"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/addPaymentAmount"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/rev1Btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#EFEBEB"
+            android:textColor="@color/black"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/rev2Btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="#EFEBEB"
+            android:textColor="@color/black"
+            android:text="2" />
+
+        <Button
+            android:id="@+id/rev3Btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="#EFEBEB"
+            android:textColor="@color/black"
+            android:text="3" />
+
+        <Button
+            android:id="@+id/rev4Btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="#EFEBEB"
+            android:textColor="@color/black"
+            android:text="4" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/addPaymentAmount"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginRight="40dp"
+        android:background="#E9F1F0"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@+id/accountInfoAppear" />
+
+    <Button
+        android:id="@+id/paymentDoneBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="100dp"
+        android:text="Pay"
+        app:layout_constraintTop_toBottomOf="@+id/addPaymentAmount" />
+
+    <Button
+        android:id="@+id/askInfoAgainBtn"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="80dp"
+        android:text="Ask AccountDetails Again?"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:id="@+id/confirmBuyerBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="Confirm Order"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

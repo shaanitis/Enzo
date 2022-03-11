@@ -1,4 +1,4 @@
-package com.example.enzo
+package com.example.enzo.Adapters
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.example.enzo.ChattingScreen
+import com.example.enzo.Models.AllChatsModel
+import com.example.enzo.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,7 +22,7 @@ class AllChatsAdapter(var context: android.content.Context, private var allChats
     val db:FirebaseDatabase= FirebaseDatabase.getInstance()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(com.example.enzo.R.layout.sample_all_chats_rv, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.sample_all_chats_rv, parent, false)
 
         return MyViewHolder(itemView)
 

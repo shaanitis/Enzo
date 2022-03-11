@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "com.example.enzo"
         minSdk 19
-        targetSdk 31
+        targetSdk 30
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -35,6 +35,7 @@ android {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
 dependencies {
 
@@ -44,7 +45,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
+    //facebook
+    implementation 'com.facebook.android:facebook-android-sdk:12.3.0'
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.google.firebase:firebase-storage-ktx:20.0.0'
     implementation 'com.firebaseui:firebase-ui-storage:7.2.0'
@@ -53,23 +55,53 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.0.1')
     // Declare the dependency for the Realtime Database library
     implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.0.0'
+    implementation 'com.android.volley:volley:1.2.0'
+    implementation 'androidx.test:core-ktx:1.3.0'
+    //glide
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    //navbar
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    //vector
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+    //live data
+
+    //auth
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
+    //firestore
     implementation 'com.google.firebase:firebase-firestore-ktx:24.0.0'
     implementation 'com.firebaseui:firebase-ui-firestore:4.1.0'
     implementation 'com.google.firebase:firebase-core:19.0.2'
+    //hodden circular
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+    //shhimmer
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    //mvvm
+
+
+    //retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    //coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.5'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5'
+    //material searchView
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+repositories {
+    mavenCentral()
+
 }

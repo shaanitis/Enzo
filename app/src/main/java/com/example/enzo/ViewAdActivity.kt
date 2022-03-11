@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.withStyledAttributes
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -24,6 +25,7 @@ class ViewAdActivity : AppCompatActivity() {
     lateinit var adViewPrice: TextView
     lateinit var adViewDetail: TextView
     lateinit var chatWithUploaderBtn:Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_ad)
@@ -70,10 +72,13 @@ class ViewAdActivity : AppCompatActivity() {
 
             sR.set(user)
 
+
             val intent= Intent(this, ChattingScreen::class.java)
             intent.putExtra("idOfUploaderChatting", idOfUploader )
             startActivity(intent)
         }
+
+
 
 
     }//oncreate

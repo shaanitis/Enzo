@@ -1,13 +1,13 @@
 package com.example.enzo
 
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import com.example.enzo.Models.LoginModel
 import com.facebook.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -17,16 +17,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginBehavior
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FacebookAuthProvider
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import java.lang.Exception
+import com.google.firebase.iid.FirebaseInstanceIdReceiver
+import com.google.firebase.iid.internal.FirebaseInstanceIdInternal
 import java.util.*
 
 public class LoginActivity : AppCompatActivity() {
@@ -47,6 +45,8 @@ public class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+
 /////hiding status bar
         this.supportActionBar?.hide()
 /////initialzing
@@ -56,6 +56,7 @@ public class LoginActivity : AppCompatActivity() {
         fbLoginBtn=findViewById(R.id.fbLoginBtn)
         passwordLogin= findViewById(R.id.passwordLogin)
         loginBtn= findViewById(R.id.loginBtn)
+        val goToHome= findViewById<Button>(R.id.goToHome)
         auth = FirebaseAuth.getInstance()
         fStore= FirebaseFirestore.getInstance()
         FacebookSdk.sdkInitialize(applicationContext)
@@ -126,7 +127,16 @@ public class LoginActivity : AppCompatActivity() {
                 .logInWithReadPermissions(this, Arrays.asList("email", "public_profile"))
         }
 
+///////////goToHomeevelopment
+
+        goToHome.setOnClickListener {
+            val intent=Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
     }//oncreate
+
+
 
 /////////Google Login Methods//////////////////////
     val RC_SIGN_IN= 56
@@ -162,6 +172,7 @@ public class LoginActivity : AppCompatActivity() {
 //////code for facebook on activity result
         else{
             cbManager.onActivityResult(requestCode, resultCode, data)
+
 
         }
     }
@@ -210,6 +221,7 @@ public class LoginActivity : AppCompatActivity() {
 ////////////FACebook handle acccess token//////////////
 
     private fun handleFacebookAccessToken(token: AccessToken) {
+
         Log.d(TAG, "handleFacebookAccessToken:$token")
         val credential: AuthCredential = FacebookAuthProvider.getCredential(token.token)
         auth.signInWithCredential(credential)
@@ -237,7 +249,7 @@ public class LoginActivity : AppCompatActivity() {
 
                 } else {
                     // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    Log.w(TAG, "failure", task.exception)
                     Toast.makeText(baseContext, "Authentication failed.",
                         Toast.LENGTH_SHORT).show()
                     progressBar.visibility=View.GONE

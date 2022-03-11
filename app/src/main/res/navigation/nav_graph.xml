@@ -7,27 +7,27 @@
 
     <fragment
         android:id="@+id/homeFrag"
-        android:name="com.example.enzo.HomeFrag"
+        android:name="com.example.enzo.Fragments.HomeFrag"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/chatFrag"
-        android:name="com.example.enzo.ChatFrag"
+        android:name="com.example.enzo.Fragments.ChatFrag"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/addFrag"
-        android:name="com.example.enzo.AddFrag"
+        android:name="com.example.enzo.Fragments.AddFrag"
         android:label="fragment_add"
         tools:layout="@layout/fragment_add" />
     <fragment
         android:id="@+id/notifyFrag"
-        android:name="com.example.enzo.NotifyFrag"
+        android:name="com.example.enzo.Fragments.NotifyFrag"
         android:label="fragment_notify"
         tools:layout="@layout/fragment_notify" />
     <fragment
         android:id="@+id/profileFrag"
-        android:name="com.example.enzo.ProfileFrag"
+        android:name="com.example.enzo.Fragments.ProfileFrag"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>

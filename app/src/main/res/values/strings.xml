@@ -9,4 +9,10 @@
     <string name="web_client_id">140690257898-boea5v2iov3kh08lasue82jmesdnvo4j.apps.googleusercontent.com</string>
     <string name="facebook_app_id">1327490174359485</string>
     <string name="fb_login_protocol_scheme">fb1327490174359485</string>
+
+    <string name="hint">Search Accounts</string>
+    <string-array name="searchSuggestions">
+        <item>Gaming</item>
+        <item>SocialMedia</item>
+    </string-array>
 </resources>

@@ -1,14 +1,20 @@
-package com.example.enzo
+package com.example.enzo.Fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.Button
+import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.enzo.Models.AdModel
+import com.example.enzo.Adapters.HomeRVAdapter
 import com.example.enzo.R
+import com.example.enzo.SearchResult
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -24,6 +30,8 @@ class HomeFrag : Fragment() {
     lateinit var recyclerView: RecyclerView
    lateinit var homeRVAdapter: HomeRVAdapter
     lateinit var adList: ArrayList<AdModel>
+    lateinit var shimmerHomeAds:ShimmerFrameLayout
+    lateinit var searchBarHome:SearchView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,7 +47,9 @@ class HomeFrag : Fragment() {
         adList= arrayListOf<AdModel>()
 
 //////setting up recycler view and assigning adapter////////
+        shimmerHomeAds=view.findViewById(R.id.shimmerHomeAds)
         recyclerView =view.findViewById(R.id.homeRView)
+        searchBarHome=view.findViewById(R.id.searchBarHome)
         recyclerView.layoutManager= LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
         homeRVAdapter= HomeRVAdapter(requireContext(), adList)
@@ -58,13 +68,57 @@ class HomeFrag : Fragment() {
                         var displayAdDetail:String= qds.getString("adDetail").toString()
                         var displayAdType:String= qds.getString("adType").toString()
                         var displayAdUserId:String= qds.getString("adUserId").toString()
-                        adList.add(AdModel(displayAdTitle, displayAdDetail, displayAdPrice, displayAdImage, displayAdType, displayAdUserId  ))
+                        var adSearchTitle:String= qds.getString("adSearchTitle").toString()
+
+                        adList.add(AdModel(displayAdTitle, displayAdDetail, displayAdPrice, displayAdImage, displayAdType, displayAdUserId, adSearchTitle  ))
                         homeRVAdapter.notifyDataSetChanged()
+
                     }
+                    shimmerHomeAds.stopShimmer()
+                    shimmerHomeAds.hideShimmer()
+                    shimmerHomeAds.visibility=View.GONE
                 }
             })
+        searchBarHome.setOnClickListener {
+            val intent=Intent(requireContext(), SearchResult::class.java)
+            startActivity(intent)
+
+        }
+        searchBarHome.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(searchText: String?): Boolean {
+                val intent=Intent(requireContext(), SearchResult::class.java)
+                intent.putExtra("searchText" , searchText)
+                startActivity(intent)
+
+ return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                return false
+            }
+
+
+        })
+
+
+
+        ///////checking mvvm actvity
+
 
         return view
     }//oncreate
+
+    override fun onPause() {
+        shimmerHomeAds.hideShimmer()
+        shimmerHomeAds.stopShimmer()
+        shimmerHomeAds.visibility=View.GONE
+        super.onPause()
+    }
+
+    override fun onResume() {
+        shimmerHomeAds.startShimmer()
+        super.onResume()
+    }
 
 }//main

@@ -1,4 +1,4 @@
-package com.example.enzo
+package com.example.enzo.Fragments
 
 import android.os.Bundle
 import android.util.Log

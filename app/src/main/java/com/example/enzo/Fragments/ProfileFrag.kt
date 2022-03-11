@@ -1,4 +1,4 @@
-package com.example.enzo
+package com.example.enzo.Fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,17 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
+import com.example.enzo.LoginActivity
 import com.example.enzo.R
 import com.facebook.login.LoginManager
-import com.facebook.login.widget.LoginButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
-import org.w3c.dom.Text
 
 
 class ProfileFrag : Fragment() {

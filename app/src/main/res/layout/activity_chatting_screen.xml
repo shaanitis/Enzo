@@ -15,9 +15,17 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:id="@+id/tradeBtn"
+            android:layout_marginLeft="5dp"
+            android:text="T"/>
+
         <EditText
             android:id="@+id/chatText"
-            android:layout_width="320dp"
+            android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
             android:background="#F4EFEF"

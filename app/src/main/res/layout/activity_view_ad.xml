@@ -113,4 +113,17 @@
         android:text="Chat"
         android:textStyle="bold"
         android:textSize="22dp"/>
+    <Button
+        android:id="@+id/buyAdBtn"
+        android:layout_width="100dp"
+        android:layout_height="65dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/chatWithUploaderBtn"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="40dp"
+        android:backgroundTint="#1182F2"
+        android:textAllCaps="false"
+        android:text="Buy"
+        android:textStyle="bold"
+        android:textSize="22dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

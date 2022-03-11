@@ -1,4 +1,4 @@
-package com.example.enzo
+package com.example.enzo.Fragments
 
 import android.app.ProgressDialog
 import android.content.Intent
@@ -8,12 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.*
+import com.example.enzo.Models.AdModel
 import com.example.enzo.R
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.core.View
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.util.*
@@ -95,7 +95,8 @@ class AddFrag : Fragment() {
                         , adPrice = adPrice.text.toString()
                         , adImageUrl =url
                         , adType= radioButton.text.toString()
-                    , adUserId = userId)
+                    , adUserId = userId
+                    , adSearchTitle = adTitle.text.toString().toLowerCase())
 //////uploading to firestore
                     val dR: DocumentReference = db.collection("ads")
                         .document()
@@ -105,6 +106,11 @@ class AddFrag : Fragment() {
                     if(progressDialogue!!.isShowing) {
                         progressDialogue!!.hide()
                     }
+
+                    adTitle.text=null
+                    adDetail.text=null
+                    adPrice.text=null
+
 
 
                 })?.addOnFailureListener(OnFailureListener {

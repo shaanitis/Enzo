@@ -1,4 +1,4 @@
-package com.example.enzo
+package com.example.enzo.Fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +9,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.enzo.Adapters.AllChatsAdapter
+import com.example.enzo.Models.AllChatsModel
 import com.example.enzo.R
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -46,7 +48,7 @@ lateinit var testText: TextView
         allChatsRV.setHasFixedSize(true)
 
 
-        val allChatsAdapter: AllChatsAdapter= AllChatsAdapter(requireContext(), allChatsList)
+        val allChatsAdapter: AllChatsAdapter = AllChatsAdapter(requireContext(), allChatsList)
         allChatsRV.adapter=allChatsAdapter
 
         allChatsList.clear()
@@ -62,8 +64,7 @@ lateinit var testText: TextView
             .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot>{
                 override fun onSuccess(qs: QuerySnapshot?) {
                     for (qds: QueryDocumentSnapshot in qs!!) {
-                        val idOfUploaderChats: String =
-                            qds.getString("idOfUploaderChats").toString()
+                        val idOfUploaderChats: String = qds.getString("idOfUploaderChats").toString()
                         idsOfChats.add("$idOfUploaderChats")
 
 
@@ -92,7 +93,8 @@ for (i in idsOfChats) {
             })
 
 ////////////getting all users in database
-      /*  fStore.collection("users")
+/*
+        fStore.collection("users")
             .get()
             .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot>{
                 override fun onSuccess(qs: QuerySnapshot?) {
@@ -102,8 +104,8 @@ for (i in idsOfChats) {
                         var imgUrlOfUserChatClicked:String= qds.getString("profileUrl").toString()
                         var idOfUserChatClicked:String=qds.id
                         var lastMsg:String=""
+                        Toast.makeText(requireContext(), "$nameOfUserChatclicked", Toast.LENGTH_SHORT).show()
                         allChatsList.add(AllChatsModel(nameOfUserChatclicked, imgUrlOfUserChatClicked,lastMsg, idOfUserChatClicked))
-
 
                     }
                     allChatsAdapter.notifyDataSetChanged()

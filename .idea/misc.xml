@@ -17,20 +17,33 @@
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/google_icon.xml" value="0.1935185185185185" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/home_basic.xml" value="0.23493360572012256" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/home_icon_bg.xml" value="0.23333333333333334" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.23493360572012256" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/ic_baseline_vpn_key_24.xml" value="0.23493360572012256" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/ic_home.xml" value="0.23493360572012256" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/ic_launcher_background.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/ic_notify.xml" value="0.23493360572012256" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/ic_person.xml" value="0.23493360572012256" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/login_btn_bg.xml" value="0.23958333333333334" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/navbar_icon_tint.xml" value="0.23493360572012256" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/notify_icon_bg.xml" value="0.23333333333333334" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/profile_bg.xml" value="0.23493360572012256" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/progressbar_bg.xml" value="0.20277777777777778" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/search_bar_bg.xml" value="0.20925925925925926" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/search_bar_checked.xml" value="0.20925925925925926" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/search_bar_uncheck.xml" value="0.20925925925925926" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/drawable/user_icon_bg.xml" value="0.23148148148148148" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_buyer.xml" value="0.1585144927536232" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_buyer_or_seller.xml" value="0.19021739130434784" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_chatting_screen.xml" value="0.1062058526740666" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_login.xml" value="0.176" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_main.xml" value="0.136" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_main2.xml" value="0.11865942028985507" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_mvvm.xml" value="0.16757246376811594" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_search_result.xml" value="0.14583333333333334" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_seller.xml" value="0.2" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_trading.xml" value="0.16485507246376813" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/activity_view_ad.xml" value="0.176" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/ad_rv_item_one.xml" value="0.16485507246376813" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/fragment_add.xml" value="0.20697463768115942" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/fragment_chat.xml" value="0.17527173913043478" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/fragment_home.xml" value="0.1062058526740666" />
@@ -41,8 +54,13 @@
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/sample_all_chats_rv.xml" value="0.15715579710144928" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/sample_reciever.xml" value="0.1062058526740666" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/sample_sender.xml" value="0.264" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/search_result_rv_item.xml" value="0.10400000000000001" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/layout/shimmer_item_view.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/menu/bottom_nav_menu.xml" value="0.10104166666666667" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/menu/menu_chatting.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/menu/my_menu.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/menu/search_bar_menu.xml" value="0.176" />
+        <entry key="..\:/Users/shaan/AndroidStudioProjects/Enzo/app/src/main/res/xml/network_security_config.xml" value="0.11865942028985507" />
       </map>
     </option>
   </component>

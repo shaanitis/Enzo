@@ -1,24 +1,19 @@
 package com.example.enzo
 
-import android.graphics.Path
-import android.icu.text.RelativeDateTimeFormatter
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.*
-import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.enzo.Adapters.ChattingAdapter
+import com.example.enzo.Models.MessageModel
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.*
-import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -32,6 +27,9 @@ class ChattingScreen : AppCompatActivity() {
     lateinit var chatRView: RecyclerView
     lateinit var sendTextBtn: ImageButton
     lateinit var chatText: EditText
+    lateinit var recieverID:String
+    lateinit var tradeBtn:Button
+    lateinit var idOfUserChatClicked:String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,11 +46,12 @@ class ChattingScreen : AppCompatActivity() {
         uploaderImgChatting= findViewById(R.id.uploaderImgChatting)
         uploaderNameChatting= findViewById(R.id.uploaderNameChatting)
         sendTextBtn= findViewById(R.id.sendText)
+        tradeBtn=findViewById(R.id.tradeBtn)
 
 /////getting uploader id by same intent from AdView and AllChats activity and displaying it////////
 
-        val idOfUserChatClicked= intent.getStringExtra("idOfUploaderChatting")
-        val recieverID= intent.getStringExtra("idOfUploaderChatting")
+        idOfUserChatClicked= intent.getStringExtra("idOfUploaderChatting").toString()
+        recieverID= intent.getStringExtra("idOfUploaderChatting").toString()
         fStore.collection("users").document(intent.getStringExtra("idOfUploaderChatting").toString()).get().addOnSuccessListener {
             uploaderNameChatting.text = it.getString("profileName")
             val uploaderImgChattingUrl: String = it.getString("profileUrl").toString()
@@ -115,13 +114,20 @@ class ChattingScreen : AppCompatActivity() {
             val tsLong = System.currentTimeMillis()
             val timeStamp = tsLong.toString()
 ///making object of model MessageModel and adding values to it
-            val msgModel: MessageModel= MessageModel(currentUserId, chatTextString, timeOfText, recieverIde, timeStamp)
+            val msgModel: MessageModel = MessageModel(currentUserId, chatTextString, timeOfText, recieverIde, timeStamp)
 
 
-//////with firestore
+//////displaying current text and uploading message with with firestore
                      msgList.add(MessageModel(currentUserId, chatText.text.toString(), timeOfText, recieverIde, timeStamp))
                      chattingAdapter.notifyDataSetChanged()
 
+            val user = hashMapOf(
+                "idOfUploaderChats" to currentUserId
+            )
+            val zR: DocumentReference = fStore.collection("users")
+                .document(idOfUserChatClicked).collection("idOfUploaderChats").document(currentUserId)
+
+            zR.set(user)
 
             val sR: DocumentReference = fStore.collection("chats")
                 .document(currentUserId).collection(senderRoom).document()
@@ -143,7 +149,16 @@ class ChattingScreen : AppCompatActivity() {
 
 
 
+        }////sendBtn End
+        tradeBtn.setOnClickListener {
+            val intent = Intent(this, BuyerOrSeller::class.java)
+            intent.putExtra("yourID", auth.currentUser!!.uid.toString())
+            intent.putExtra("recieverID", recieverID)
+            startActivity(intent)
         }
 
-    }
-}
+    }///onCreate
+
+
+
+}//main
