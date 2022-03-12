@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
+import com.miguelcatalan.materialsearchview.MaterialSearchView
 
 
 class HomeFrag : Fragment() {
@@ -31,7 +34,7 @@ class HomeFrag : Fragment() {
    lateinit var homeRVAdapter: HomeRVAdapter
     lateinit var adList: ArrayList<AdModel>
     lateinit var shimmerHomeAds:ShimmerFrameLayout
-    lateinit var searchBarHome:SearchView
+    lateinit var searchBarHome:Button
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,29 +82,12 @@ class HomeFrag : Fragment() {
                     shimmerHomeAds.visibility=View.GONE
                 }
             })
+
+     ////setting on click of search bar button
         searchBarHome.setOnClickListener {
-            val intent=Intent(requireContext(), SearchResult::class.java)
+            val intent= Intent(context, SearchResult::class.java)
             startActivity(intent)
-
         }
-        searchBarHome.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(searchText: String?): Boolean {
-                val intent=Intent(requireContext(), SearchResult::class.java)
-                intent.putExtra("searchText" , searchText)
-                startActivity(intent)
-
- return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-
-                return false
-            }
-
-
-        })
-
-
 
         ///////checking mvvm actvity
 

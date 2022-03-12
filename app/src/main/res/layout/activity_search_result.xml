@@ -17,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#7A7A7A"
+            android:background="#F5F5F5"
             android:theme="@style/AppTheme.AppBarOverlay"/>
 
         <com.miguelcatalan.materialsearchview.MaterialSearchView
