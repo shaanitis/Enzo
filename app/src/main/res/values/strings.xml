@@ -12,7 +12,9 @@
 
     <string name="hint">Search Accounts</string>
     <string-array name="searchSuggestions">
-        <item>Gaming</item>
-        <item>SocialMedia</item>
+        <item>Apple</item>
+        <item>Blue berry</item>
+        <item>Carrot</item>
+        <item>Daikon</item>
     </string-array>
 </resources>

@@ -1,9 +1,14 @@
 package com.example.enzo
 
+import android.annotation.SuppressLint
+import android.app.SearchManager
 import android.content.Intent
+import android.database.Cursor
+import android.database.MatrixCursor
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -33,34 +38,28 @@ class SearchResult : AppCompatActivity() {
     lateinit var fStore:FirebaseFirestore
     lateinit var searchResultAdapter:SearchResultRVAdapter
 
-    lateinit var toolbar: Toolbar
-    lateinit var mtSearchView: MaterialSearchView
+    lateinit var mtSearchView:SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_result)
-        toolbar=findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        getSupportActionBar()?.setDisplayShowTitleEnabled(false);
+       this.supportActionBar?.hide()
+
+///initializing
         mtSearchView=findViewById(R.id.mtSearchView)
-
-
-
-
         fStore= FirebaseFirestore.getInstance()
-
-
-
-
-
-
         searchRecyclerView= findViewById(R.id.searchRecyclerView)
         searchResultList= arrayListOf<AdModel>()
+////focusing searchView on Activity Start
+         mtSearchView.setFocusable(true)
+        mtSearchView.setIconified(false)
 
 
+
+
+///recycler view adapter setting
         searchRecyclerView.layoutManager= LinearLayoutManager(this)
         searchRecyclerView.setHasFixedSize(true)
-
 
         searchResultAdapter= SearchResultRVAdapter(this, searchResultList)
         searchRecyclerView.adapter=searchResultAdapter
@@ -68,40 +67,39 @@ class SearchResult : AppCompatActivity() {
         searchResultList.clear()
 
 
-    }
+///////suggestions adapter
+        val from = arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
+        val to = intArrayOf(R.id.item_label)
+        val cursorAdapter = SimpleCursorAdapter(this, R.layout.search_sugges_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
+        val suggestions = listOf("   Netflix Account", "   Gaming Account", "   Fiver Account", "   Instagram Account", "   Facebook Page", "   Influencer")
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search_bar_menu, menu)
-        val menuItem:MenuItem= menu!!.findItem(R.id.action_search)
-        mtSearchView.setMenuItem(menuItem)
-        mtSearchView.setEllipsize(true)
-        mtSearchView.setSuggestions(resources.getStringArray(R.array.searchSuggestions))
-        val searchText= intent.getStringExtra("searchText")
-        mtSearchView.setQuery(searchText, true)
-        mtSearchView.clearFocus()
+        mtSearchView.suggestionsAdapter = cursorAdapter
 
-
-
-
-        ////on focus, searchView
-        mtSearchView.setOnSearchViewListener(object: MaterialSearchView.SearchViewListener{
-            override fun onSearchViewShown() {
-                searchRecyclerView.visibility=View.GONE
+///////search suggestions listener
+        mtSearchView.setOnSuggestionListener(object: SearchView.OnSuggestionListener {
+            override fun onSuggestionSelect(position: Int): Boolean {
+                return false
             }
 
-            override fun onSearchViewClosed() {
-                searchRecyclerView.visibility=View.VISIBLE
-            }
+            @SuppressLint("Range")
+            override fun onSuggestionClick(position: Int): Boolean {
 
+                val cursor = mtSearchView.suggestionsAdapter.getItem(position) as Cursor
+                val selection = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
+                mtSearchView.setQuery(selection, false)
+
+                // Do something with selection
+                return true
+            }
         })
 
-///////on text submit, searchView
-        mtSearchView.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener{
+//////searchView text submit listener
+        mtSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
 
                 searchResultList.clear()
                 searchResultAdapter.notifyDataSetChanged()
-
+                mtSearchView.clearFocus()
                 fStore.collection("ads")
                     /*.whereEqualTo("adSearchTitle", "${query?.toLowerCase()}")*/
                     .get()
@@ -116,7 +114,7 @@ class SearchResult : AppCompatActivity() {
                                 var displayAdUserId:String= qds.getString("adUserId").toString()
                                 var displayAdSearchTitle:String= qds.getString("adSearchTitle").toString()
 
-                               if (displayAdSearchTitle.contains(query!!.toLowerCase())){
+                               if (displayAdSearchTitle.contains(query!!.trim().toLowerCase())){
 
                                 searchResultList.add(AdModel(adTitle = displayAdTitle ,
                                     adDetail = displayAdDetail,
@@ -126,7 +124,8 @@ class SearchResult : AppCompatActivity() {
                                     adUserId = displayAdUserId,
                                     adSearchTitle = displayAdSearchTitle))
 
-                               searchResultAdapter.notifyDataSetChanged()}
+                               searchResultAdapter.notifyDataSetChanged()
+                               }
                                else{
                                        searchResultAdapter.notifyDataSetChanged()
                                }
@@ -142,17 +141,27 @@ class SearchResult : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                return false
+                val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
+                newText?.let {
+                    suggestions.forEachIndexed { index, suggestion ->
+                        if (suggestion.contains(newText, true))
+                            cursor.addRow(arrayOf(index, suggestion))
+                    }
+                }
+
+                cursorAdapter.changeCursor(cursor)
+                return true
+
             }
         })
-        return super.onCreateOptionsMenu(menu)
+
     }
 
+
+////onBack pressed
     override fun onBackPressed() {
-        if (mtSearchView.isSearchOpen){
-            mtSearchView.closeSearch()
-            searchRecyclerView.visibility=View.VISIBLE
-            searchResultAdapter.notifyDataSetChanged()
+        if (mtSearchView.isFocused){
+            mtSearchView.clearFocus()
         }
         super.onBackPressed()
     }

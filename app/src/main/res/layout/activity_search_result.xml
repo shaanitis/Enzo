@@ -5,27 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SearchResult">
-    <FrameLayout
-        android:id="@+id/toolbar_container"
-        android:layout_width="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#F5F5F5"
-            android:theme="@style/AppTheme.AppBarOverlay"/>
-
-        <com.miguelcatalan.materialsearchview.MaterialSearchView
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/mtSearchView"
             android:layout_width="match_parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:theme="@style/MaterialSearchViewStyle"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/search_bar_checked"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
