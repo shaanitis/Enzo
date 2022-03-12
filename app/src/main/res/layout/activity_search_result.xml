@@ -15,6 +15,7 @@
             android:layout_marginEnd="15dp"
             android:theme="@style/MaterialSearchViewStyle"
             android:layout_height="50dp"
+            app:queryHint="Find Accounts.."
             android:layout_marginTop="20dp"
             app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/search_bar_checked"/>
