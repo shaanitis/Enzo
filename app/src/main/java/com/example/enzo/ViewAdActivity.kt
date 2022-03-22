@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.withStyledAttributes
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
@@ -44,17 +45,29 @@ class ViewAdActivity : AppCompatActivity() {
         fStore= FirebaseFirestore.getInstance()
 
 ////////getting ad details from recycler view adatper in previous activity/fragment////////
+        val allImagesUrl= intent.getStringExtra("adAllImages")
         val imageUrl= intent.getStringExtra("adViewImage")
         val title= intent.getStringExtra("adViewTitle")
         val price= intent.getStringExtra("adViewPrice")
         val detail= intent.getStringExtra("adViewDetail")
         val idOfUploader=intent.getStringExtra("idOfUploader")
+        val adId=intent.getStringExtra("adId")
+
+
 
         Picasso.get().load(imageUrl).into(adViewImage)
         adViewTitle.text=title
         adViewPrice.text= price
         adViewDetail.text= detail
 
+
+        adViewImage.setOnClickListener {
+           val intent=Intent(this, DisplayAdImages::class.java)
+            intent.putExtra("allImagesUrl", allImagesUrl)
+            intent.putExtra("idUploader", idOfUploader)
+            intent.putExtra("adId",adId)
+            startActivity(intent)
+        }
 ////////////////getting user info from firestore by help of user id/////////
         fStore.collection("users").document(idOfUploader.toString()).get().addOnSuccessListener {
             nameOfUploader.text= it.getString("profileName")

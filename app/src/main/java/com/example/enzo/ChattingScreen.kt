@@ -14,12 +14,13 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 class ChattingScreen : AppCompatActivity() {
-    lateinit var uploaderImgChatting: ImageView
+    lateinit var uploaderImgChatting: CircleImageView
     lateinit var uploaderNameChatting:TextView
     lateinit var auth: FirebaseAuth
     lateinit var fStore:FirebaseFirestore

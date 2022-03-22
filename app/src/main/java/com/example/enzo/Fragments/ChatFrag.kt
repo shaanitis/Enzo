@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.enzo.Adapters.AllChatsAdapter
@@ -91,7 +93,13 @@ for (i in idsOfChats) {
 }
 
             })
+        val callback=object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_chatFrag_to_homeFrag)
+            }
 
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(callback)
 ////////////getting all users in database
 /*
         fStore.collection("users")

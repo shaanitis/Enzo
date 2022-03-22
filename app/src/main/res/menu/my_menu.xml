@@ -12,8 +12,7 @@
         />
     <item
         android:title=""
-        android:id="@+id/addFrag"
-
+        android:id="@+id/adCategory"
         android:icon="@drawable/add_icon_bg" />
 
 

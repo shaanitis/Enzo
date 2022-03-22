@@ -1,5 +1,6 @@
 package com.example.enzo.Adapters
 
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -7,14 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.enzo.Models.AdModel
 import com.example.enzo.R
 import com.example.enzo.ViewAdActivity
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.squareup.picasso.Picasso
 
-class HomeRVAdapter(val context: android.content.Context,  var adList: ArrayList<AdModel>):
+class HomeRVAdapter(val context: Context, var adList: ArrayList<AdModel>, var adIds: ArrayList<String>):
     RecyclerView.Adapter<HomeRVAdapter.MyViewHolder>() {
 
 ///////For on click listener in activity of recycler view/////////
@@ -43,7 +42,7 @@ class HomeRVAdapter(val context: android.content.Context,  var adList: ArrayList
         holder.displayAdTitle.text= currentItem.adTitle
         holder.displayAdPrice.text= "${currentItem.adPrice}"+" Rs"
        Picasso.get()
-            .load(currentItem.adImageUrl)
+            .load(currentItem.adImageUrl).fit().centerCrop()
            .into(holder.displayAdImage)
 
 
@@ -56,6 +55,8 @@ class HomeRVAdapter(val context: android.content.Context,  var adList: ArrayList
             intent.putExtra("adViewPrice", currentItem.adPrice)
             intent.putExtra("adViewDetail", currentItem.adDetail)
             intent.putExtra("idOfUploader", currentItem.adUserId)
+            intent.putExtra("adAllImages", currentItem.adAllImages)
+            intent.putExtra("adId", adIds[position])
             context.startActivity(intent)
         }
 

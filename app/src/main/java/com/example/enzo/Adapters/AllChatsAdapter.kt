@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.enzo.ChattingScreen
 import com.example.enzo.Models.AllChatsModel
@@ -13,7 +14,9 @@ import com.example.enzo.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mikhaellopez.circularimageview.CircularImageView
 import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 
 class AllChatsAdapter(var context: android.content.Context, private var allChatsList: ArrayList<AllChatsModel>): RecyclerView.Adapter<AllChatsAdapter.MyViewHolder>()  {
 
@@ -57,7 +60,7 @@ class AllChatsAdapter(var context: android.content.Context, private var allChats
     }
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        val image: ImageView =itemView.findViewById(R.id.friendImg)
+        val image: CircularImageView =itemView.findViewById(R.id.friendImg)
         val name: TextView = itemView.findViewById(R.id.name)
         val lastMsg: TextView = itemView.findViewById(R.id.lastMsg)
         val clickListenerView: View?= itemView

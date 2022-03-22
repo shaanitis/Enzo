@@ -4,18 +4,26 @@
     package="com.example.enzo">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Enzo">
         <activity
-            android:name=".SearchResult"
-android:theme="@style/AppTheme.SearhView"
+            android:name=".DisplayAdImages"
             android:exported="false" />
+        <activity
+            android:name=".TryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchResult"
+            android:exported="false"
+            android:theme="@style/AppTheme.SearhView" />
 
         <service
             android:name=".NotificationWork.FirebaseService"
@@ -77,7 +85,6 @@ android:theme="@style/AppTheme.SearhView"
         <activity
             android:name=".MainActivity"
             android:exported="false"
-
             android:windowSoftInputMode="adjustPan" />
 
         <meta-data

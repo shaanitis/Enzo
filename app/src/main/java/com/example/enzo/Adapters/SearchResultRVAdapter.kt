@@ -12,6 +12,7 @@ import com.example.enzo.ChattingScreen
 import com.example.enzo.Models.AdModel
 import com.example.enzo.Models.AllChatsModel
 import com.example.enzo.R
+import com.example.enzo.ViewAdActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,6 +39,16 @@ class SearchResultRVAdapter(var context: android.content.Context, private var se
         holder.adTitle.text= currentItem.adTitle
         holder.adPrice.text= "Rs ${currentItem.adPrice}"
 
+        holder.clickListenerView?.setOnClickListener {
+
+            val intent= Intent(context, ViewAdActivity::class.java)
+            intent.putExtra("adViewImage", currentItem.adImageUrl)
+            intent.putExtra("adViewTitle", currentItem.adTitle)
+            intent.putExtra("adViewPrice", currentItem.adPrice)
+            intent.putExtra("adViewDetail", currentItem.adDetail)
+            intent.putExtra("idOfUploader", currentItem.adUserId)
+            context.startActivity(intent)
+        }
 
         //////on click listener used and ad details sent to next activity//////////
         /*holder.clickListenerView?.setOnClickListener {

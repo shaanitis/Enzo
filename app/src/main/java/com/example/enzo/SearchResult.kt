@@ -19,11 +19,13 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.enzo.Adapters.AllChatsAdapter
 import com.example.enzo.Adapters.HomeRVAdapter
 import com.example.enzo.Adapters.SearchResultRVAdapter
+import com.example.enzo.Fragments.HomeFrag
 import com.example.enzo.Models.AdModel
 import com.example.enzo.Models.AllChatsModel
 import com.google.android.gms.tasks.OnSuccessListener
@@ -31,14 +33,19 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.miguelcatalan.materialsearchview.MaterialSearchView
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
+
 
 class SearchResult : AppCompatActivity() {
     lateinit  var searchRecyclerView: RecyclerView
     lateinit var searchResultList: ArrayList<AdModel>
     lateinit var fStore:FirebaseFirestore
     lateinit var searchResultAdapter:SearchResultRVAdapter
-
     lateinit var mtSearchView:SearchView
+    lateinit var homeFrag:HomeFrag
+    lateinit var list:ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +54,7 @@ class SearchResult : AppCompatActivity() {
 
 ///initializing
         mtSearchView=findViewById(R.id.mtSearchView)
+        list= arrayListOf()
         fStore= FirebaseFirestore.getInstance()
         searchRecyclerView= findViewById(R.id.searchRecyclerView)
         searchResultList= arrayListOf<AdModel>()
@@ -114,6 +122,7 @@ class SearchResult : AppCompatActivity() {
                                 var displayAdUserId:String= qds.getString("adUserId").toString()
                                 var displayAdSearchTitle:String= qds.getString("adSearchTitle").toString()
 
+                              list.add(displayAdSearchTitle)
                                if (displayAdSearchTitle.contains(query!!.trim().toLowerCase())){
 
                                 searchResultList.add(AdModel(adTitle = displayAdTitle ,
@@ -122,20 +131,31 @@ class SearchResult : AppCompatActivity() {
                                     adImageUrl = displayAdImage,
                                     adType = displayAdType,
                                     adUserId = displayAdUserId,
-                                    adSearchTitle = displayAdSearchTitle))
+                                    adSearchTitle = displayAdSearchTitle,
+                                null,
+                                null,
+                                null))
 
                                searchResultAdapter.notifyDataSetChanged()
                                }
-                               else{
-                                       searchResultAdapter.notifyDataSetChanged()
-                               }
 
+
+
+
+
+                            }
+/////if search word not exsist in account  names(doing it outside loop)
+
+                            if (!list.contains(query!!.trim().toLowerCase())){
+
+                                Toast.makeText(this@SearchResult, "No search results found", Toast.LENGTH_SHORT).show()
 
                             }
 
                         }
 
                     })
+
 
                 return false
             }
@@ -160,9 +180,13 @@ class SearchResult : AppCompatActivity() {
 
 ////onBack pressed
     override fun onBackPressed() {
+
         if (mtSearchView.isFocused){
             mtSearchView.clearFocus()
+        }else{
+               val intent=Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(R.anim.activity_fade_out, R.anim.activity_fade_in)
         }
-        super.onBackPressed()
-    }
+}
 }

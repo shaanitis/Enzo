@@ -14,20 +14,72 @@
         android:id="@+id/chatFrag"
         android:name="com.example.enzo.Fragments.ChatFrag"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_chatFrag_to_homeFrag"
+            app:destination="@id/homeFrag" />
+    </fragment>
     <fragment
-        android:id="@+id/addFrag"
-        android:name="com.example.enzo.Fragments.AddFrag"
-        android:label="fragment_add"
-        tools:layout="@layout/fragment_add" />
+        android:id="@+id/adCategory"
+        android:name="com.example.enzo.Fragments.SelectCategoryFrag"
+        android:label="fragment_select_category"
+        tools:layout="@layout/fragment_select_category" >
+        <action
+            android:id="@+id/action_adCategory_to_addFrag"
+            app:destination="@id/addFrag" />
+        <action
+            android:id="@+id/action_adCategory_to_homeFrag"
+            app:destination="@id/homeFrag" />
+    </fragment>
     <fragment
         android:id="@+id/notifyFrag"
         android:name="com.example.enzo.Fragments.NotifyFrag"
         android:label="fragment_notify"
-        tools:layout="@layout/fragment_notify" />
+        tools:layout="@layout/fragment_notify" >
+        <action
+            android:id="@+id/action_notifyFrag_to_homeFrag"
+            app:destination="@id/homeFrag" />
+    </fragment>
     <fragment
         android:id="@+id/profileFrag"
         android:name="com.example.enzo.Fragments.ProfileFrag"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFrag_to_homeFrag"
+            app:destination="@id/homeFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/addFrag"
+        android:name="com.example.enzo.Fragments.AddFrag"
+        android:label="fragment_add"
+        tools:layout="@layout/fragment_add" >
+        <action
+            android:id="@+id/action_addFrag_to_adCategory"
+            app:destination="@id/adCategory" />
+        <action
+            android:id="@+id/action_addFrag_to_uploadFrag"
+            app:destination="@id/uploadFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/uploadFrag"
+        android:name="com.example.enzo.Fragments.UploadFrag"
+        android:label="fragment_upload"
+        tools:layout="@layout/fragment_upload" >
+        <action
+            android:id="@+id/action_uploadFrag_to_addFrag"
+            app:destination="@id/addFrag" />
+        <argument
+            android:name="adTitleImgUrl"
+            app:argType="string" />
+        <argument android:name="adTitle"
+            app:argType="string"/>
+        <argument
+            android:name="adPrice"
+            app:argType="string" />
+        <argument
+            android:name="adDetail"
+            app:argType="string" />
+    </fragment>
+
 </navigation>
