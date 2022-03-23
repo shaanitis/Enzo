@@ -44,8 +44,11 @@ class ViewAdActivity : AppCompatActivity() {
         auth= FirebaseAuth.getInstance()
         fStore= FirebaseFirestore.getInstance()
 
-////////getting ad details from recycler view adatper in previous activity/fragment////////
-        val allImagesUrl= intent.getStringExtra("adAllImages")
+////////getting ad details from recycler view adatper of home and search adapter from activity/fragment////////
+////if want to differentiate between intents from df activity,
+// add extra intent when moving from that activity to this activity with that activity name and value
+//////    and then check here if the value of that activity name matches the activity name
+        val allImagesUrl= intent.getStringExtra("adAllImages").toString()
         val imageUrl= intent.getStringExtra("adViewImage")
         val title= intent.getStringExtra("adViewTitle")
         val price= intent.getStringExtra("adViewPrice")
@@ -62,17 +65,19 @@ class ViewAdActivity : AppCompatActivity() {
 
 
         adViewImage.setOnClickListener {
+
            val intent=Intent(this, DisplayAdImages::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            overridePendingTransition(0, 0)
             intent.putExtra("allImagesUrl", allImagesUrl)
-            intent.putExtra("idUploader", idOfUploader)
-            intent.putExtra("adId",adId)
+            intent.putExtra("titleImgUrl", imageUrl)
             startActivity(intent)
         }
 ////////////////getting user info from firestore by help of user id/////////
         fStore.collection("users").document(idOfUploader.toString()).get().addOnSuccessListener {
             nameOfUploader.text= it.getString("profileName")
             val picUrl:String= it.getString("profileUrl").toString()
-            Picasso.get().load(picUrl).into(imageOfUploader)
+            Picasso.get().load(picUrl).placeholder(R.drawable.blankuser).into(imageOfUploader)
         }
 //////////on clicking chat button, going to chatting screen and also adding id of this uploader as collection in current user's id
         chatWithUploaderBtn.setOnClickListener {

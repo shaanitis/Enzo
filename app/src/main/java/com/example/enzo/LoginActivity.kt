@@ -215,6 +215,8 @@ public class LoginActivity : AppCompatActivity() {
         super.onStart()
         if( auth.currentUser != null) {
             val intent = Intent(this, MainActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            overridePendingTransition(0, 0)
             startActivity(intent)
         }}
 
@@ -244,6 +246,7 @@ public class LoginActivity : AppCompatActivity() {
                     progressBar.visibility=View.GONE
 
                     val intent = Intent(applicationContext, MainActivity::class.java)
+
                     startActivity(intent)
 
 

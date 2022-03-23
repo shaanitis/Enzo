@@ -56,6 +56,7 @@ class HomeRVAdapter(val context: Context, var adList: ArrayList<AdModel>, var ad
             intent.putExtra("adViewDetail", currentItem.adDetail)
             intent.putExtra("idOfUploader", currentItem.adUserId)
             intent.putExtra("adAllImages", currentItem.adAllImages)
+            intent.putExtra("fromHome", "fromHome")
             intent.putExtra("adId", adIds[position])
             context.startActivity(intent)
         }

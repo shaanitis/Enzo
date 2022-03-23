@@ -47,6 +47,9 @@ class SearchResultRVAdapter(var context: android.content.Context, private var se
             intent.putExtra("adViewPrice", currentItem.adPrice)
             intent.putExtra("adViewDetail", currentItem.adDetail)
             intent.putExtra("idOfUploader", currentItem.adUserId)
+            intent.putExtra("adAllImages", currentItem.adAllImages)
+            intent.putExtra("fromSearch", "fromSearch")
+
             context.startActivity(intent)
         }
 

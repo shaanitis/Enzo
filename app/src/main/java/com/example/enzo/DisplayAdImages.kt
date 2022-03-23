@@ -2,17 +2,20 @@ package com.example.enzo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.enzo.Adapters.ViewPagerImagesAdapter
 import com.google.firebase.firestore.FirebaseFirestore
+import java.lang.Exception
 
 
 class DisplayAdImages : AppCompatActivity() {
     lateinit var displayAdImagesVP:ViewPager
     lateinit var fStore:FirebaseFirestore
     lateinit var allImagesUrl:String
+    lateinit var titleImgUrl:String
     lateinit var imgLinks:ArrayList<String>
 
 
@@ -25,11 +28,18 @@ class DisplayAdImages : AppCompatActivity() {
         fStore= FirebaseFirestore.getInstance()
         imgLinks= arrayListOf()
         allImagesUrl= intent.getStringExtra("allImagesUrl").toString()
-        val idUploader=intent.getStringExtra("idUploader")
-        val adId=intent.getStringExtra("adId")
+        titleImgUrl= intent.getStringExtra("titleImgUrl").toString()
+     try {
+         imgLinks.add(titleImgUrl)
+
+     } catch (e:Exception){
+         Log.e("", e.message.toString())
+     }
 
         var noOfImages: Int=0
-        fStore= FirebaseFirestore.getInstance()
+   try {
+
+
         val docRef= fStore.collection("adAllImages").document(allImagesUrl.toString()).get().addOnSuccessListener {
             if(it.exists()) {
 
@@ -61,6 +71,9 @@ class DisplayAdImages : AppCompatActivity() {
                 }
 
             }
+   }catch (e:Exception){
+       Log.e("", e.message.toString())
+   }
 
         }
 

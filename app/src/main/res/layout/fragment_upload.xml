@@ -52,7 +52,6 @@
             android:id="@+id/adPhoneNo"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-
             android:layout_marginTop="20dp"
             android:hint="Phone No"
             android:imeOptions="actionNext"

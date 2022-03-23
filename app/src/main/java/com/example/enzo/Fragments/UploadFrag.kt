@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -113,62 +114,69 @@ class UploadFrag : Fragment() {
         val adCategory= requireArguments().getString("adCategory")
         var adNo= requireArguments().getString("imgsUrl")
         adUploadBtn.setOnClickListener {
+            if (adLocation.text.toString().isEmpty()) {
+                adLocation.requestFocus()
+                adLocation.setError("Add Location")
+            } else if (adPhoneNo.text.toString().isEmpty()) {
+                adPhoneNo.requestFocus()
+                adPhoneNo.setError("Add Phone No")
+            } else if (imageList.isEmpty()) {
+                Toast.makeText(requireContext(), "Provide additional Images", Toast.LENGTH_SHORT).show()
+            } else {
 
+                hideKeyboard(requireActivity())
+                pD.show()
+                for (i in 0 until imageList.size) {
+                    var imgNAME = UUID.randomUUID().toString()
 
-            pD.show()
-            for (i in 0 until imageList.size) {
-                var imgNAME= UUID.randomUUID().toString()
+                    var uriImg: Uri = imageList.get(i)
+                    var imgFolder: StorageReference =
+                        FirebaseStorage.getInstance().getReference()
+                            .child(requireArguments().getString("imgsUrl").toString())
 
-                var uriImg: Uri= imageList.get(i)
-                var imgFolder: StorageReference =
-                    FirebaseStorage.getInstance().getReference()
-                        .child(requireArguments().getString("imgsUrl").toString())
+                    var imgPath = imgFolder.child("image" + uriImg.lastPathSegment)
 
-                       var imgPath= imgFolder .child("image"+ uriImg.lastPathSegment)
-
-                imgPath.putFile(uriImg).addOnSuccessListener {
+                    imgPath.putFile(uriImg).addOnSuccessListener {
 //////getting download url of image just uploaded
-                       imgPath.downloadUrl.addOnSuccessListener(
+                        imgPath.downloadUrl.addOnSuccessListener(
                             OnSuccessListener<Any?> { downloadUrl ->
 
                                 val url = downloadUrl.toString()
 
 
-
-                                val data= hashMapOf(i.toString() to url)
-                             fStore.collection("adAllImages")
+                                val data = hashMapOf(i.toString() to url)
+                                fStore.collection("adAllImages")
                                     .document(requireArguments().getString("imgsUrl").toString())
                                     .set(data, SetOptions.merge()).addOnSuccessListener {
-                                     pD.hide()
-                                 }
+                                        pD.hide()
+                                    }
 
                             })
 
                     }
-            }
+                }
 
 
-
-        val adModel = AdModel(
-                adTitle,
-                adDetail,
-                adPrice,
-                 adTitleImgUrl,
-                adCategory,
-                userId,
-                adTitle?.toLowerCase(),
-                adAllImages = adNo.toString(),
-                adPhoneNo.text.toString(),
-                adLocation.text.toString()
-            )
+                val adModel = AdModel(
+                    adTitle,
+                    adDetail,
+                    adPrice,
+                    adTitleImgUrl,
+                    adCategory,
+                    userId,
+                    adTitle?.toLowerCase(),
+                    adAllImages = adNo.toString(),
+                    adPhoneNo.text.toString(),
+                    adLocation.text.toString()
+                )
 //////uploading to firestore
-            val dR: DocumentReference = fStore.collection("ads")
-                .document()
+                val dR: DocumentReference = fStore.collection("ads")
+                    .document()
 
-            dR.set(adModel)
+                dR.set(adModel)
 
+            }
         }
-
 
 
 ////navigating back to addFragon onBackPress
@@ -211,4 +219,14 @@ class UploadFrag : Fragment() {
          }
 
 }
+    fun hideKeyboard(activity: Activity) {
+        val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        //Find the currently focused view, so we can grab the correct window token from it.
+        var view: View? = activity.currentFocus
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = View(activity)
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
+    }
 }

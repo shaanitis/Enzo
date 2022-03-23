@@ -121,6 +121,7 @@ class SearchResult : AppCompatActivity() {
                                 var displayAdType:String= qds.getString("adType").toString()
                                 var displayAdUserId:String= qds.getString("adUserId").toString()
                                 var displayAdSearchTitle:String= qds.getString("adSearchTitle").toString()
+                                var allImagesUrl:String= qds.getString("adAllImages").toString()
 
                               list.add(displayAdSearchTitle)
                                if (displayAdSearchTitle.contains(query!!.trim().toLowerCase())){
@@ -132,7 +133,7 @@ class SearchResult : AppCompatActivity() {
                                     adType = displayAdType,
                                     adUserId = displayAdUserId,
                                     adSearchTitle = displayAdSearchTitle,
-                                null,
+                                adAllImages = allImagesUrl,
                                 null,
                                 null))
 
