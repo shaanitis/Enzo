@@ -6,30 +6,34 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.enzo.Adapters.ChattingAdapter
 import com.example.enzo.Models.MessageModel
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.makeramen.roundedimageview.RoundedImageView
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.GlobalScope
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 class ChattingScreen : AppCompatActivity() {
-    lateinit var uploaderImgChatting: CircleImageView
+    lateinit var uploaderImgChatting: RoundedImageView
     lateinit var uploaderNameChatting:TextView
     lateinit var auth: FirebaseAuth
     lateinit var fStore:FirebaseFirestore
     lateinit var msgList: ArrayList<MessageModel>
     lateinit var chatRView: RecyclerView
-    lateinit var sendTextBtn: ImageButton
+    lateinit var sendTextBtn: CardView
     lateinit var chatText: EditText
     lateinit var recieverID:String
-    lateinit var tradeBtn:Button
+    lateinit var tradeBtn:ImageView
     lateinit var idOfUserChatClicked:String
 
 
@@ -50,6 +54,10 @@ class ChattingScreen : AppCompatActivity() {
         tradeBtn=findViewById(R.id.tradeBtn)
 
 /////getting uploader id by same intent from AdView and AllChats activity and displaying it////////
+         val nameOfUserChatClicked=intent.getStringExtra("nameOfUserChatClicked").toString()
+        uploaderNameChatting.text=nameOfUserChatClicked
+        val imgOfUserChatClicked=intent.getStringExtra("imgOfUserChatClicked").toString()
+        Picasso.get().load(imgOfUserChatClicked).into(uploaderImgChatting)
 
         idOfUserChatClicked= intent.getStringExtra("idOfUploaderChatting").toString()
         recieverID= intent.getStringExtra("idOfUploaderChatting").toString()
@@ -89,6 +97,8 @@ class ChattingScreen : AppCompatActivity() {
                         val timeOfText: String= qds.getString("timeOfText").toString()
                         val recieverIde: String= qds.getString("recieverID").toString()
                         val timeStmap: String= qds.getString("timeStamp").toString()
+
+                        chatRView.startLayoutAnimation()
                         msgList.add(MessageModel(userId, msg, timeOfText,recieverIde, timeStmap))
 
                     }
@@ -103,48 +113,59 @@ class ChattingScreen : AppCompatActivity() {
 
 
              chatText= findViewById(R.id.chatText)
-
            var chatTextString:String?=  chatText.text.toString()
-            val currentUserId: String= auth.currentUser?.uid.toString()
 
-            val calendar: Calendar = Calendar.getInstance()
-            val format : SimpleDateFormat = SimpleDateFormat("hh:mm a")
-            val timeOfText: String = format.format(calendar.time)
-            val recieverIde:String= recieverID.toString()
+            if (chatTextString==""){
+                Toast.makeText(this, "Type message first", Toast.LENGTH_SHORT).show()
+            }else {
+                val currentUserId: String = auth.currentUser?.uid.toString()
+
+                val calendar: Calendar = Calendar.getInstance()
+                val format: SimpleDateFormat = SimpleDateFormat("hh:mm a")
+                val timeOfText: String = format.format(calendar.time)
+                val recieverIde: String = recieverID.toString()
 //////creating Time stamp
-            val tsLong = System.currentTimeMillis()
-            val timeStamp = tsLong.toString()
+                val tsLong = System.currentTimeMillis()
+                val timeStamp = tsLong.toString()
 ///making object of model MessageModel and adding values to it
-            val msgModel: MessageModel = MessageModel(currentUserId, chatTextString, timeOfText, recieverIde, timeStamp)
+                val msgModel: MessageModel =
+                    MessageModel(currentUserId, chatTextString, timeOfText, recieverIde, timeStamp)
 
 
 //////displaying current text and uploading message with with firestore
-                     msgList.add(MessageModel(currentUserId, chatText.text.toString(), timeOfText, recieverIde, timeStamp))
-                     chattingAdapter.notifyDataSetChanged()
+                msgList.add(
+                    MessageModel(
+                        currentUserId,
+                        chatText.text.toString(),
+                        timeOfText,
+                        recieverIde,
+                        timeStamp
+                    )
+                )
+                chattingAdapter.notifyDataSetChanged()
 
-            val user = hashMapOf(
-                "idOfUploaderChats" to currentUserId
-            )
-            val zR: DocumentReference = fStore.collection("users")
-                .document(idOfUserChatClicked).collection("idOfUploaderChats").document(currentUserId)
+                val user = hashMapOf(
+                    "idOfUploaderChats" to currentUserId
+                )
+                val zR: DocumentReference = fStore.collection("users")
+                    .document(idOfUserChatClicked).collection("idOfUploaderChats")
+                    .document(currentUserId)
 
-            zR.set(user)
+                zR.set(user)
 
-            val sR: DocumentReference = fStore.collection("chats")
-                .document(currentUserId).collection(senderRoom).document()
+                val sR: DocumentReference = fStore.collection("chats")
+                    .document(currentUserId).collection(senderRoom).document()
 
-            sR.set(msgModel)
+                sR.set(msgModel)
 
-            val rR: DocumentReference = fStore.collection("chats")
-                .document(recieverID.toString()).collection(recieverRoom).document()
+                val rR: DocumentReference = fStore.collection("chats")
+                    .document(recieverID.toString()).collection(recieverRoom).document()
 
-            rR.set(msgModel)
-            chatText.setText("")
-
-
-
+                rR.set(msgModel)
+                chatText.setText("")
 
 
+            }
 
 
 

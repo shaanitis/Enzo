@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/chat" android:state_checked="false"/>
-    <item android:drawable="@drawable/chatselected" android:state_checked="true"/>
+    <item android:state_checked="true">
+        <bitmap android:src="@drawable/chatselected" android:tint="#ff6600"/>
+    </item>
 </selector>

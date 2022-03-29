@@ -9,7 +9,14 @@
         android:id="@+id/homeFrag"
         android:name="com.example.enzo.Fragments.HomeFrag"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFrag_to_viewCategoryAds"
+            app:destination="@id/viewCategoryAds" />
+        <action
+            android:id="@+id/action_homeFrag_to_profileFrag2"
+            app:destination="@id/profileFrag" />
+    </fragment>
     <fragment
         android:id="@+id/chatFrag"
         android:name="com.example.enzo.Fragments.ChatFrag"
@@ -48,6 +55,9 @@
         <action
             android:id="@+id/action_profileFrag_to_homeFrag"
             app:destination="@id/homeFrag" />
+        <action
+            android:id="@+id/action_profileFrag_to_myAdsFrag"
+            app:destination="@id/myAdsFrag" />
     </fragment>
     <fragment
         android:id="@+id/addFrag"
@@ -80,6 +90,24 @@
         <argument
             android:name="adDetail"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/myAdsFrag"
+        android:name="com.example.enzo.Fragments.MyAdsFrag"
+        android:label="fragment_my_ads"
+        tools:layout="@layout/fragment_my_ads" >
+        <action
+            android:id="@+id/action_myAdsFrag_to_profileFrag"
+            app:destination="@id/profileFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewCategoryAds"
+        android:name="com.example.enzo.Fragments.ViewCategoryAds"
+        android:label="fragment_view_category_ads"
+        tools:layout="@layout/fragment_view_category_ads" >
+        <action
+            android:id="@+id/action_viewCategoryAds_to_homeFrag"
+            app:destination="@id/homeFrag" />
     </fragment>
 
 </navigation>

@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.Enzo" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorPrimary">@color/orange_main</item>
+        <item name="colorPrimaryVariant">@color/orange_200</item>
         <item name="colorOnPrimary">@color/white</item>
 
 
@@ -17,7 +17,7 @@
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.NavBar" parent="Theme.MaterialComponents.DayNight.DarkActionBar"/>
-    <style name="AppTheme.SearhView" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
+
 
     <style name="MaterialSearchViewStyle">
         <!-- Background for the search bar -->
@@ -42,7 +42,7 @@
         <item name="android:textColor">@color/black</item>
 
         <!-- Change hint text color for edit text -->
-        <item name="android:textColorHint">#4B4949</item>
+        <item name="android:textColorHint">#8C8686</item>
 
         <!-- Hint for edit text -->
         <item name="android:hint">@string/hint</item>

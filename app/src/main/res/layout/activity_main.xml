@@ -15,8 +15,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/my_menu"
-        app:itemIconSize="30sp"
-        android:theme="@style/AppTheme.NavBar"
+        app:itemTextColor="#ff6600"
+        app:itemRippleColor="@color/orange_200"
+        android:background="#FBF6F7"
+        app:elevation="40dp"
+        app:itemIconTint="@color/navbar_icons_color"
+        app:itemIconSize="28sp"
+
 
         />
 

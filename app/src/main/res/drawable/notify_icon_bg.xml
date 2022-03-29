@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/bell" android:state_checked="false"/>
-    <item android:drawable="@drawable/bellselected" android:state_checked="true"/>
+    <item android:drawable="@drawable/save_border" android:state_checked="false"/>
+    <item android:state_checked="true">
+        <bitmap android:src="@drawable/save" android:tint="#ff6600"/>
+    </item>
 </selector>

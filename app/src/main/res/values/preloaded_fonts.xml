@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
-        <item>@font/</item>
         <item>@font/aclonica</item>
         <item>@font/acme</item>
         <item>@font/fascinate_inline</item>
+        <item>@font/headland_one</item>
+        <item>@font/heebo_thin</item>
         <item>@font/nothing_you_could_do</item>
     </array>
 </resources>

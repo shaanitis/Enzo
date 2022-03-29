@@ -1,9 +1,12 @@
 package com.example.enzo
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.example.enzo.Models.MessageModel
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +26,6 @@ class BuyerActivity : AppCompatActivity() {
         val paymentDoneBtn:Button=findViewById(R.id.paymentDoneBtn)
         val confirmBuyerBtn:Button=findViewById(R.id.confirmBuyerBtn)
         val askInfoAgainBtn:Button=findViewById(R.id.askInfoAgainBtn)
-
         ///rev btns
         val revBtnsLayout:LinearLayout=findViewById(R.id.revBtnsLayout)
         val rev1Btn:Button=findViewById(R.id.rev1Btn)

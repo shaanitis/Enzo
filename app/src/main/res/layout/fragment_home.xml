@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="60dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.HomeFrag">
     <de.hdodenhof.circleimageview.CircleImageView
@@ -34,107 +35,88 @@
         app:layout_constraintTop_toBottomOf="@+id/textDiscover"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="26dp"
-        android:textColor="#BE1948"
+        android:textColor="#ff6600"
         android:text="Accounts you desire!"
         android:textSize="32sp"
         android:textStyle="bold"
         android:fontFamily="@font/acme"/>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.cardview.widget.CardView
         android:id="@+id/searchBarHome"
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:drawableLeft="@drawable/search_icon_black"
-        android:paddingLeft="20dp"
-        android:text="    Search Accounts"
-        android:fontFamily="@font/acme"
-        android:textSize="18sp"
-        android:textColor="#AEABAB"
-        android:textAllCaps="false"
-        android:textAlignment="viewStart"
         android:background="@drawable/search_bar_checked"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:cardElevation="5dp"
+        android:transitionName="searchBarHomeTrans"
+        app:cardCornerRadius="15dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textAccountDesire"
-       />
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/searchBarHome"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginTop="5dp"
-            android:fillViewport="true"
-            android:measureAllChildren="false"
-            android:scrollbars="none">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@+id/searchBarHome"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-
-                >
-        <Button
-            android:layout_width="60dp"
-            android:layout_height="50dp"
-            android:text="All"
-            android:backgroundTint="#BE1948"
-            android:textAllCaps="false"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:backgroundTint="#E1EAEF"
-            android:textColor="#929090"
-            android:textAllCaps="false"
-            android:text="Social Media"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:backgroundTint="#E1EAEF"
-            android:textColor="#929090"
-            android:textAllCaps="false"
-            android:text="Gaming"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:backgroundTint="#E1EAEF"
-            android:textColor="#929090"
-            android:textAllCaps="false"
-            android:text="Other"/>
-            </LinearLayout>
-        </HorizontalScrollView>
+       >
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="9dp"
+            android:src="@drawable/search_icon_black"/>
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="25dp"
+            android:text="Search Accounts.."
+            android:layout_marginStart="45dp"
+            android:fontFamily="@font/arimo"
+            android:textSize="18sp"
+            android:textColor="#8C8686"
+            android:layout_gravity="center_vertical"/>
+    </androidx.cardview.widget.CardView>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/homeRView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchBarHome"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="300dp"
-        android:layout_marginStart="26dp"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"/>
+
+ <TextView
+     android:id="@+id/categoriesTitleText"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginTop="7dp"
+     android:text="Ads Related To:"
+     android:textStyle="bold"
+     android:layout_marginStart="15dp"
+     android:fontFamily="@font/arimo"
+     android:textColor="@color/black"
+     android:textSize="22sp"
+     app:layout_constraintTop_toBottomOf="@id/homeRView"
+     app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+     android:id="@+id/homeCategoryRV"
+     app:layout_constraintLeft_toLeftOf="parent"
+     app:layout_constraintRight_toRightOf="parent"
+     android:layout_marginStart="12dp"
+     android:layout_marginEnd="5dp"
+     android:layout_width="match_parent"
+     app:layout_constraintTop_toBottomOf="@+id/categoriesTitleText"
+     android:layout_marginTop="7dp"
+     android:orientation="horizontal"
+     android:layout_height="140dp"/>
     <com.facebook.shimmer.ShimmerFrameLayout
 
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:id="@+id/shimmerHomeAds"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchBarHome"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="300dp"
-        android:layout_marginStart="26dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -151,7 +133,6 @@
 
 
     </com.facebook.shimmer.ShimmerFrameLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

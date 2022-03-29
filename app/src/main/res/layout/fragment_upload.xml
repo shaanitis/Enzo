@@ -5,15 +5,54 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.UploadFrag">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/chatTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:backgroundTint="@color/orange_200"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/chatTitleText"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:text="Upload Ad"
+                android:fontFamily="@font/arimo"
+                android:textStyle="bold"
+                android:layout_marginStart="15dp"
+                android:textSize="22sp"
+                android:textColor="@color/white"
 
+                />
+            <ImageView
+                app:layout_constraintRight_toLeftOf="@+id/chatTitleText"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/uploadfragicon"
+                app:tint="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/adLocationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:startIconDrawable="@drawable/location_icon"
-        app:startIconTint="@color/purple_200"
-        app:boxStrokeColor="@color/purple_200"
-      app:layout_constraintTop_toTopOf="parent"
+        app:startIconTint="@color/orange_main"
+        app:boxStrokeColor="@color/orange_200"
+      app:layout_constraintTop_toBottomOf="@+id/chatTitle"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -40,8 +79,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:startIconDrawable="@drawable/phone_icon"
-        app:startIconTint="@color/purple_200"
-        app:boxStrokeColor="@color/purple_200"
+        app:startIconTint="@color/orange_main"
+        app:boxStrokeColor="@color/orange_200"
         app:layout_constraintTop_toBottomOf="@+id/adLocationLayout"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
@@ -74,19 +113,28 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="15dp">
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@color/teal_200"/>
+            android:id="@+id/uploadedImgView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/multiple_image"/>
         <TextView
             android:id="@+id/noOfImages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Additional Images"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textStyle="bold"
+            android:maxHeight="45dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginEnd="10dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:maxWidth="250dp"
+            android:fontFamily="@font/arimo"
             android:layout_gravity="center"
-            android:textSize="26sp"
-            android:fontFamily="@font/acme"/>
+            android:textSize="18sp" />
 
     </androidx.cardview.widget.CardView>
 
@@ -95,7 +143,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/adDetailImgs"
+       app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="10dp"
         app:cornerRadius="15dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

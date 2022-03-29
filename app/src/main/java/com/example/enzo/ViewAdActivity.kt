@@ -3,10 +3,7 @@ package com.example.enzo
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.withStyledAttributes
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
@@ -26,6 +23,7 @@ class ViewAdActivity : AppCompatActivity() {
     lateinit var adViewPrice: TextView
     lateinit var adViewDetail: TextView
     lateinit var chatWithUploaderBtn:Button
+    lateinit var saveAdBtn:ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +38,7 @@ class ViewAdActivity : AppCompatActivity() {
         imageOfUploader= findViewById(R.id.imageOfUploader)
         nameOfUploader= findViewById(R.id.nameOfUploader)
         chatWithUploaderBtn=findViewById(R.id.chatWithUploaderBtn)
+        saveAdBtn=findViewById(R.id.saveAdBtn)
 
         auth= FirebaseAuth.getInstance()
         fStore= FirebaseFirestore.getInstance()
@@ -72,6 +71,14 @@ class ViewAdActivity : AppCompatActivity() {
             intent.putExtra("allImagesUrl", allImagesUrl)
             intent.putExtra("titleImgUrl", imageUrl)
             startActivity(intent)
+        }
+        saveAdBtn.setOnClickListener {
+            Toast.makeText(this, "Ad saved to your list", Toast.LENGTH_SHORT).show()
+            saveAdBtn.setImageResource(R.drawable.hearticon)
+            val strRef: DocumentReference = fStore.collection("savedAds").document(adId.toString())
+            val hash = hashMapOf("userId" to auth.currentUser?.uid.toString())
+            strRef.set(hash)
+
         }
 ////////////////getting user info from firestore by help of user id/////////
         fStore.collection("users").document(idOfUploader.toString()).get().addOnSuccessListener {

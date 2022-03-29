@@ -2,6 +2,7 @@ package com.example.enzo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.transition.ChangeBounds
 import android.util.Log
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
@@ -25,8 +26,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val navBar: BottomNavigationView = findViewById(R.id.navBar)
-
-        navBar.setItemIconTintList(null);
+        
 
         val navController = findNavController(R.id.fragmentHost)
         val appBarConfiguration = AppBarConfiguration(

@@ -1,128 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.AddFrag"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".Fragments.AddFrag">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/chatTitle"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:backgroundTint="@color/orange_200"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/chatTitleText"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/arimo"
+                android:text="Add Details"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/adfragicon"
+                app:layout_constraintRight_toLeftOf="@+id/chatTitleText"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/adTitleImg"
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        app:cardCornerRadius="40dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="15dp"
-        app:cardCornerRadius="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="15dp">
+        app:layout_constraintTop_toBottomOf="@+id/chatTitle">
+
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@color/teal_200"/>
+            android:id="@+id/uploadedImgView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/single_image"/>
+
         <TextView
+            android:id="@+id/addTitleImgText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add title Image"
-            android:textColor="@color/white"
-            android:textStyle="bold"
+            android:maxHeight="45dp"
             android:layout_gravity="center"
-            android:textSize="26sp"
-            android:fontFamily="@font/acme"/>
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="10dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:maxWidth="250dp"
+            android:fontFamily="@font/arimo"
+            android:text="Add title Image"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </androidx.cardview.widget.CardView>
 
 
-<com.google.android.material.textfield.TextInputLayout
-    android:id="@+id/adTitleLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:startIconDrawable="@drawable/titleicon"
-    app:startIconTint="@color/purple_200"
-    app:boxStrokeColor="@color/purple_200"
-    app:layout_constraintTop_toBottomOf="@+id/adTitleImg"
-    android:layout_marginTop="20dp"
-    android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"
-    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-    >
-    <EditText
-        android:id="@+id/adTitle"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        app:layout_constraintTop_toBottomOf="@+id/adTitleImg"
-        android:layout_marginTop="10dp"
-        android:hint="Ad Title"
-        android:imeOptions="actionNext"
-        android:inputType="text"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-       />
-
-</com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/adPriceLayout"
+        android:id="@+id/adTitleLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:startIconDrawable="@drawable/priceicon"
-        app:startIconTint="@color/purple_200"
-       app:boxStrokeColor="@color/purple_200"
-        app:layout_constraintTop_toBottomOf="@+id/adTitleLayout"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
+        app:boxStrokeColor="@color/orange_200"
+        app:layout_constraintTop_toBottomOf="@+id/adTitleImg"
+        app:startIconDrawable="@drawable/titleicon"
+        app:startIconTint="@color/orange_main">
+
+        <EditText
+            android:id="@+id/adTitle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:hint="Ad Title"
+            android:imeOptions="actionNext"
+            android:inputType="textCapWords"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/adTitleImg" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/adPriceLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        app:boxStrokeColor="@color/orange_200"
+        app:layout_constraintTop_toBottomOf="@+id/adTitleLayout"
+        app:startIconDrawable="@drawable/priceicon"
+        app:startIconTint="@color/orange_main">
+
         <EditText
             android:id="@+id/adPrice"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentTop="true"
-
             android:layout_marginTop="10dp"
             android:hint="Ad Price"
             android:imeOptions="actionNext"
-            android:inputType="number"
+            android:inputType="numberSigned"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            />
+            app:layout_constraintRight_toRightOf="parent" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-    android:id="@+id/adDetailLayout"
+        android:id="@+id/adDetailLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:startIconDrawable="@drawable/detailicon"
-        app:startIconTint="@color/purple_200"
-        app:boxStrokeColor="@color/purple_200"
-        app:layout_constraintTop_toBottomOf="@+id/adPriceLayout"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        >
-    <EditText
-        android:id="@+id/adDetail"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
         android:layout_marginTop="20dp"
-        android:hint="Ad Detail"
-        android:imeOptions="actionNext"
-        android:inputType="text"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
+        android:layout_marginEnd="20dp"
+        app:boxStrokeColor="@color/orange_200"
+        app:layout_constraintTop_toBottomOf="@+id/adPriceLayout"
+        app:startIconDrawable="@drawable/detailicon"
+        app:startIconTint="@color/orange_main">
 
-
+        <EditText
+            android:id="@+id/adDetail"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
+            android:hint="Ad Detail"
+            android:imeOptions="actionNext"
+            android:inputType="textMultiLine"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -131,21 +179,34 @@
         android:id="@+id/nextBtn"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/adDetailLayout"
-        app:cornerRadius="30dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/acme"
         android:text="Next"
         android:textAllCaps="false"
-        android:textSize="18sp"
         android:textColor="@color/white"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:fontFamily="@font/acme"
-        />
+        app:cornerRadius="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineLeft"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-</ScrollView>

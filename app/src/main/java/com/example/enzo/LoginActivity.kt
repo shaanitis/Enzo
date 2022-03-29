@@ -193,7 +193,7 @@ public class LoginActivity : AppCompatActivity() {
                     val LoginModel= LoginModel(profileName = user!!.displayName .toString(), profileUrl = user?.photoUrl.toString())
                         val documentReference: DocumentReference= fStore.collection("users").document(userId.toString())
                     documentReference.set(LoginModel).addOnSuccessListener {
-                        Toast.makeText(this, "Successfully Registered", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Welcome "+ user!!.displayName , Toast.LENGTH_SHORT).show()
                     }
                     val intent = Intent(applicationContext, MainActivity::class.java)
                     startActivity(intent)
@@ -230,10 +230,10 @@ public class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    Toast.makeText(baseContext, "Successfully registered",
-                        Toast.LENGTH_SHORT).show()
-                    val user = auth.currentUser
 
+                    val user = auth.currentUser
+                    Toast.makeText(baseContext, "Welcome "+ user!!.displayName,
+                        Toast.LENGTH_SHORT).show()
 
                     ///////////adding user to firstore/////////
                     val userId= auth.currentUser?.uid
@@ -260,6 +260,9 @@ public class LoginActivity : AppCompatActivity() {
             }
     }
 
-
+    override fun onBackPressed() {
+        finishAffinity()
+        super.onBackPressed()
+    }
 
 }

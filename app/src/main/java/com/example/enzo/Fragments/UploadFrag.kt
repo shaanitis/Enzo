@@ -14,10 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
@@ -25,6 +22,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.enzo.Models.AdModel
 import com.example.enzo.R
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -45,6 +43,7 @@ class UploadFrag : Fragment() {
     lateinit var adPhoneNo:EditText
     lateinit var adDetailImages: CardView
     lateinit var noOfImages: TextView
+    lateinit var uploadedImg:ImageView
     lateinit var imageList:ArrayList<Uri>
     lateinit var auth: FirebaseAuth
     lateinit var storageReference: StorageReference
@@ -60,11 +59,13 @@ class UploadFrag : Fragment() {
     ): View? {
 
         val view= inflater.inflate(R.layout.fragment_upload, container, false)
-
+        val navBar: BottomNavigationView = requireActivity().findViewById(R.id.navBar)
+        navBar.visibility=View.GONE
         auth= FirebaseAuth.getInstance()
         fStore= FirebaseFirestore.getInstance()
         storageReference= FirebaseStorage.getInstance().getReference()
         adLocation=view.findViewById(R.id.adLocation)
+        uploadedImg=view.findViewById(R.id.uploadedImgView)
         noOfImages=view.findViewById(R.id.noOfImages)
         adUploadBtn=view.findViewById(R.id.adUploadBtn)
         adPhoneNo=view.findViewById(R.id.adPhoneNo)
@@ -209,11 +210,14 @@ class UploadFrag : Fragment() {
 
                    var imageUri: Uri = clip.getItemAt(i).uri
                     imageList.add(imageUri)
+                    uploadedImg.setImageURI(imageUri)
+
 
 
 
             }
-                noOfImages.text = "You have selected ${imageList.size} images"
+                noOfImages.text = " ${imageList.size} images attached."
+
 
             }
          }

@@ -1,19 +1,27 @@
 package com.example.enzo.Fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.enzo.Adapters.AllChatsAdapter
+import com.example.enzo.ChattingScreen
 import com.example.enzo.Models.AllChatsModel
+import com.example.enzo.OnClickRV.UserChatOnClick
 import com.example.enzo.R
+import com.example.enzo.ViewAdActivity
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -22,12 +30,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 
-class ChatFrag : Fragment() {
+class ChatFrag : Fragment(), UserChatOnClick {
     lateinit var fStore: FirebaseFirestore
     lateinit var auth:FirebaseAuth
     lateinit var db:FirebaseDatabase
     lateinit  var allChatsRV: RecyclerView
     lateinit var allChatsList: ArrayList<AllChatsModel>
+    lateinit var shimmerUserChat:ShimmerFrameLayout
 
 lateinit var testText: TextView
     override fun onCreateView(
@@ -40,7 +49,7 @@ lateinit var testText: TextView
       auth= FirebaseAuth.getInstance()
         fStore= FirebaseFirestore.getInstance()
         db= FirebaseDatabase.getInstance()
-
+shimmerUserChat=view.findViewById(R.id.shimmerUserChat)
 
         allChatsRV= view.findViewById(R.id.allChatsRV)
         allChatsList= arrayListOf<AllChatsModel>()
@@ -50,7 +59,7 @@ lateinit var testText: TextView
         allChatsRV.setHasFixedSize(true)
 
 
-        val allChatsAdapter: AllChatsAdapter = AllChatsAdapter(requireContext(), allChatsList)
+        val allChatsAdapter: AllChatsAdapter = AllChatsAdapter(requireContext(), allChatsList, this)
         allChatsRV.adapter=allChatsAdapter
 
         allChatsList.clear()
@@ -77,7 +86,7 @@ for (i in idsOfChats) {
     val documentReference: DocumentReference= fStore.collection("users").document(i)
         documentReference.get()
         .addOnSuccessListener{
-
+                     allChatsRV.startLayoutAnimation()
                     var nameOfUserChatclicked:String= it.getString("profileName").toString()
                     var imgUrlOfUserChatClicked:String= it.getString("profileUrl").toString()
                     var idOfUserChatClicked:String=it.id
@@ -85,6 +94,10 @@ for (i in idsOfChats) {
                     allChatsList.add(AllChatsModel(nameOfUserChatclicked, imgUrlOfUserChatClicked,lastMsg, idOfUserChatClicked))
 
             allChatsAdapter.notifyDataSetChanged()
+            shimmerUserChat.stopShimmer()
+            shimmerUserChat.hideShimmer()
+            shimmerUserChat.visibility=View.GONE
+
                 }
 
             }
@@ -143,6 +156,23 @@ for (i in idsOfChats) {
 
         return view
     }
+    override fun onAdItemClick(pos: Int, userName:TextView, userImg: ImageView ) {
+        val intent= Intent(requireContext(), ChattingScreen::class.java)
+        intent.putExtra("idOfUploaderChatting", allChatsList[pos].idOfUserChatClicked)
+        intent.putExtra("imgOfUserChatClicked", allChatsList[pos].imgOfUserChatClicked)
+        intent.putExtra("nameOfUserChatClicked", allChatsList[pos].nameOfUserChatClicked)
 
+
+        val p1: Pair<View, String>
+        p1= Pair(userName, "userChatNameTrans")
+
+        val p2: Pair<View, String>
+        p2= Pair(userImg, "userChatImgTrans")
+
+        val extras= ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(),p1, p2)
+        startActivity(intent, extras.toBundle())
+
+        super.onAdItemClick(pos,userName, userImg)
+    }
 
 }

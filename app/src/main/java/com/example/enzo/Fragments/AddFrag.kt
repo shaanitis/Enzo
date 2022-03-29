@@ -25,6 +25,7 @@ import com.example.enzo.Models.AdModel
 import com.example.enzo.R
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -53,7 +54,8 @@ class AddFrag : Fragment() {
     lateinit var adPrice: EditText
     lateinit var adTitleImg: CardView
     lateinit var nextBtn: Button
-
+    lateinit var adTitleImgText:TextView
+ lateinit var uploadedImgView:ImageView
     lateinit var category: String
     lateinit var userId: String
 
@@ -67,10 +69,14 @@ class AddFrag : Fragment() {
     ): android.view.View? {
         val view: android.view.View = inflater.inflate(R.layout.fragment_add, container, false)
 ///initializing
+        val navBar:BottomNavigationView= requireActivity().findViewById(R.id.navBar)
+        navBar.visibility=View.GONE
         auth = FirebaseAuth.getInstance()
         fStore = FirebaseFirestore.getInstance()
         storageReference = FirebaseStorage.getInstance().getReference()
         db = FirebaseDatabase.getInstance().getReference()
+        uploadedImgView=view.findViewById(R.id.uploadedImgView)
+        adTitleImgText=view.findViewById(R.id.addTitleImgText)
         adTitle = view.findViewById(R.id.adTitle)
         adDetail = view.findViewById(R.id.adDetail)
         adPrice = view.findViewById(R.id.adPrice)
@@ -84,13 +90,12 @@ class AddFrag : Fragment() {
 
 
         try {
-            val arg = this.arguments
-            category = arg?.get("category").toString()
+            /*val arg = this.arguments*/
+            category = requireArguments().getString("adCategory").toString()
 
         } catch (e: Exception) {
             Log.e("", "")
         }
-
         pD.setTitle("Please Wait")
         pD.setMessage("Adding your Image and Info")
         pD.setCancelable(false)
@@ -130,13 +135,15 @@ class AddFrag : Fragment() {
             } else if (adPrice.text.toString().isEmpty()) {
                 adPrice.requestFocus()
                 adPrice.setError("Add Price")
-            } else {
+            }
+            else {
                 adDetail.clearFocus()
                 adPrice.clearFocus()
                 adTitle.clearFocus()
 
-                pD.show()
                 hideKeyboard(requireActivity())
+                pD.show()
+
 
                 var adNo = UUID.randomUUID().toString()
 
@@ -144,7 +151,7 @@ class AddFrag : Fragment() {
                     FirebaseStorage.getInstance().getReference("images/" + imageName)
 
                 storageReference
-                    .putFile(imageUri).addOnSuccessListener {
+                    .putFile(imageUri!!).addOnSuccessListener {
 //////getting download url of image just uploaded
                         storageReference?.downloadUrl?.addOnSuccessListener(
                             OnSuccessListener<Any?> { downloadUrl ->
@@ -194,6 +201,8 @@ class AddFrag : Fragment() {
 
 
         imageUri = data.data!!
+        uploadedImgView.setImageURI(imageUri)
+        adTitleImgText.text="Added Title Image."
 
 
     }
