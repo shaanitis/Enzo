@@ -14,6 +14,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class ViewCategoryAds : Fragment(), ViewCategoryRVOnClick {
@@ -41,6 +45,7 @@ class ViewCategoryAds : Fragment(), ViewCategoryRVOnClick {
     lateinit var categoryTitleIcon:ImageView
     lateinit var searchBar:CardView
     lateinit var viewCategoryAdIocn:ImageView
+   lateinit var categoryAdsRVAdapter:ViewCategoryAdsAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,69 +75,37 @@ class ViewCategoryAds : Fragment(), ViewCategoryRVOnClick {
                 categoryAdsRV.layoutManager = LinearLayoutManager(requireContext())
                 categoryAdsRV.setHasFixedSize(true)
 
-                val categoryAdsRVAdapter =
-                    ViewCategoryAdsAdapter(requireContext(), adList, adIds, this)
+                categoryAdsRVAdapter = ViewCategoryAdsAdapter(requireContext(), adList, adIds, this)
                 categoryAdsRV.adapter = categoryAdsRVAdapter
 
                 adList.clear()
 
 
+                  gettingAds(category)
 
-                fStore.collection("ads")
-                    .whereEqualTo("adType", category)
-                    .get().addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                        override fun onSuccess(querySnapshot: QuerySnapshot?) {
-                            for (qds: QueryDocumentSnapshot in querySnapshot!!) {
-
-                                val adId: String = qds.id.toString()
-                                val displayAdTitle: String = qds.getString("adTitle").toString()
-                                var displayAdPrice: String = qds.getString("adPrice").toString()
-                                var displayAdImage: String = qds.getString("adImageUrl").toString()
-                                var displayAdDetail: String = qds.getString("adDetail").toString()
-                                var displayAdType: String = qds.getString("adType").toString()
-                                var displayAdUserId: String = qds.getString("adUserId").toString()
-                                var displayAdSearchTitle: String =
-                                    qds.getString("adSearchTitle").toString()
-                                var allImagesUrl: String = qds.getString("adAllImages").toString()
-                                var adPhoneNo: String = qds.getString("adPhoneNo").toString()
-                                var adLocation: String = qds.getString("adLocation").toString()
-
-                                categoryAdsRV.startLayoutAnimation()
-                                adIds.add(adId)
-                                adList.add(
-                                    AdModel(
-                                        adTitle = displayAdTitle,
-                                        adDetail = displayAdDetail,
-                                        adPrice = displayAdPrice,
-                                        adImageUrl = displayAdImage,
-                                        adType = displayAdType,
-                                        adUserId = displayAdUserId,
-                                        adSearchTitle = displayAdSearchTitle,
-                                        adAllImages = allImagesUrl,
-                                        adPhoneNo,
-                                        adLocation
-                                    )
-                                )
-                                categoryAdsRVAdapter.notifyDataSetChanged()
-
-                            }
-                        }
-                    })
+            callCategoryIcons(category)
 
                 searchBar.setOnClickListener {
                     /////shared element transition
+                try {
+
+
                     val p1: Pair<View, String>
-                    p1= Pair(searchBar, "searchBarHomeTrans")
-                    val extras= ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), p1)
+                    p1 = Pair(searchBar, "searchBarHomeTrans")
+                    val extras =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), p1)
 
                     val intent = Intent(requireContext(), SearchResult::class.java)
                     startActivity(intent, extras.toBundle())
+                }catch (e:Exception){
+                    Log.d("err","")
+                }
               /*      requireActivity().overridePendingTransition(0, 0);*/
 
                 }
 
 
-            callCategoryIcons(category)
+
 
         }catch (e:Exception){
             Log.d("", "")
@@ -151,6 +124,64 @@ class ViewCategoryAds : Fragment(), ViewCategoryRVOnClick {
 
 
         return view
+    }
+
+    private fun gettingAds(category: String?) {
+
+      lifecycleScope.async (Dispatchers.IO) {
+
+
+          val job=async {
+              try {
+
+
+                  fStore.collection("ads")
+                      .whereEqualTo("adType", category)
+                      .get().addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
+                          override fun onSuccess(querySnapshot: QuerySnapshot?) {
+                              for (qds: QueryDocumentSnapshot in querySnapshot!!) {
+
+                                  val adId: String = qds.id.toString()
+                                  val displayAdTitle: String = qds.getString("adTitle").toString()
+                                  var displayAdPrice: String = qds.getString("adPrice").toString()
+                                  var displayAdImage: String =
+                                      qds.getString("adImageUrl").toString()
+                                  var displayAdDetail: String = qds.getString("adDetail").toString()
+                                  var displayAdType: String = qds.getString("adType").toString()
+                                  var displayAdUserId: String = qds.getString("adUserId").toString()
+                                  var displayAdSearchTitle: String =
+                                      qds.getString("adSearchTitle").toString()
+                                  var allImagesUrl: String = qds.getString("adAllImages").toString()
+                                  var adPhoneNo: String = qds.getString("adPhoneNo").toString()
+                                  var adLocation: String = qds.getString("adLocation").toString()
+
+
+                                  adIds.add(adId)
+                                  adList.add(
+                                      AdModel(
+                                          adTitle = displayAdTitle,
+                                          adDetail = displayAdDetail,
+                                          adPrice = displayAdPrice,
+                                          adImageUrl = displayAdImage,
+                                          adType = displayAdType,
+                                          adUserId = displayAdUserId,
+                                          adSearchTitle = displayAdSearchTitle,
+                                          adAllImages = allImagesUrl,
+                                          adPhoneNo,
+                                          adLocation
+                                      )
+                                  )
+                                  categoryAdsRV.startLayoutAnimation()
+                                  categoryAdsRVAdapter.notifyDataSetChanged()
+
+                              }
+                          }
+                      })
+              } catch (e: Exception) {
+                  Log.d("err", "")
+              }
+          }.await()
+      }
     }
 
     private fun callCategoryIcons(category: String?) {

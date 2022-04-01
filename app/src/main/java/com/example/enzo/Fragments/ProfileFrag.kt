@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -21,6 +22,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 
@@ -52,48 +58,52 @@ class ProfileFrag : Fragment() {
         ////////////getting user id of current user from auth
 
 //////getting detail of current user from firestore
-        val documentReference: DocumentReference= fStore.collection("users")
-            .document(auth.currentUser?.uid.toString())
-        documentReference.get().addOnSuccessListener {
-          try {
-              profileName.text= it.getString("profileName")
-              val picUrl:String= it.getString("profileUrl").toString()
-              Glide.with(requireContext()).load(picUrl).placeholder(R.drawable.ic_person).into(profilePic)
-          }  catch (e:Exception){
-              Log.e("error", e.message.toString())
-          }
-        }
+        showUserProfile()
+
 ///////////logging out
         logoutView.setOnClickListener {
-            Firebase.auth.signOut()
-            LoginManager.getInstance().logOut()
-            val intent=Intent(requireContext(), LoginActivity::class.java)
-            startActivity(intent)
+
+           try {
+
+               Firebase.auth.signOut()
+               LoginManager.getInstance().logOut()
+               val intent = Intent(requireContext(), LoginActivity::class.java)
+               startActivity(intent)
+           }catch (e:Exception){
+               Log.d("","")
+           }
         }
         myAdsBtn.setOnClickListener {
 
-            val extras:FragmentNavigator.Extras= FragmentNavigator.Extras.Builder()
-                .addSharedElement(myAdsBtn, "myAds")
-                .build()
-            findNavController().navigate(R.id.action_profileFrag_to_myAdsFrag
-            , null
-            ,null
-            ,extras)
+          try {
 
+
+              val extras: FragmentNavigator.Extras = FragmentNavigator.Extras.Builder()
+                  .addSharedElement(myAdsBtn, "myAds")
+                  .build()
+              findNavController().navigate(
+                  R.id.action_profileFrag_to_myAdsFrag, null, null, extras
+              )
+          }catch (e:Exception){
+              Log.d("","")
+          }
         }
 
 
+try {
 
 
-        val callback=object : OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.action_profileFrag_to_homeFrag)
-            }
-
+    val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            findNavController().navigate(R.id.action_profileFrag_to_homeFrag)
         }
-        requireActivity().onBackPressedDispatcher.addCallback(callback)
 
+    }
+    requireActivity().onBackPressedDispatcher.addCallback(callback)
 
+}catch (e:Exception){
+    Log.d("","")
+}
 
 
 
@@ -102,6 +112,31 @@ class ProfileFrag : Fragment() {
 
         return view
     }//on craete
+
+    private fun showUserProfile() {
+
+        try {
+       lifecycleScope.async(Dispatchers.IO) {
+
+           val job=async {
+            val documentReference: DocumentReference = fStore.collection("users")
+                .document(auth.currentUser?.uid.toString())
+            documentReference.get().addOnSuccessListener {
+
+
+                profileName.text = it.getString("profileName")
+                val picUrl: String = it.getString("profileUrl").toString()
+                Picasso.get().load(picUrl).placeholder(R.drawable.ic_person)
+                    .into(profilePic)
+
+
+            }
+            }
+        }
+        } catch (e: Exception) {
+            Log.e("error", e.message.toString())
+        }
+    }
 
 
 }//main

@@ -20,7 +20,7 @@
         android:background="#FBF6F7"
         app:elevation="40dp"
         app:itemIconTint="@color/navbar_icons_color"
-        app:itemIconSize="28sp"
+        app:itemIconSize="25sp"
 
 
         />

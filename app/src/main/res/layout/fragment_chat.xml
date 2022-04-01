@@ -52,7 +52,6 @@
         app:layout_constraintTop_toBottomOf="@id/chatTitle"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="55dp"
-        android:layoutAnimation="@anim/recycler_view_layout_anim"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
 

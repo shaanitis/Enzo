@@ -88,7 +88,6 @@
         app:layout_constraintBottom_toTopOf="@id/sendTextCardView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layoutAnimation="@anim/chat_msgs_rv_layout_anim"
         >
 
     </androidx.recyclerview.widget.RecyclerView>

@@ -16,6 +16,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +35,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.*
 import java.lang.Exception
+import kotlin.coroutines.suspendCoroutine
 
 
 class HomeFrag : Fragment(), HomeRVOnClick {
@@ -105,81 +109,29 @@ try {
         recyclerView.layoutManager= LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
 
-/////setting user profile pic to dashboard pic
-try {
 
-    fStore.collection("users").document(auth.currentUser!!.uid.toString()).get()
-        .addOnSuccessListener {
-            val picUrl: String = it.getString("profileUrl").toString()
-            Glide.with(requireContext()).load(picUrl).placeholder(R.drawable.blankuser)
-                .into(profilePicHomeFrag)
-        }
-}catch (e:Exception){
-    Log.e("","")
-}
-profilePicHomeFrag.setOnClickListener {
-    findNavController().navigate(R.id.action_homeFrag_to_profileFrag2)
-}
-///////////getting all ads displayed in recycler view///////////
-    try {
-
-
-        fStore.collection("ads")
-            .get()
-            .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                override fun onSuccess(qs: QuerySnapshot?) {
-
-                    for (qds: QueryDocumentSnapshot in qs!!) {
-                        var adsId: String = qds.id.toString()
-                        var displayAdTitle: String = qds.getString("adTitle").toString()
-                        var displayAdPrice: String = qds.getString("adPrice").toString()
-                        var displayAdImage: String = qds.getString("adImageUrl").toString()
-                        var displayAdDetail: String = qds.getString("adDetail").toString()
-                        var displayAdType: String = qds.getString("adType").toString()
-                        var displayAdUserId: String = qds.getString("adUserId").toString()
-                        var adSearchTitle: String = qds.getString("adSearchTitle").toString()
-                        var adAllImages: String = qds.getString("adAllImages").toString()
-
-                        adList.add(
-                            AdModel(
-                                displayAdTitle,
-                                displayAdDetail,
-                                displayAdPrice,
-                                displayAdImage,
-                                displayAdType,
-                                displayAdUserId,
-                                adSearchTitle,
-                                adAllImages,
-                                null,
-                                null
-                            )
-                        )
-                        homeRVAdapter.notifyDataSetChanged()
-
-                        adIds.add(adsId)
-                    }
-
-                    shimmerHomeAds.stopShimmer()
-                    shimmerHomeAds.hideShimmer()
-                    shimmerHomeAds.visibility = View.GONE
-                }
-            })
-    }catch (e:Exception){
-        Log.e("","")
-    }
         homeRVAdapter= HomeRVAdapter(requireContext(), adList, adIds, this)
         recyclerView.adapter=homeRVAdapter
+
+/////setting user profile pic to dashboard pic
+        displayingUserProfileDashboard()
+
+        displayAllAdsScrollRV()
+
+
+  profilePicHomeFrag.setOnClickListener {
+    findNavController().navigate(R.id.action_homeFrag_to_profileFrag2)
+    }
+///////////getting all ads displayed in recycler view///////////
+
+
 
      ////setting on click of search bar button
         searchBarHome.setOnClickListener {
 
             /////shared element transition
-            val p1: Pair<View, String>
-            p1= Pair(searchBarHome, "searchBarHomeTrans")
-            val extras= ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), p1)
 
-                       val intent= Intent(requireContext(), SearchResult::class.java)
-            startActivity(intent, extras.toBundle())
+            sharedElementTransitionSearchBar()
 
 
         }
@@ -196,6 +148,95 @@ profilePicHomeFrag.setOnClickListener {
 
         return view
     }//oncreate
+
+    private fun sharedElementTransitionSearchBar() {
+       //to send Image as shared element to next activity
+
+       val p1: Pair<View, String>
+        p1= Pair(searchBarHome, "searchBarHomeTrans")
+        val extras= ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), p1)
+        val intent= Intent(requireContext(), SearchResult::class.java)
+        startActivity(intent, extras.toBundle())
+
+    }
+
+    private fun displayAllAdsScrollRV() {
+        lifecycleScope.async(Dispatchers.IO) {
+            try {
+
+          val job1=async {
+                fStore.collection("ads")
+                    .get()
+                    .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
+                        override fun onSuccess(qs: QuerySnapshot?) {
+
+                            for (qds: QueryDocumentSnapshot in qs!!) {
+                                var adsId: String = qds.id.toString()
+                                var displayAdTitle: String = qds.getString("adTitle").toString()
+                                var displayAdPrice: String = qds.getString("adPrice").toString()
+                                var displayAdImage: String = qds.getString("adImageUrl").toString()
+                                var displayAdDetail: String = qds.getString("adDetail").toString()
+                                var displayAdType: String = qds.getString("adType").toString()
+                                var displayAdUserId: String = qds.getString("adUserId").toString()
+                                var adSearchTitle: String = qds.getString("adSearchTitle").toString()
+                                var adAllImages: String = qds.getString("adAllImages").toString()
+
+                                adList.add(
+                                    AdModel(
+                                        displayAdTitle,
+                                        displayAdDetail,
+                                        displayAdPrice,
+                                        displayAdImage,
+                                        displayAdType,
+                                        displayAdUserId,
+                                        adSearchTitle,
+                                        adAllImages,
+                                        null,
+                                        null
+                                    )
+                                )
+                                homeRVAdapter.notifyDataSetChanged()
+
+                                adIds.add(adsId)
+                            }
+
+                            shimmerHomeAds.stopShimmer()
+                            shimmerHomeAds.hideShimmer()
+                            shimmerHomeAds.visibility = View.GONE
+                        }
+                    })
+          }
+            }catch (e:Exception){
+                Log.e("","")
+            }
+        }
+    }
+
+
+    private fun displayingUserProfileDashboard() {
+        lifecycleScope.async(Dispatchers.IO) {
+        try {
+
+
+
+          val job=  async {
+              fStore.collection("users").document(auth.currentUser!!.uid.toString()).get()
+                  .addOnSuccessListener {
+
+                      val picUrl: String = it.getString("profileUrl").toString()
+                          Picasso.get().load(picUrl).placeholder(R.drawable.blankuser)
+                              .into(profilePicHomeFrag)
+
+                  }
+          }
+
+            }
+        catch (e:Exception){
+            Log.e("","")
+        }
+        }
+
+    }
 
     override fun onPause() {
         shimmerHomeAds.hideShimmer()
@@ -219,12 +260,12 @@ profilePicHomeFrag.setOnClickListener {
         intent.putExtra("adAllImages", adList[pos].adAllImages)
 
 
-
-        val p2: Pair<View, String>
+///to send image as shared element
+      /*  val p2: Pair<View, String>
         p2= Pair(adImage, "viewAdImgTrans")
-
-        val extras= ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), p2)
-        startActivity(intent, extras.toBundle())
+*/
+        val extras= ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity()/*, p2*/)
+        startActivity(intent/*, extras.toBundle()*/)
 
         super.onAdItemClick(pos, adImage)
     }
