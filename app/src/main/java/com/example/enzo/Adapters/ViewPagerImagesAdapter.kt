@@ -33,7 +33,7 @@ class ViewPagerImagesAdapter(
 
         val all_imgs_imgView: ImageView = convertView!!.findViewById(R.id.all_imgs_imgView)
 
-        Picasso.get().load(imgLinks[position]).placeholder(R.drawable.gray).into(all_imgs_imgView)
+        Picasso.get().load(imgLinks[position]).into(all_imgs_imgView)
 
 
         container.addView(convertView, position)

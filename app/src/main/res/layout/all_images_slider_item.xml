@@ -6,10 +6,10 @@
 
     <com.ortiz.touchview.TouchImageView
         android:id="@+id/all_imgs_imgView"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:scaleType="center"/>
+        android:scaleType="fitCenter"/>
 
 
 </RelativeLayout>

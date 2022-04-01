@@ -115,7 +115,7 @@ try {
 
 /////setting user profile pic to dashboard pic
         displayingUserProfileDashboard()
-
+////displaying all ads in first RV
         displayAllAdsScrollRV()
 
 
@@ -161,6 +161,7 @@ try {
     }
 
     private fun displayAllAdsScrollRV() {
+
         lifecycleScope.async(Dispatchers.IO) {
             try {
 
@@ -258,6 +259,7 @@ try {
         intent.putExtra("adViewDetail", adList[pos].adDetail)
         intent.putExtra("idOfUploader", adList[pos].adUserId)
         intent.putExtra("adAllImages", adList[pos].adAllImages)
+        intent.putExtra("adId", adIds[pos])
 
 
 ///to send image as shared element

@@ -3,13 +3,21 @@ package com.example.enzo
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
+import androidx.cardview.widget.CardView
 import androidx.core.content.withStyledAttributes
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class ViewAdActivity : AppCompatActivity() {
 
@@ -23,7 +31,9 @@ class ViewAdActivity : AppCompatActivity() {
     lateinit var adViewPrice: TextView
     lateinit var adViewDetail: TextView
     lateinit var chatWithUploaderBtn:Button
-    lateinit var saveAdBtn:ImageButton
+    lateinit var saveAdBtn:CardView
+    lateinit var goBackBtn:ImageButton
+    lateinit var saveIconImg:ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +49,8 @@ class ViewAdActivity : AppCompatActivity() {
         nameOfUploader= findViewById(R.id.nameOfUploader)
         chatWithUploaderBtn=findViewById(R.id.chatWithUploaderBtn)
         saveAdBtn=findViewById(R.id.saveAdBtn)
+        saveIconImg=findViewById(R.id.saveIconImg)
+        goBackBtn=findViewById(R.id.goBackBtn)
 
         auth= FirebaseAuth.getInstance()
         fStore= FirebaseFirestore.getInstance()
@@ -56,12 +68,19 @@ class ViewAdActivity : AppCompatActivity() {
         val adId=intent.getStringExtra("adId")
 
 
+try {
+    Picasso.get().load(imageUrl).into(adViewImage)
+    adViewTitle.text = title
+    adViewPrice.text = price
+    adViewDetail.text = detail
+}catch (e:Exception){
+    Log.d("err","")
+}
 
-        Picasso.get().load(imageUrl).into(adViewImage)
-        adViewTitle.text=title
-        adViewPrice.text= price
-        adViewDetail.text= detail
 
+        goBackBtn.setOnClickListener {
+            finish()
+        }
 
         adViewImage.setOnClickListener {
 
@@ -73,31 +92,44 @@ class ViewAdActivity : AppCompatActivity() {
             startActivity(intent)
         }
         saveAdBtn.setOnClickListener {
+
+saveIconImg.setImageResource(R.drawable.save)
             Toast.makeText(this, "Ad saved to your list", Toast.LENGTH_SHORT).show()
-            saveAdBtn.setImageResource(R.drawable.hearticon)
-            val strRef: DocumentReference = fStore.collection("savedAds").document(adId.toString())
-            val hash = hashMapOf("userId" to auth.currentUser?.uid.toString())
-            strRef.set(hash)
+
+            lifecycleScope.launch(Dispatchers.IO) {
+                val strRef: DocumentReference =
+                    fStore.collection("savedAds").document(adId.toString())
+                val hash = hashMapOf("userId" to auth.currentUser?.uid.toString())
+                strRef.set(hash)
+            }
+
 
         }
 ////////////////getting user info from firestore by help of user id/////////
+     lifecycleScope.async(Dispatchers.IO) {
+    val job2=async {
         fStore.collection("users").document(idOfUploader.toString()).get().addOnSuccessListener {
-            nameOfUploader.text= it.getString("profileName")
-            val picUrl:String= it.getString("profileUrl").toString()
+            nameOfUploader.text = it.getString("profileName")
+            val picUrl: String = it.getString("profileUrl").toString()
             Picasso.get().load(picUrl).placeholder(R.drawable.blankuser).into(imageOfUploader)
         }
+    }
+     }
 //////////on clicking chat button, going to chatting screen and also adding id of this uploader as collection in current user's id
         chatWithUploaderBtn.setOnClickListener {
 
-            val user = hashMapOf(
-                "idOfUploaderChats" to idOfUploader
-            )
-            val sR: DocumentReference = fStore.collection("users")
-                .document(auth.currentUser!!.uid).collection("idOfUploaderChats").document(idOfUploader.toString())
+         lifecycleScope.launch(Dispatchers.IO) {
 
-            sR.set(user)
+             val user = hashMapOf(
+                 "idOfUploaderChats" to idOfUploader
+             )
+             val sR: DocumentReference = fStore.collection("users")
+                 .document(auth.currentUser!!.uid).collection("idOfUploaderChats")
+                 .document(idOfUploader.toString())
 
+             sR.set(user)
 
+         }
             val intent= Intent(this, ChattingScreen::class.java)
             intent.putExtra("idOfUploaderChatting", idOfUploader )
             startActivity(intent)
@@ -107,4 +139,5 @@ class ViewAdActivity : AppCompatActivity() {
 
 
     }//oncreate
+
 }//main
