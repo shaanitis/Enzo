@@ -8,6 +8,7 @@
 
 
     <ScrollView
+        android:id="@+id/adScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -30,6 +31,8 @@
         android:transitionName="viewAdImgTrans"
         android:layout_width="match_parent"
         android:layout_height="220dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:scaleType="centerCrop"
 
         android:src="@drawable/gray"/>
@@ -165,49 +168,90 @@
 
     </ScrollView>
 
-    <com.google.android.material.button.MaterialButton
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent">
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/chatWithUploaderBtn"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="4dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="67dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="68dp"
         android:backgroundTint="@color/orange_main"
-        app:cornerRadius="13dp"
-        app:elevation="5dp"
-        android:textAllCaps="false"
-        android:text="Chat     "
-        android:fontFamily="@font/acme"
-        android:gravity="center"
-        android:drawableLeft="@drawable/chat_icon"
-        android:textStyle="bold"
-        android:textSize="22dp"/>
+       app:cardCornerRadius="15dp"
+
+       >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ImageView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="48dp"
+            android:src="@drawable/chat"
+            app:tint="@color/white"
+            />
+        <TextView
+            android:id="@+id/chatBtnText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="48dp"
+            android:textAllCaps="false"
+            android:text="Chat     "
+            android:fontFamily="@font/acme"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:textColor="@color/white"
+            />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/saveAdBtn"
-        android:layout_width="55dp"
+        android:layout_width="52dp"
         android:layout_height="55dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="7dp"
-        app:cardCornerRadius="13dp"
-       app:elevation="5dp"
-        android:backgroundTint="#EEE7E7"
-        app:layout_constraintLeft_toRightOf="@+id/chatWithUploaderBtn">
+       android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="17dp"
+        android:layout_marginBottom="8dp"
 
-    <ImageView
-       android:id="@+id/saveIconImg"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:src="@drawable/saveborder"
-        android:background="#00ffffff"
-        android:layout_gravity="center"
-      />
+        android:backgroundTint="#F5EAE3"
+       >
+        <ImageView
+            android:id="@+id/saveIconImg"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:background="#00ffffff"
+            android:src="@drawable/saveborder" />
     </androidx.cardview.widget.CardView>
+
+
+    </RelativeLayout>
 
     <ImageButton
         android:id="@+id/goBackBtn"

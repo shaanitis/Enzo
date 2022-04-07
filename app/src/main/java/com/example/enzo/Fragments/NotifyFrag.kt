@@ -26,10 +26,12 @@ import com.example.enzo.ViewAdActivity
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -71,6 +73,7 @@ class NotifyFrag : Fragment(), SavedAdsOnClick {
        savedAdsRV.layoutManager= LinearLayoutManager(requireContext())
         savedAdsRV.setHasFixedSize(true)
 
+
         savedAdsRVAdapter= SavedAdsAdapter(requireContext(), adList, adIds , this)
         savedAdsRV.adapter=savedAdsRVAdapter
 
@@ -78,17 +81,15 @@ class NotifyFrag : Fragment(), SavedAdsOnClick {
         adIds.clear()
 
 
-////checking if saved ad of current user exists in saved ads list
-        checkingIfSavedAdsExsist()
+
 
 
 //////getting saved ads
         gettingSavedAds()
 
 
+
        deleteDialogOnItemSwipe()
-
-
 
 
 
@@ -121,6 +122,8 @@ class NotifyFrag : Fragment(), SavedAdsOnClick {
                             .setPositiveButton("Yes, delete"){dialog, it->
 
                                 savedAdsRVAdapter.deleteItem(viewHolder.position)
+                                Snackbar.make(savedAdsRV, "Ad removed from saved list", Snackbar.LENGTH_SHORT)
+                                    .show()
                             }
                             .show()
 
@@ -144,18 +147,24 @@ val job2=async {
         .get()
         .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
             override fun onSuccess(querySnapshot: QuerySnapshot?) {
+                if (querySnapshot!!.isEmpty){
+                    searchNothingImage.visibility=View.VISIBLE
+                    searchNothingText.visibility=View.VISIBLE
+                    shimmerSavedAds.visibility = View.GONE
+                } else{
+
                 for (it: QueryDocumentSnapshot in querySnapshot!!) {
                     val adId: String = it.id.toString()
                     val userId: String = it.getString("userId").toString()
 
 
-                    searchNothingImage.visibility = View.GONE
-                    searchNothingText.visibility = View.GONE
                     savedAdIds.add(adId)
+                }
 
                 }
                 for (i in 0 until savedAdIds.size) {
                     fStore.collection("ads").document(savedAdIds[i]).get().addOnSuccessListener {
+
 
                         val adId: String = it.id.toString()
                         val displayAdTitle: String = it.getString("adTitle").toString()
@@ -186,14 +195,20 @@ val job2=async {
                             )
                         )
 
-                        adIds.add(adId)
-                        savedAdsRVAdapter.notifyDataSetChanged()
-                        shimmerSavedAds.stopShimmer()
-                        shimmerSavedAds.hideShimmer()
-                        shimmerSavedAds.visibility = View.GONE
+
+                            adIds.add(adId)
+                            savedAdsRVAdapter.notifyDataSetChanged()
+
+                            shimmerSavedAds.visibility = View.GONE
 
 
+
+
+                    }.addOnFailureListener {
+                        Log.e("hh", "")
                     }
+
+
                     savedAdsRVAdapter.notifyDataSetChanged()
 
                 }
@@ -202,7 +217,10 @@ val job2=async {
             }
 
         })
+
 }
+
+
             }catch (e:Exception){
                 Log.e("error", e.message.toString())
             }
@@ -210,28 +228,6 @@ val job2=async {
 
     }
 
-    private fun checkingIfSavedAdsExsist() {
-        lifecycleScope.async(Dispatchers.Main) {
-
-          val job1=async {    fStore.collection("savedAds").whereEqualTo("userId", auth.currentUser?.uid.toString())
-            .get()
-            .addOnSuccessListener {
-              for (qds:DocumentSnapshot in it){
-             if ( qds.get("userId").toString()!=auth.currentUser?.uid){
-                 searchNothingImage.visibility = View.VISIBLE
-                 searchNothingText.visibility = View.VISIBLE
-                 shimmerSavedAds.hideShimmer()
-                 shimmerSavedAds.stopShimmer()
-                 shimmerSavedAds.visibility=View.GONE
-              }
-              }
-
-
-            }
-          }
-        }
-
-    }
 
     override fun onAdItemClick(pos: Int, adImage: ImageView) {
         val intent= Intent(requireContext(), ViewAdActivity::class.java)

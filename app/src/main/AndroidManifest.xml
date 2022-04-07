@@ -22,6 +22,7 @@
             android:exported="false" />
         <activity
             android:name=".TryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false" />
 
         <service
@@ -36,9 +37,6 @@
         </service>
 
         <activity
-            android:name=".BuyerOrSeller"
-            android:exported="false" />
-        <activity
             android:name=".SellerActivity"
             android:exported="false" />
         <activity
@@ -46,9 +44,12 @@
             android:exported="false" />
         <activity
             android:name=".ChattingScreen"
+            android:theme="@style/noActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false" />
         <activity
             android:name=".ViewAdActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false" />
 
         <meta-data
@@ -84,6 +85,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustPan" />
 
         <meta-data

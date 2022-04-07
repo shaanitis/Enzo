@@ -15,4 +15,16 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
+    <ImageButton
+        android:id="@+id/goBackBtn"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:backgroundTint="#00ffffff"
+        app:tint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="7dp"
+        android:src="@drawable/backicon"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

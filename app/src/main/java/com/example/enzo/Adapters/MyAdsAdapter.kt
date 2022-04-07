@@ -17,6 +17,7 @@ import com.example.enzo.OnClickRV.MyAdsOnClick
 import com.example.enzo.R
 import com.example.enzo.ViewAdActivity
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
@@ -83,8 +84,6 @@ class MyAdsAdapter(
             notifyDataSetChanged()
             fStore.collection("ads").document(adIds[i]).delete().addOnSuccessListener {
 
-                Toast.makeText(context, "Ad deleted Succesfully", Toast.LENGTH_SHORT)
-                    .show()
                 val storageRef: StorageReference =
                     storage.getReferenceFromUrl(currentItem.adImageUrl.toString())
                 storageRef.delete().addOnSuccessListener {

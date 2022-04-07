@@ -7,13 +7,10 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_ONE_SHOT
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.example.enzo.BuyerOrSeller
+import com.example.enzo.BuyerActivity
 import com.example.enzo.R
-import com.google.firebase.database.collection.LLRBNode
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
@@ -23,7 +20,7 @@ private const val CHANNEL_ID="newChannel"
 class FirebaseService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        val intent= Intent(this, BuyerOrSeller::class.java)
+        val intent= Intent(this, BuyerActivity::class.java)
         val notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID= Random.nextInt()
 

@@ -20,12 +20,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 
-class SavedAdsAdapter(
-    var context: Context,
+class SavedAdsAdapter(var context: Context,
     private var adList: ArrayList<AdModel>,
     var adIds: ArrayList<String>,
-    val onCLick:SavedAdsOnClick?
-): RecyclerView.Adapter<SavedAdsAdapter.MyViewHolder>()  {
+    val onCLick:SavedAdsOnClick?): RecyclerView.Adapter<SavedAdsAdapter.MyViewHolder>()  {
 
     val auth: FirebaseAuth = FirebaseAuth.getInstance()
     val fStore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -75,7 +73,6 @@ class SavedAdsAdapter(
         fStore.collection("savedAds").document(adIds[i]).delete().addOnSuccessListener {
 
 
-    Toast.makeText(context, "Ad removed from your list", Toast.LENGTH_SHORT).show()
 }
         }catch (e:Exception){
     Log.e("", "")

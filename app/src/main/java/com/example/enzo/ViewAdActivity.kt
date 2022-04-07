@@ -4,12 +4,16 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.withStyledAttributes
+import androidx.core.util.Pair
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,7 +34,7 @@ class ViewAdActivity : AppCompatActivity() {
     lateinit var adViewTitle:TextView
     lateinit var adViewPrice: TextView
     lateinit var adViewDetail: TextView
-    lateinit var chatWithUploaderBtn:Button
+    lateinit var chatWithUploaderBtn:CardView
     lateinit var saveAdBtn:CardView
     lateinit var goBackBtn:ImageButton
     lateinit var saveIconImg:ImageView
@@ -69,7 +73,7 @@ class ViewAdActivity : AppCompatActivity() {
 
 
 try {
-    Picasso.get().load(imageUrl).into(adViewImage)
+    Picasso.get().load(imageUrl).fit().centerCrop().placeholder(R.drawable.gray).into(adViewImage)
     adViewTitle.text = title
     adViewPrice.text = price
     adViewDetail.text = detail
@@ -83,8 +87,8 @@ try {
         }
 
         adViewImage.setOnClickListener {
+            val intent=Intent(this, DisplayAdImages::class.java)
 
-           val intent=Intent(this, DisplayAdImages::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             overridePendingTransition(0, 0)
             intent.putExtra("allImagesUrl", allImagesUrl)
@@ -93,7 +97,7 @@ try {
         }
         saveAdBtn.setOnClickListener {
 
-saveIconImg.setImageResource(R.drawable.save)
+         saveIconImg.setImageResource(R.drawable.save)
             Toast.makeText(this, "Ad saved to your list", Toast.LENGTH_SHORT).show()
 
             lifecycleScope.launch(Dispatchers.IO) {
@@ -118,24 +122,36 @@ saveIconImg.setImageResource(R.drawable.save)
 //////////on clicking chat button, going to chatting screen and also adding id of this uploader as collection in current user's id
         chatWithUploaderBtn.setOnClickListener {
 
-         lifecycleScope.launch(Dispatchers.IO) {
+            if (idOfUploader == auth.currentUser?.uid.toString()) {
+                Snackbar.make(
+                    chatWithUploaderBtn,
+                    "Cannot Chat if its your own Ad",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            } else {
 
-             val user = hashMapOf(
-                 "idOfUploaderChats" to idOfUploader
-             )
-             val sR: DocumentReference = fStore.collection("users")
-                 .document(auth.currentUser!!.uid).collection("idOfUploaderChats")
-                 .document(idOfUploader.toString())
+                lifecycleScope.launch(Dispatchers.IO) {
 
-             sR.set(user)
+                    val user = hashMapOf(
+                        "idOfUploaderChats" to idOfUploader,
+                        "idOfAdUploaderSeller" to idOfUploader,
+                        "idOfUserWhoClickedChatBuyer" to auth.currentUser?.uid
 
-         }
-            val intent= Intent(this, ChattingScreen::class.java)
-            intent.putExtra("idOfUploaderChatting", idOfUploader )
-            startActivity(intent)
+                        )
+                    val sR: DocumentReference = fStore.collection("users")
+                        .document(auth.currentUser!!.uid).collection("idOfUploaderChats")
+                        .document(idOfUploader.toString())
+
+                    sR.set(user)
+
+                }
+                val intent = Intent(this, ChattingScreen::class.java)
+                intent.putExtra("idOfAdUploaderSeller", idOfUploader)
+                intent.putExtra("idOfBuyerWhoClickedChat", auth.currentUser?.uid.toString())
+                startActivity(intent)
+            }
+
         }
-
-
 
 
     }//oncreate

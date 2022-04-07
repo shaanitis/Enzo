@@ -13,18 +13,25 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.enzo.Adapters.AllChatsAdapter
 import com.example.enzo.ChattingScreen
 import com.example.enzo.Models.AllChatsModel
+import com.example.enzo.OnClickRV.SwipeGestures
 import com.example.enzo.OnClickRV.UserChatOnClick
 import com.example.enzo.R
 import com.example.enzo.ViewAdActivity
+import com.example.enzo.ViewModels.ChatFragViewModel
+import com.example.enzo.ViewModels.TryViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentReference
@@ -45,8 +52,11 @@ class ChatFrag : Fragment(), UserChatOnClick {
     lateinit var shimmerUserChat:ShimmerFrameLayout
     lateinit var idsOfChats:ArrayList<String>
     lateinit var allChatsAdapter:AllChatsAdapter
-
-lateinit var testText: TextView
+    lateinit var viewModel: ChatFragViewModel
+    lateinit var chatList:ArrayList<AllChatsModel>
+    lateinit var searchNothingImage: ImageView
+    lateinit var searchNothingText: TextView
+    lateinit var testText: TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,34 +67,70 @@ lateinit var testText: TextView
           auth= FirebaseAuth.getInstance()
         fStore= FirebaseFirestore.getInstance()
         db= FirebaseDatabase.getInstance()
+
        shimmerUserChat=view.findViewById(R.id.shimmerUserChat)
         allChatsRV= view.findViewById(R.id.allChatsRV)
+        searchNothingImage=view.findViewById(R.id.searchNothingImage)
+        searchNothingText=view.findViewById(R.id.searchNothingText)
+        searchNothingImage.visibility=View.GONE
+        searchNothingText.visibility=View.GONE
+
+
         allChatsList= arrayListOf<AllChatsModel>()
         idsOfChats= arrayListOf()
-
+chatList= arrayListOf()
 
 ////setting up recycler view adapter
         allChatsRV.layoutManager= LinearLayoutManager(requireContext())
         allChatsRV.setHasFixedSize(true)
 
-        allChatsAdapter= AllChatsAdapter(requireContext(), allChatsList, this)
+
+
+
+
+
+      allChatsAdapter= AllChatsAdapter(requireContext(), allChatsList, this)
         allChatsRV.adapter=allChatsAdapter
 
-
-
-
-
-
-       ///displaying chats
+        ///displaying chats
 
         allChatsList.clear()
+
+
            displayUserChats()
 
+        /////recycler view swipe gestures
+       /* val swipeGesture= object : SwipeGestures(requireContext()){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when(direction) {
+
+                    ItemTouchHelper.LEFT -> {
 
 
+                        MaterialAlertDialogBuilder(requireContext()).setTitle("Want to delete this chat?")
+                            .setMessage("All messages and trading data with the user will be cleared!")
+                            .setNegativeButton("No"){dialog, it->
+                                allChatsAdapter.notifyDataSetChanged()
+                            }
+                            .setPositiveButton("Yes, delete"){dialog, it->
+
+                                allChatsAdapter.deleteItem(viewHolder.position)
+
+                                Snackbar.make(allChatsRV, "Ad deleted Succesfully", Snackbar.LENGTH_SHORT)
+                                    .show()
+                            }
+                            .show()
+                    }
+                }
 
 
+            }
+        }
 
+        val touchHelper= ItemTouchHelper(swipeGesture)
+        touchHelper.attachToRecyclerView(allChatsRV)
+*/
+///onBackPress
         val callback=object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 findNavController().navigate(R.id.action_chatFrag_to_homeFrag)
@@ -112,11 +158,17 @@ val job=async {
         .get()
         .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
             override fun onSuccess(qs: QuerySnapshot?) {
+                if (qs!!.isEmpty){
+                    searchNothingImage.visibility=View.VISIBLE
+                    searchNothingText.visibility=View.VISIBLE
+                    shimmerUserChat.visibility = View.GONE
+                } else{
                 for (qds: QueryDocumentSnapshot in qs!!) {
                     val idOfUploaderChats: String =
                         qds.getString("idOfUploaderChats").toString()
                     idsOfChats.add("$idOfUploaderChats")
 
+                }
                 }
 ////////looping through array of ids and getting info of each id and displaying chats overall
                 for (i in idsOfChats) {
@@ -130,12 +182,10 @@ val job=async {
                         var imgUrlOfUserChatClicked: String =
                             it.getString("profileUrl").toString()
                         var idOfUserChatClicked: String = it.id
-                        var lastMsg: String = ""
                         allChatsList.add(
                             AllChatsModel(
                                 nameOfUserChatclicked,
                                 imgUrlOfUserChatClicked,
-                                lastMsg,
                                 idOfUserChatClicked
                             )
                         )
@@ -161,10 +211,12 @@ val job=async {
 
     override fun onAdItemClick(pos: Int, userName:TextView, userImg: ImageView ) {
         val intent= Intent(requireContext(), ChattingScreen::class.java)
-        intent.putExtra("idOfUploaderChatting", allChatsList[pos].idOfUserChatClicked)
-        intent.putExtra("imgOfUserChatClicked", allChatsList[pos].imgOfUserChatClicked)
-        intent.putExtra("nameOfUserChatClicked", allChatsList[pos].nameOfUserChatClicked)
-
+        //seller details
+        intent.putExtra("idOfAdUploaderSeller", allChatsList[pos].idOfUserChatClicked)
+        intent.putExtra("imgOfAdUploaderSeller", allChatsList[pos].imgOfUserChatClicked)
+        intent.putExtra("nameOfAdUploaderSeller", allChatsList[pos].nameOfUserChatClicked)
+        //buyer id
+        intent.putExtra("idOfBuyerWhoClickedChat", auth.currentUser?.uid.toString())
 
         val p1: Pair<View, String>
         p1= Pair(userName, "userChatNameTrans")

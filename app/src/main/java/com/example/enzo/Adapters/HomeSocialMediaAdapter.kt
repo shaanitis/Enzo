@@ -1,6 +1,7 @@
 package com.example.enzo.Adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,23 +9,22 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.enzo.Models.AdModel
 import com.example.enzo.OnClickRV.HomeRVOnClick
 import com.example.enzo.R
+import com.example.enzo.ViewAdActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
-class HomeRVAdapter(
+class HomeSocialMediaAdapter(
     val context: Context,
     var adList: ArrayList<AdModel>,
-    var adIds: ArrayList<String>,
-    val onClickHome: HomeRVOnClick
+    var adIds: ArrayList<String>
 ):
-    RecyclerView.Adapter<HomeRVAdapter.MyViewHolder>() {
+    RecyclerView.Adapter<HomeSocialMediaAdapter.MyViewHolder>() {
 
     val fStore= FirebaseFirestore.getInstance()
     val auth= FirebaseAuth.getInstance()
@@ -52,24 +52,20 @@ class HomeRVAdapter(
 
         //////on click listener used and ad details sent to next activity//////////
         holder.clickListenerView?.setOnClickListener {
-             onClickHome.onAdItemClick(pos = position, adImage = holder.displayAdImage)
-           /* val intent= Intent(context, ViewAdActivity::class.java)
+             val intent= Intent(context, ViewAdActivity::class.java)
 
-            intent.putExtra("adViewImage", currentItem.adImageUrl)
-            intent.putExtra("adViewTitle", currentItem.adTitle)
-            intent.putExtra("adViewPrice", currentItem.adPrice)
-            intent.putExtra("adViewDetail", currentItem.adDetail)
-            intent.putExtra("idOfUploader", currentItem.adUserId)
-            intent.putExtra("adAllImages", currentItem.adAllImages)
+              intent.putExtra("adViewImage", currentItem.adImageUrl)
+              intent.putExtra("adViewTitle", currentItem.adTitle)
+              intent.putExtra("adViewPrice", currentItem.adPrice)
+              intent.putExtra("adViewDetail", currentItem.adDetail)
+              intent.putExtra("idOfUploader", currentItem.adUserId)
+              intent.putExtra("adAllImages", currentItem.adAllImages)
+            intent.putExtra("adLocation", currentItem.adLocation)
+            intent.putExtra("adPhoneNo", currentItem.adPhoneNo)
+            intent.putExtra("adId", adIds[position])
 
-            context.startActivity(intent)*/
+              context.startActivity(intent)
 
-//////to navigate to fragment from adapter class
-        /*  val navController: NavController=Navigation.findNavController(holder.clickListenerView)
-            navController.navigate(R.id.action_homeFrag_to_viewAdFrag, Bundle().apply {
-                putString("adViewImage", currentItem.adImageUrl)
-
-            })*/
 
         }
 
@@ -87,20 +83,15 @@ class HomeRVAdapter(
     override fun getItemCount(): Int {
         return adList.size
     }
-///////////////listener argument here for on click in activity of recycler view//////
-    class MyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
+    ///////////////listener argument here for on click in activity of recycler view//////
+    class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val displayAdTitle: TextView = itemView.findViewById(R.id.displayAdTitle)
         val displayAdPrice: TextView = itemView.findViewById(R.id.displayAdPrice)
         val displayAdImage: ImageView = itemView.findViewById(R.id.displayAdImage)
-       val saveAdBtn: ImageButton = itemView.findViewById(R.id.saveAdBtn)
+        val saveAdBtn: ImageButton = itemView.findViewById(R.id.saveAdBtn)
 
         val clickListenerView: View?= itemView
 
-//////////For on click in activity of recycler view/////////
-    /*init {
-        itemView.setOnClickListener {
-            listener.onItemClick(adapterPosition)
-        }
-    }*/
+
     }
 }

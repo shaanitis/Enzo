@@ -1,5 +1,6 @@
 package com.example.enzo.Adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,34 +8,46 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.enzo.Models.AdModel
+import com.example.enzo.Models.LoginModel
 import com.example.enzo.R
+import com.squareup.picasso.Picasso
 
-class TryAdapter(var context: android.content.Context, private var searchResultList: ArrayList<AdModel>): RecyclerView.Adapter<TryAdapter.MyViewHolder>()  {
+class TryAdapter( var context: Context,
+                  private var userList: ArrayList<LoginModel>): RecyclerView.Adapter<TryAdapter.MyViewHolder>()  {
+
+   /* private val userData= arrayListOf<LoginModel>()*/
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
-    ): TryAdapter.MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.search_result_rv_item, parent, false)
+        viewType: Int): TryAdapter.MyViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.sample_all_chats_rv, parent, false)
 
         return MyViewHolder(itemView)
     }
 
 
     override fun getItemCount(): Int {
-        return searchResultList.size
+        return userList.size
     }
 
-    fun setItems(){}
+
+
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val currentItem= userList.get(position)
+        holder.userName.text=currentItem.profileName.toString()
+        Picasso.get().load(currentItem.profileUrl).into(holder.userImg)
+    }
+  /*  fun setItems(userDataList:ArrayList<LoginModel>){
+
+            this.userData.clear()
+            this.userData.addAll(userDataList)
+
+    }*/
 
   inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        val adImage: ImageView =itemView.findViewById(R.id.adImageSearchRV)
-        val adTitle: TextView = itemView.findViewById(R.id.adTitleSearchRV)
-        val adPrice: TextView = itemView.findViewById(R.id.adPriceSearchRV)
+        val userImg: ImageView =itemView.findViewById(R.id.friendImg)
+        val userName: TextView = itemView.findViewById(R.id.name)
         val clickListenerView: View?= itemView
 
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        TODO("Not yet implemented")
-    }
 }

@@ -43,7 +43,6 @@ class AllChatsAdapter(var context: android.content.Context,
 
         Picasso.get().load(currentItem.imgOfUserChatClicked).placeholder(R.drawable.blankuser).into(holder.image)
         holder.name.text= currentItem.nameOfUserChatClicked
-        holder.lastMsg.text= currentItem.lastMessage
 
 
 
@@ -64,7 +63,6 @@ class AllChatsAdapter(var context: android.content.Context,
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val image: RoundedImageView=itemView.findViewById(R.id.friendImg)
         val name: TextView = itemView.findViewById(R.id.name)
-        val lastMsg: TextView = itemView.findViewById(R.id.lastMsg)
         val clickListenerView: View?= itemView
 
     }

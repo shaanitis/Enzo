@@ -18,6 +18,7 @@ import android.view.WindowManager
 
 import android.os.Build
 import android.view.Window
+import android.widget.ImageButton
 
 
 class DisplayAdImages : AppCompatActivity() {
@@ -26,6 +27,7 @@ class DisplayAdImages : AppCompatActivity() {
     lateinit var allImagesUrl:String
     lateinit var titleImgUrl:String
     lateinit var imgLinks:ArrayList<String>
+    lateinit var goBackBtn: ImageButton
     var noOfImages: Int=0
 
 
@@ -46,6 +48,10 @@ class DisplayAdImages : AppCompatActivity() {
             Log.d("","")
         }
 
+goBackBtn=findViewById(R.id.goBackBtn)
+        goBackBtn.setOnClickListener {
+            finish()
+        }
 
         displayAdImagesVP=findViewById(R.id.displayImagesVP)
         fStore= FirebaseFirestore.getInstance()

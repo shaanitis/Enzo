@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="60dp"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.HomeFrag">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profilePicHomeFrag"
         android:layout_width="50dp"
@@ -107,6 +111,38 @@
      android:layout_marginTop="7dp"
      android:orientation="horizontal"
      android:layout_height="140dp"/>
+
+    <TextView
+        android:id="@+id/socialMediaAdsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:text="Social Media accounts:"
+        android:textStyle="bold"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/arimo"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintTop_toBottomOf="@id/homeCategoryRV"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/socialMediaRV"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@id/socialMediaAdsText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="7dp"
+        android:layout_marginStart="10dp"/>
+  <!--  <Button
+        android:id="@+id/goTry"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Go"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />-->
+
     <com.facebook.shimmer.ShimmerFrameLayout
 
         android:layout_width="match_parent"
@@ -133,6 +169,32 @@
 
 
     </com.facebook.shimmer.ShimmerFrameLayout>
+    <com.facebook.shimmer.ShimmerFrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/shimmersocialMediaAds"
+        app:layout_constraintTop_toBottomOf="@id/socialMediaAdsText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="7dp"
+        android:layout_marginStart="10dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include layout="@layout/shimmer_home_ads_view"/>
+            <include layout="@layout/shimmer_home_ads_view"/>
+            <include layout="@layout/shimmer_home_ads_view"/>
+            <include layout="@layout/shimmer_home_ads_view"/>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

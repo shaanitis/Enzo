@@ -3,6 +3,7 @@ package com.example.enzo.Fragments
 import android.content.Intent
 import android.os.Bundle
 import android.transition.ChangeBounds
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ import com.example.enzo.ViewAdActivity
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
@@ -45,6 +47,8 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
     lateinit var imgLinks:ArrayList<String>
     lateinit var adAllImgLinkList:ArrayList<String>
     lateinit var shimmerMyAds:ShimmerFrameLayout
+    lateinit var myAdsRVAdapter:MyAdsAdapter
+    lateinit var myAdsRV: RecyclerView
     lateinit var searchNothingImage: ImageView
     lateinit var searchNothingText: TextView
     override fun onCreateView(
@@ -67,90 +71,22 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
         imgLinks= arrayListOf()
         adAllImgLinkList= arrayListOf()
 
-        val myAdsRV: RecyclerView = view.findViewById(R.id.myAdsRV)
+        myAdsRV= view.findViewById(R.id.myAdsRV)
 
 
         myAdsRV.layoutManager= LinearLayoutManager(requireContext())
         myAdsRV.setHasFixedSize(true)
 
-        val myAdsRVAdapter= MyAdsAdapter(requireContext(), adList, adIds, adAllImgLinkList , this)
+        myAdsRVAdapter= MyAdsAdapter(requireContext(), adList, adIds, adAllImgLinkList , this)
         myAdsRV.adapter=myAdsRVAdapter
 
         adList.clear()
         adIds.clear()
 
-        fStore.collection("ads").whereEqualTo("adUserId", auth.currentUser?.uid.toString())
-            .get()
-            .addOnSuccessListener {
-                searchNothingImage.visibility = View.VISIBLE
-                searchNothingText.visibility = View.VISIBLE
-                shimmerMyAds.hideShimmer()
-                shimmerMyAds.stopShimmer()
-                shimmerMyAds.visibility=View.GONE
-            }
+///getting my Ads
+     getMyAds()
 
-
-        var noOfImages: Int=0
-    lifecycleScope.async(Dispatchers.IO) {
-
-      val job=async {
-          fStore.collection("ads")
-              .get()
-              .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                  override fun onSuccess(qs: QuerySnapshot?) {
-
-                      for (qds: QueryDocumentSnapshot in qs!!) {
-                          val adUserId: String = qds.get("adUserId").toString()
-                          if (adUserId.equals(auth.currentUser?.uid.toString())) {
-                              var adsId: String = qds.id.toString()
-                              var displayAdTitle: String = qds.getString("adTitle").toString()
-                              var displayAdPrice: String = qds.getString("adPrice").toString()
-                              var displayAdImage: String = qds.getString("adImageUrl").toString()
-                              var displayAdDetail: String = qds.getString("adDetail").toString()
-                              var displayAdType: String = qds.getString("adType").toString()
-                              var displayAdUserId: String = qds.getString("adUserId").toString()
-                              var adSearchTitle: String = qds.getString("adSearchTitle").toString()
-                              var adAllImages: String = qds.getString("adAllImages").toString()
-                              var adLocation: String = qds.getString("adLocation").toString()
-                              var adPhoneNo: String = qds.getString("adPhoneNo").toString()
-
-
-                              myAdsRV.startLayoutAnimation()
-                              adList.add(
-                                  AdModel(
-                                      displayAdTitle,
-                                      displayAdDetail,
-                                      displayAdPrice,
-                                      displayAdImage,
-                                      displayAdType,
-                                      displayAdUserId,
-                                      adSearchTitle,
-                                      adAllImages,
-                                      adLocation,
-                                      adPhoneNo
-                                  )
-                              )
-                              adIds.add(adsId)
-                              adAllImgLinkList.add(adAllImages)
-                              myAdsRVAdapter.notifyDataSetChanged()
-                              searchNothingImage.visibility = View.GONE
-                              searchNothingText.visibility = View.GONE
-                              shimmerMyAds.stopShimmer()
-                              shimmerMyAds.hideShimmer()
-                              shimmerMyAds.visibility = View.GONE
-
-                          }
-
-                      }
-
-                      myAdsRVAdapter.notifyDataSetChanged()
-                  }
-              })
-      }.await()
-    }
-        myAdsRVAdapter.notifyDataSetChanged()
-
-
+////on Back Press
         val callback=object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 findNavController().navigate(R.id.action_myAdsFrag_to_profileFrag)
@@ -159,7 +95,7 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
         }
         requireActivity().onBackPressedDispatcher.addCallback(callback)
 
-            /////recycler view swipe gestures
+  /////recycler view swipe gestures
         val swipeGesture= object : SwipeGestures(requireContext()){
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 when(direction) {
@@ -175,6 +111,9 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
                             .setPositiveButton("Yes, delete"){dialog, it->
 
                                myAdsRVAdapter.deleteItem(viewHolder.position)
+
+                                Snackbar.make(myAdsRV, "Ad deleted Succesfully", Snackbar.LENGTH_SHORT)
+                                    .show()
                             }
                             .show()
                     }
@@ -188,6 +127,87 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
         touchHelper.attachToRecyclerView(myAdsRV)
 
         return view
+    }///////////////onCreate
+
+    private fun getMyAds() {
+        lifecycleScope.async(Dispatchers.IO) {
+            try {
+
+
+
+                val job = async {
+                    fStore.collection("ads")
+                        .get()
+                        .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
+                            override fun onSuccess(qs: QuerySnapshot?) {
+                                if (qs!!.isEmpty){
+                                    searchNothingImage.visibility=View.VISIBLE
+                                    searchNothingText.visibility=View.VISIBLE
+                                    shimmerMyAds.visibility = View.GONE
+                                } else {
+
+                                    for (qds: QueryDocumentSnapshot in qs!!) {
+                                        val adUserId: String = qds.get("adUserId").toString()
+                                        if (adUserId.equals(auth.currentUser?.uid.toString())) {
+                                            var adsId: String = qds.id.toString()
+                                            var displayAdTitle: String =
+                                                qds.getString("adTitle").toString()
+                                            var displayAdPrice: String =
+                                                qds.getString("adPrice").toString()
+                                            var displayAdImage: String =
+                                                qds.getString("adImageUrl").toString()
+                                            var displayAdDetail: String =
+                                                qds.getString("adDetail").toString()
+                                            var displayAdType: String =
+                                                qds.getString("adType").toString()
+                                            var displayAdUserId: String =
+                                                qds.getString("adUserId").toString()
+                                            var adSearchTitle: String =
+                                                qds.getString("adSearchTitle").toString()
+                                            var adAllImages: String =
+                                                qds.getString("adAllImages").toString()
+                                            var adLocation: String =
+                                                qds.getString("adLocation").toString()
+                                            var adPhoneNo: String =
+                                                qds.getString("adPhoneNo").toString()
+
+
+                                            myAdsRV.startLayoutAnimation()
+                                            adList.add(
+                                                AdModel(
+                                                    displayAdTitle,
+                                                    displayAdDetail,
+                                                    displayAdPrice,
+                                                    displayAdImage,
+                                                    displayAdType,
+                                                    displayAdUserId,
+                                                    adSearchTitle,
+                                                    adAllImages,
+                                                    adLocation,
+                                                    adPhoneNo
+                                                )
+                                            )
+                                            adIds.add(adsId)
+                                            adAllImgLinkList.add(adAllImages)
+                                            myAdsRVAdapter.notifyDataSetChanged()
+                                            searchNothingImage.visibility = View.GONE
+                                            searchNothingText.visibility = View.GONE
+                                            shimmerMyAds.visibility = View.GONE
+
+                                        }
+
+                                    }
+
+                                myAdsRVAdapter.notifyDataSetChanged()
+                                }
+                            }
+                        })
+                }.await()
+            }catch (e:Exception){
+                Log.d("hi","")
+            }
+            myAdsRVAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onAdItemClick(pos: Int, adImage: ImageView) {
@@ -209,4 +229,4 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
 
         super.onAdItemClick(pos, adImage)
     }
-}
+}//main
