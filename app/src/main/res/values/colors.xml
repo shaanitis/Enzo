@@ -10,6 +10,7 @@
     <color name="orange_main">#FF6600</color>
     <color name="red">#FF0000</color>
     <color name="orange_200">#FF9D5C</color>
+    <color name="orange_00">#EAB28D</color>
     <color name="searchBackground">#D9E6E6E2</color>
     <color name="navBarbg">#FBF6F7</color>
 </resources>

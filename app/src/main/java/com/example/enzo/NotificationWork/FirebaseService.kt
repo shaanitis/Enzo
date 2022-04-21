@@ -9,7 +9,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import com.example.enzo.BuyerActivity
+import com.example.enzo.ChattingScreen
+import com.example.enzo.MainActivity
 import com.example.enzo.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -17,10 +20,11 @@ import kotlin.random.Random
 
 
 private const val CHANNEL_ID="newChannel"
+private const val channelName="channelName"
 class FirebaseService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        val intent= Intent(this, BuyerActivity::class.java)
+        val intent= Intent(this, MainActivity::class.java)
         val notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID= Random.nextInt()
 
@@ -30,10 +34,10 @@ class FirebaseService : FirebaseMessagingService() {
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent=PendingIntent.getActivity(this, 0, intent, FLAG_ONE_SHOT)
-    val notification= androidx.core.app.NotificationCompat.Builder(this, CHANNEL_ID)
+    val notification= NotificationCompat.Builder(this, CHANNEL_ID)
         .setContentTitle(message.data["title"])
         .setContentText(message.data["message"])
-        .setSmallIcon(R.drawable.ic_notify)
+        .setSmallIcon(R.drawable.saveicon)
         .setAutoCancel(true)
         .setContentIntent(pendingIntent)
         .build()
@@ -43,10 +47,9 @@ class FirebaseService : FirebaseMessagingService() {
 
    @RequiresApi(Build.VERSION_CODES.O)
    private fun createNotificationChannel(notificationManager: NotificationManager){
-        val channelName="channelName"
+
        val channel=NotificationChannel(CHANNEL_ID, channelName, IMPORTANCE_HIGH).apply {
-           description="New Channel Description"
-           enableLights(true)
+           description="My Channel Description"
        }
        notificationManager.createNotificationChannel(channel)
 

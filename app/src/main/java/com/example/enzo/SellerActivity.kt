@@ -6,11 +6,16 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import com.example.enzo.Models.AccountInfo
 import com.example.enzo.NotificationWork.DataNotification
 import com.example.enzo.NotificationWork.PushNotification
 import com.example.enzo.NotificationWork.RetrofitInstance
 import com.example.enzo.NotificationWork.SenderNotification
+import com.facebook.share.Share
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,14 +33,14 @@ class SellerActivity : AppCompatActivity() {
 /////declaring
     lateinit var auth:FirebaseAuth
     lateinit var fStore:FirebaseFirestore
-    lateinit var token:String
-
 
     lateinit var sellingAccountId:EditText
     lateinit var sellingAccountPassword:EditText
     lateinit var sellingAccountDetails:EditText
-    lateinit var uploadSellingAccountInfo: Button
-    var sellerRevNo:Int=1
+    lateinit var uploadSellingAccountInfo: MaterialButton
+    lateinit var detailsToBuyerText:TextView
+    lateinit var sellerConfirmBtn:Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,99 +50,68 @@ class SellerActivity : AppCompatActivity() {
         auth= FirebaseAuth.getInstance()
         fStore= FirebaseFirestore.getInstance()
 
-        val buyerID:String=intent.getStringExtra("buyerID").toString()
-        val sellerID:String=intent.getStringExtra("sellerID").toString()
-        val buyerSellerRoom:String= buyerID+sellerID
-        val sellerBuyerRoom:String=sellerID+buyerID
+
+        val recieverId:String= intent.getStringExtra("recieverID").toString()
+        val recieverName:String=intent.getStringExtra("nameOfOther").toString()
+
+
+        val senderId:String=auth.currentUser?.uid.toString()
+        val senderRoom:String= senderId+recieverId
+        val recieverRoom:String=recieverId+senderId
 
         sellingAccountId=findViewById(R.id.addSellingAccountId)
         sellingAccountPassword=findViewById(R.id.addSellingAccountPassword)
         sellingAccountDetails=findViewById(R.id.addSellingAccountDetails)
         uploadSellingAccountInfo=findViewById(R.id.uploadSellingAccountInfo)
+        detailsToBuyerText=findViewById(R.id.detailsToBuyerText)
+        detailsToBuyerText.text="Provide details to $recieverName"
+        sellerConfirmBtn=findViewById(R.id.confirmSellerBtn)
 
-
-        ////checking if its 2nd/3rd/4th revision///////////
-
-        var sp: SharedPreferences = getSharedPreferences("sellerRev", MODE_PRIVATE)
-        if (sp.contains("sellerRev")){
-            if (sp.getInt("sellerRev", 1)>=1){
-
-               sellerRevNo=sellerRevNo+1
-
+        var sellerRevNo=1
+        ////putting seller rev to shared preferences
+        val tp:SharedPreferences=getSharedPreferences("sellerRevNo", MODE_PRIVATE)
+        if (tp.contains("revNo")){
+            if (tp.getInt("revNo",1)>=1){
+                 sellerRevNo=sellerRevNo+1
+                val tpEdit:SharedPreferences.Editor=tp.edit()
+                tpEdit.putInt("revNo", sellerRevNo)
+                tpEdit.commit()
             }
         }
 
-        FirebaseMessaging.getInstance().token.addOnSuccessListener {
-            token=it.toString()
-            Log.d("tkkkkk", token.toString())
-        }
-        val apiService= RetrofitInstance
+
+
         uploadSellingAccountInfo.setOnClickListener {
 
+                 /*   val accountInfoModel: AccountInfo = AccountInfo(
+                                     accountID = sellingAccountId.text.toString(),
+                                     accountPassword = sellingAccountPassword.text.toString(),
+                                     accountDetail = sellingAccountDetails.text.toString(),
+                                     revNo = sellerRevNo
+                                 )
 
-            var sp: SharedPreferences = getSharedPreferences("sellerRev", MODE_PRIVATE)
-            val ed: SharedPreferences.Editor= sp.edit()
-            ed.putInt("sellerRev", sellerRevNo)
-            ed.commit()
+                                 val sR: DocumentReference = fStore.collection("users")
+                                     .document(recieverId).collection("accountDetails").document()
+
+                                 sR.set(accountInfoModel)*/
 
 
+                Toast.makeText(this, sellerRevNo.toString(), Toast.LENGTH_SHORT).show()
 
-            val accountInfoModel: AccountInfo = AccountInfo( accountID = sellingAccountId.text.toString()
-                , accountPassword = sellingAccountPassword.text.toString()
-                , accountDetail = sellingAccountDetails.text.toString()
-                , revNo = sellerRevNo)
 
-            val sR: DocumentReference = fStore.collection("users")
-                .document(buyerID).collection("AccountDetails").document()
+            }
 
-            sR.set(accountInfoModel)
 
-    /*        Toast.makeText(this, "Uploaded to $buyerID", Toast.LENGTH_SHORT).show()*/
-
-            /*val rR: DocumentReference = fStore.collection("users")
-                .document(buyerID).collection("Account Details").document()
-
-            rR.set(accountInfoModel)*/
 
 //notificationWork
 
-            val title=sellingAccountId.text.toString()
-            val message=sellingAccountPassword.text.toString()
 
 
-            val senderNotification=SenderNotification(token,title,message,this, this)
 
-            PushNotification(DataNotification(title, message), TOPIC ).also {
-               sendNotification(it)
-
-            }
-
-        }
 
 
 
 
     }//oncreate
-
-
-/////notification work
-    private fun sendNotification(notification: PushNotification)= CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val response=RetrofitInstance.api.postNotification(notification)
-
-            if (response.isSuccessful) {
-                Log.d("pyar", "Response: ${Gson().toJson(response)}")
-
-            }else{
-                Log.d("etron", response.errorBody().toString())
-
-            }
-        } catch (e:Exception){
-            Log.d("taggerr", e.toString())
-
-        }
-}
-
-
 
 }//main

@@ -17,11 +17,13 @@ import com.bumptech.glide.Glide
 import com.example.enzo.LoginActivity
 import com.example.enzo.R
 import com.facebook.login.LoginManager
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -44,6 +46,7 @@ class ProfileFrag : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
 // Inflate the layout for this fragment
         val view: View= inflater.inflate(R.layout.fragment_profile, container, false)
 /////initializng

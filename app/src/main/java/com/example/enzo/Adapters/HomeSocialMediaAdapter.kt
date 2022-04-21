@@ -88,7 +88,7 @@ class HomeSocialMediaAdapter(
         val displayAdTitle: TextView = itemView.findViewById(R.id.displayAdTitle)
         val displayAdPrice: TextView = itemView.findViewById(R.id.displayAdPrice)
         val displayAdImage: ImageView = itemView.findViewById(R.id.displayAdImage)
-        val saveAdBtn: ImageButton = itemView.findViewById(R.id.saveAdBtn)
+        val saveAdBtn: ImageView = itemView.findViewById(R.id.saveAdBtn)
 
         val clickListenerView: View?= itemView
 

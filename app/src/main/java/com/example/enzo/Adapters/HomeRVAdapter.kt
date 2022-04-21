@@ -1,5 +1,6 @@
 package com.example.enzo.Adapters
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.enzo.Models.AdModel
 import com.example.enzo.OnClickRV.HomeRVOnClick
 import com.example.enzo.R
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import kotlin.coroutines.coroutineContext
 
 class HomeRVAdapter(
     val context: Context,
@@ -74,8 +77,12 @@ class HomeRVAdapter(
         }
 
         holder.saveAdBtn.setOnClickListener {
-            Toast.makeText(context, "Ad saved to your list", Toast.LENGTH_SHORT).show()
-            holder.saveAdBtn.setImageResource(R.drawable.hearticon)
+            val sb=Snackbar.make(it, "Ad saved to your list", Snackbar.LENGTH_SHORT)
+            sb.setAction("Got It"){
+                sb.dismiss()
+            }.show()
+
+            holder.saveAdBtn.setImageResource(R.drawable.saveicon)
             val strRef: DocumentReference = fStore.collection("savedAds").document(adIds[position])
             val hash = hashMapOf("userId" to auth.currentUser?.uid.toString())
             strRef.set(hash)
@@ -92,7 +99,7 @@ class HomeRVAdapter(
         val displayAdTitle: TextView = itemView.findViewById(R.id.displayAdTitle)
         val displayAdPrice: TextView = itemView.findViewById(R.id.displayAdPrice)
         val displayAdImage: ImageView = itemView.findViewById(R.id.displayAdImage)
-       val saveAdBtn: ImageButton = itemView.findViewById(R.id.saveAdBtn)
+       val saveAdBtn: ImageView = itemView.findViewById(R.id.saveAdBtn)
 
         val clickListenerView: View?= itemView
 

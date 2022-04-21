@@ -170,8 +170,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="68dp"
         android:orientation="horizontal"
+        android:background="@color/navBarbg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
@@ -183,6 +184,7 @@
         android:layout_height="55dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
@@ -237,6 +239,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginEnd="10dp"
         app:cardCornerRadius="17dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
 
         android:backgroundTint="#F5EAE3"

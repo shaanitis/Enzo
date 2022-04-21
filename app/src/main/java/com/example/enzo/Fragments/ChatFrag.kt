@@ -9,11 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -25,9 +23,7 @@ import com.example.enzo.Models.AllChatsModel
 import com.example.enzo.OnClickRV.SwipeGestures
 import com.example.enzo.OnClickRV.UserChatOnClick
 import com.example.enzo.R
-import com.example.enzo.ViewAdActivity
 import com.example.enzo.ViewModels.ChatFragViewModel
-import com.example.enzo.ViewModels.TryViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -38,50 +34,47 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.lang.Exception
 
 class ChatFrag : Fragment(), UserChatOnClick {
     lateinit var fStore: FirebaseFirestore
-    lateinit var auth:FirebaseAuth
-    lateinit var db:FirebaseDatabase
-    lateinit  var allChatsRV: RecyclerView
+    lateinit var auth: FirebaseAuth
+    lateinit var db: FirebaseDatabase
+    lateinit var allChatsRV: RecyclerView
     lateinit var allChatsList: ArrayList<AllChatsModel>
-    lateinit var shimmerUserChat:ShimmerFrameLayout
-    lateinit var idsOfChats:ArrayList<String>
-    lateinit var allChatsAdapter:AllChatsAdapter
+    lateinit var shimmerUserChat: ShimmerFrameLayout
+    lateinit var idsOfChats: ArrayList<String>
+    lateinit var allChatsAdapter: AllChatsAdapter
     lateinit var viewModel: ChatFragViewModel
-    lateinit var chatList:ArrayList<AllChatsModel>
+    lateinit var chatList: ArrayList<AllChatsModel>
     lateinit var searchNothingImage: ImageView
     lateinit var searchNothingText: TextView
-    lateinit var testText: TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
 
-        val view:View= inflater.inflate(R.layout.fragment_chat, container, false)
-          auth= FirebaseAuth.getInstance()
-        fStore= FirebaseFirestore.getInstance()
-        db= FirebaseDatabase.getInstance()
+        val view: View = inflater.inflate(R.layout.fragment_chat, container, false)
+        auth = FirebaseAuth.getInstance()
+        fStore = FirebaseFirestore.getInstance()
+        db = FirebaseDatabase.getInstance()
 
-       shimmerUserChat=view.findViewById(R.id.shimmerUserChat)
-        allChatsRV= view.findViewById(R.id.allChatsRV)
-        searchNothingImage=view.findViewById(R.id.searchNothingImage)
-        searchNothingText=view.findViewById(R.id.searchNothingText)
-        searchNothingImage.visibility=View.GONE
-        searchNothingText.visibility=View.GONE
+        shimmerUserChat = view.findViewById(R.id.shimmerUserChat)
+        allChatsRV = view.findViewById(R.id.allChatsRV)
+        searchNothingImage = view.findViewById(R.id.searchNothingImage)
+        searchNothingText = view.findViewById(R.id.searchNothingText)
+        searchNothingImage.visibility = View.GONE
+        searchNothingText.visibility = View.GONE
 
 
-        allChatsList= arrayListOf<AllChatsModel>()
-        idsOfChats= arrayListOf()
-chatList= arrayListOf()
+        allChatsList = arrayListOf<AllChatsModel>()
+        idsOfChats = arrayListOf()
+        chatList = arrayListOf()
 
 ////setting up recycler view adapter
-        allChatsRV.layoutManager= LinearLayoutManager(requireContext())
+        allChatsRV.layoutManager = LinearLayoutManager(requireContext())
         allChatsRV.setHasFixedSize(true)
 
 
@@ -89,18 +82,18 @@ chatList= arrayListOf()
 
 
 
-      allChatsAdapter= AllChatsAdapter(requireContext(), allChatsList, this)
-        allChatsRV.adapter=allChatsAdapter
-
+        allChatsAdapter = AllChatsAdapter(requireContext(), allChatsList, this, idsOfChats)
+        allChatsRV.adapter = allChatsAdapter
+        allChatsAdapter.notifyDataSetChanged()
         ///displaying chats
 
         allChatsList.clear()
 
 
-           displayUserChats()
+        displayUserChats()
 
         /////recycler view swipe gestures
-       /* val swipeGesture= object : SwipeGestures(requireContext()){
+         val swipeGesture= object : SwipeGestures(requireContext()){
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 when(direction) {
 
@@ -115,9 +108,11 @@ chatList= arrayListOf()
                             .setPositiveButton("Yes, delete"){dialog, it->
 
                                 allChatsAdapter.deleteItem(viewHolder.position)
-
-                                Snackbar.make(allChatsRV, "Ad deleted Succesfully", Snackbar.LENGTH_SHORT)
-                                    .show()
+                                allChatsAdapter.notifyDataSetChanged()
+                                val sb=Snackbar.make(allChatsRV, "Chat deleted Succesfully", Snackbar.LENGTH_SHORT)
+                                    sb.setAction("Got It"){
+                                    sb.dismiss()
+                                }.show()
                             }
                             .show()
                     }
@@ -129,9 +124,10 @@ chatList= arrayListOf()
 
         val touchHelper= ItemTouchHelper(swipeGesture)
         touchHelper.attachToRecyclerView(allChatsRV)
-*/
+
+
 ///onBackPress
-        val callback=object : OnBackPressedCallback(true){
+        val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().navigate(R.id.action_chatFrag_to_homeFrag)
             }
@@ -147,88 +143,98 @@ chatList= arrayListOf()
     private fun displayUserChats() {
 
 
-        ///////getting ids of uploaders with whom user chatted and saving ids in array list idsOfChats
+    ///////getting ids of uploaders with whom user chatted and saving ids in array list idsOfChats
+
         lifecycleScope.async(Dispatchers.IO) {
-                      try {
 
-val job=async {
-    fStore.collection("users")
-        .document(auth.currentUser!!.uid)
-        .collection("idOfUploaderChats")
-        .get()
-        .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-            override fun onSuccess(qs: QuerySnapshot?) {
-                if (qs!!.isEmpty){
-                    searchNothingImage.visibility=View.VISIBLE
-                    searchNothingText.visibility=View.VISIBLE
-                    shimmerUserChat.visibility = View.GONE
-                } else{
-                for (qds: QueryDocumentSnapshot in qs!!) {
-                    val idOfUploaderChats: String =
-                        qds.getString("idOfUploaderChats").toString()
-                    idsOfChats.add("$idOfUploaderChats")
+            try {
 
-                }
-                }
+
+           val job=async {
+               fStore.collection("users")
+                   .document(auth.currentUser!!.uid)
+                   .collection("idOfUploaderChats")
+                   .get()
+                   .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
+                       override fun onSuccess(qs: QuerySnapshot?) {
+                           if (qs!!.isEmpty) {
+
+                               searchNothingImage.visibility = View.VISIBLE
+                               searchNothingText.visibility = View.VISIBLE
+                               shimmerUserChat.visibility = View.GONE
+
+                           } else {
+                               for (qds: QueryDocumentSnapshot in qs!!) {
+                                   val idOfUploaderChats: String =
+                                       qds.getString("idOfUploaderChats").toString()
+                                   idsOfChats.add("$idOfUploaderChats")
+
+                               }
+                           }
 ////////looping through array of ids and getting info of each id and displaying chats overall
-                for (i in idsOfChats) {
+                           for (i in idsOfChats) {
 
-                    val documentReference: DocumentReference =
-                        fStore.collection("users").document(i)
-                    documentReference.get().addOnSuccessListener {
-                        allChatsRV.startLayoutAnimation()
-                        var nameOfUserChatclicked: String =
-                            it.getString("profileName").toString()
-                        var imgUrlOfUserChatClicked: String =
-                            it.getString("profileUrl").toString()
-                        var idOfUserChatClicked: String = it.id
-                        allChatsList.add(
-                            AllChatsModel(
-                                nameOfUserChatclicked,
-                                imgUrlOfUserChatClicked,
-                                idOfUserChatClicked
-                            )
-                        )
-                        shimmerUserChat.visibility = View.GONE
-                        allChatsAdapter.notifyDataSetChanged()
+                               val documentReference: DocumentReference =
+                                   fStore.collection("users").document(i)
+                               documentReference.get().addOnSuccessListener {
+                                   allChatsRV.startLayoutAnimation()
+                                   var nameOfUserChatclicked: String =
+                                       it.getString("profileName").toString()
+                                   var imgUrlOfUserChatClicked: String =
+                                       it.getString("profileUrl").toString()
+                                   var idOfUserChatClicked: String = it.id
+                                   allChatsList.add(
+                                       AllChatsModel(
+                                           nameOfUserChatclicked,
+                                           imgUrlOfUserChatClicked,
+                                           idOfUserChatClicked
+                                       )
+                                   )
+
+                                   shimmerUserChat.visibility = View.GONE
+                                   allChatsAdapter.notifyDataSetChanged()
 
 
-                    }
+                               }
 
-                }
+                           }
 
+                       }
+
+                   })
+           }.await()
                 allChatsAdapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.d("err", "")
             }
-
-        })
+        }
 }
-    } catch (e:Exception){
-        Log.d("", "")
-    }
-}
-    }
-
 
     override fun onAdItemClick(pos: Int, userName:TextView, userImg: ImageView ) {
-        val intent= Intent(requireContext(), ChattingScreen::class.java)
-        //seller details
-        intent.putExtra("idOfAdUploaderSeller", allChatsList[pos].idOfUserChatClicked)
-        intent.putExtra("imgOfAdUploaderSeller", allChatsList[pos].imgOfUserChatClicked)
-        intent.putExtra("nameOfAdUploaderSeller", allChatsList[pos].nameOfUserChatClicked)
-        //buyer id
-        intent.putExtra("idOfBuyerWhoClickedChat", auth.currentUser?.uid.toString())
 
-        val p1: Pair<View, String>
-        p1= Pair(userName, "userChatNameTrans")
 
-        val p2: Pair<View, String>
-        p2= Pair(userImg, "userChatImgTrans")
 
-        val extras= ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(),p1, p2)
-        startActivity(intent, extras.toBundle())
+         val intent = Intent(requireContext(), ChattingScreen::class.java)
+         //seller details
+         intent.putExtra("idOfWhoseChatClicked", allChatsList[pos].idOfUserChatClicked)
+         intent.putExtra("imgOfWhoseChatClicked", allChatsList[pos].imgOfUserChatClicked)
+         intent.putExtra("nameOfWhoseChatClicked", allChatsList[pos].nameOfUserChatClicked)
+         //buyer id
+         intent.putExtra("idOfBuyerWhoClickedChat", auth.currentUser?.uid.toString())
+
+         val p1: Pair<View, String>
+         p1 = Pair(userName, "userChatNameTrans")
+
+         val p2: Pair<View, String>
+         p2 = Pair(userImg, "userChatImgTrans")
+
+         val extras = ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), p1, p2)
+         startActivity(intent, extras.toBundle())
 
         super.onAdItemClick(pos,userName, userImg)
-    }
+
+
+     }
 
 
 

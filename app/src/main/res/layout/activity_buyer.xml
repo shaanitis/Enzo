@@ -6,22 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".BuyerActivity">
 
-    <TextView
-        android:id="@+id/accountInfoAppear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="30dp"
-        android:fontFamily="sans-serif"
-        android:maxHeight="300dp"
-        android:text="Account Details will apear her after payment is done!"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="28sp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/chatTitle"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:backgroundTint="@color/orange_200"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/detailsToBuyerText"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:maxWidth="300dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Pay to recieve account info"
+                android:fontFamily="@font/arimo"
+                android:textStyle="bold"
+                android:layout_marginStart="15dp"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+
+                />
+            <ImageView
+                app:layout_constraintRight_toLeftOf="@+id/detailsToBuyerText"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/trade"
+                app:tint="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:id="@+id/revBtnsLayout"
@@ -32,15 +59,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/addPaymentAmount"
-        android:visibility="gone">
+        app:layout_constraintBottom_toTopOf="@+id/askInfoAgainBtn"
+        >
 
         <Button
             android:id="@+id/rev1Btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:backgroundTint="#EFEBEB"
-            android:textColor="@color/black"
+            android:backgroundTint="@color/orange_200"
+            android:textColor="@color/white"
             android:text="1" />
 
         <Button
@@ -48,8 +75,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="10dp"
-            android:backgroundTint="#EFEBEB"
-            android:textColor="@color/black"
+            android:backgroundTint="@color/orange_200"
+            android:textColor="@color/white"
             android:text="2" />
 
         <Button
@@ -57,8 +84,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="10dp"
-            android:backgroundTint="#EFEBEB"
-            android:textColor="@color/black"
+            android:backgroundTint="@color/orange_200"
+            android:textColor="@color/white"
             android:text="3" />
 
         <Button
@@ -66,51 +93,86 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="10dp"
-            android:backgroundTint="#EFEBEB"
-            android:textColor="@color/black"
+            android:backgroundTint="@color/orange_200"
+            android:textColor="@color/white"
             android:text="4" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/addPaymentAmount"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginRight="40dp"
-        android:background="#E9F1F0"
-        android:inputType="number"
-        app:layout_constraintTop_toBottomOf="@+id/accountInfoAppear" />
-
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:id="@+id/getAccountInfoTextView"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@+id/revBtnsLayout"
+    android:layout_marginBottom="15dp"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
+    />
     <Button
-        android:id="@+id/paymentDoneBtn"
-        android:layout_width="match_parent"
+        android:id="@+id/payWithEasypaisaBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="170dp"
         android:layout_height="60dp"
-        android:layout_marginLeft="100dp"
+        android:backgroundTint="@color/orange_200"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="100dp"
-        android:text="Pay"
-        app:layout_constraintTop_toBottomOf="@+id/addPaymentAmount" />
-
+        android:layout_marginStart="10dp"
+        android:text="Pay with Easy Paisa"
+        android:textAllCaps="false"
+        android:fontFamily="@font/arimo"
+        app:layout_constraintTop_toBottomOf="@+id/chatTitle" />
     <Button
+        android:id="@+id/payWithJazzcashBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="170dp"
+        android:layout_height="60dp"
+
+        android:backgroundTint="@color/orange_200"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:text="Pay with \nJazz Cash"
+        android:textAllCaps="false"
+        android:fontFamily="@font/arimo"
+        app:layout_constraintTop_toBottomOf="@+id/chatTitle" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/askInfoAgainBtn"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="80dp"
-        android:text="Ask AccountDetails Again?"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:textSize="16sp"
+        android:fontFamily="@font/arimo"
+        android:textStyle="bold"
+        app:cornerRadius="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/orange_200"
+        android:text="Get account info"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/confirmBuyerBtn" />
 
     <Button
         android:id="@+id/confirmBuyerBtn"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="10dp"
-        android:text="Confirm Order"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_height="85dp"
+        android:drawableLeft="@drawable/tick_icon"
+        android:drawableTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="-15dp"
+        android:paddingBottom="15dp"
+        android:backgroundTint="@color/orange_main"
+
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:fontFamily="@font/arimo"
+
+        android:text="Confirm Account Transfer"/>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

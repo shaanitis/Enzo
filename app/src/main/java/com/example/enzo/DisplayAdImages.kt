@@ -48,7 +48,7 @@ class DisplayAdImages : AppCompatActivity() {
             Log.d("","")
         }
 
-goBackBtn=findViewById(R.id.goBackBtn)
+       goBackBtn=findViewById(R.id.goBackBtn)
         goBackBtn.setOnClickListener {
             finish()
         }
@@ -65,8 +65,6 @@ goBackBtn=findViewById(R.id.goBackBtn)
      } catch (e:Exception){
          Log.e("", e.message.toString())
      }
-
-
 
 
   displayAllImages()

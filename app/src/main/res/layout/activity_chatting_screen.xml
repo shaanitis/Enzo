@@ -9,18 +9,19 @@
     tools:context=".ChattingScreen">
 
 
-<androidx.cardview.widget.CardView
+   <androidx.cardview.widget.CardView
     android:id="@+id/sendTextCardView"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
+    android:minHeight="50dp"
     android:layout_marginBottom="7dp"
     app:cardCornerRadius="30dp"
     android:layout_marginStart="8dp"
     app:layout_constraintBottom_toBottomOf="parent"
-   app:layout_constraintStart_toStartOf="parent"
- app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
     android:layout_marginEnd="60dp">
-    <androidx.constraintlayout.widget.ConstraintLayout
+     <androidx.constraintlayout.widget.ConstraintLayout
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,7 +41,11 @@
         <EditText
             android:id="@+id/chatText"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:maxHeight="120dp"
+            android:maxLines="5"
+            android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="parent"
              app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,9 +55,12 @@
             android:backgroundTint="#FCFCFC"
             android:ems="10"
             android:hint="Type message.."
-            android:inputType="textCapSentences"
+            android:inputType="textCapSentences|textMultiLine"
             android:isScrollContainer="true"
-            android:padding="7dp" />
+            android:paddingStart="7dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:paddingEnd="12dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -69,6 +77,8 @@
             android:layout_marginBottom="7dp"
             android:layout_marginEnd="5dp"
             app:cardCornerRadius="25dp"
+            android:clickable="true"
+            android:hapticFeedbackEnabled="true"
             android:backgroundTint="@color/orange_200"
            >
             <ImageView
@@ -84,8 +94,8 @@
         android:id="@+id/chatRView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="65dp"
-
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="61dp"
         app:layout_constraintBottom_toTopOf="@id/sendTextCardView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +112,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/orange_200"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme">
+        android:theme="@style/noActionBar">
 
        <androidx.constraintlayout.widget.ConstraintLayout
            android:layout_width="match_parent"

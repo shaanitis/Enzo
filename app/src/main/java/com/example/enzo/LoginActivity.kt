@@ -30,12 +30,9 @@ import java.util.*
 public class LoginActivity : AppCompatActivity() {
 
 ///declaring
-    lateinit var googleLoginBtn: Button
-    lateinit var customFbBtn: Button
+    lateinit var googleLoginBtn: ImageView
+    lateinit var customFbBtn: ImageView
     lateinit var fbLoginBtn:LoginButton
-    lateinit var emailLogin: EditText
-    lateinit var passwordLogin: EditText
-    lateinit var loginBtn: Button
     lateinit var auth: FirebaseAuth
     lateinit var fStore :FirebaseFirestore
     lateinit var progressBar: ProgressBar
@@ -51,12 +48,8 @@ public class LoginActivity : AppCompatActivity() {
         this.supportActionBar?.hide()
 /////initialzing
         googleLoginBtn= findViewById(R.id.googleLoginBtn)
-        emailLogin= findViewById(R.id.emailLogin)
         customFbBtn=findViewById(R.id.customfbBtn)
         fbLoginBtn=findViewById(R.id.fbLoginBtn)
-        passwordLogin= findViewById(R.id.passwordLogin)
-        loginBtn= findViewById(R.id.loginBtn)
-        val goToHome= findViewById<Button>(R.id.goToHome)
         auth = FirebaseAuth.getInstance()
         fStore= FirebaseFirestore.getInstance()
         FacebookSdk.sdkInitialize(applicationContext)
@@ -127,12 +120,7 @@ public class LoginActivity : AppCompatActivity() {
                 .logInWithReadPermissions(this, Arrays.asList("email", "public_profile"))
         }
 
-///////////goToHomeevelopment
 
-        goToHome.setOnClickListener {
-            val intent=Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
 
     }//oncreate
 

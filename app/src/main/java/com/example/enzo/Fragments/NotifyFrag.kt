@@ -122,8 +122,10 @@ class NotifyFrag : Fragment(), SavedAdsOnClick {
                             .setPositiveButton("Yes, delete"){dialog, it->
 
                                 savedAdsRVAdapter.deleteItem(viewHolder.position)
-                                Snackbar.make(savedAdsRV, "Ad removed from saved list", Snackbar.LENGTH_SHORT)
-                                    .show()
+                                val sb=Snackbar.make(savedAdsRV, "Ad removed from your list", Snackbar.LENGTH_SHORT)
+                                sb.setAction("Got It"){
+                                    sb.dismiss()
+                                }.show()
                             }
                             .show()
 

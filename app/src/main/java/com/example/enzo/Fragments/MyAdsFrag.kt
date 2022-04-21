@@ -112,8 +112,10 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
 
                                myAdsRVAdapter.deleteItem(viewHolder.position)
 
-                                Snackbar.make(myAdsRV, "Ad deleted Succesfully", Snackbar.LENGTH_SHORT)
-                                    .show()
+                                val sb=Snackbar.make(myAdsRV, "Ad deleted successfully", Snackbar.LENGTH_SHORT)
+                                sb.setAction("Got It"){
+                                    sb.dismiss()
+                                }.show()
                             }
                             .show()
                     }
@@ -137,6 +139,7 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
 
                 val job = async {
                     fStore.collection("ads")
+                        .whereEqualTo("adUserId", auth.currentUser?.uid.toString())
                         .get()
                         .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
                             override fun onSuccess(qs: QuerySnapshot?) {
@@ -147,8 +150,8 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
                                 } else {
 
                                     for (qds: QueryDocumentSnapshot in qs!!) {
-                                        val adUserId: String = qds.get("adUserId").toString()
-                                        if (adUserId.equals(auth.currentUser?.uid.toString())) {
+
+
                                             var adsId: String = qds.id.toString()
                                             var displayAdTitle: String =
                                                 qds.getString("adTitle").toString()
@@ -196,7 +199,7 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
 
                                         }
 
-                                    }
+
 
                                 myAdsRVAdapter.notifyDataSetChanged()
                                 }

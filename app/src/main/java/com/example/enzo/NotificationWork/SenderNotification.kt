@@ -20,6 +20,7 @@ class SenderNotification(
     var mContext: Context,
     var mActivity: Activity
 ) {
+
     private var requestQueue: RequestQueue? = null
     private val postUrl = "https://fcm.googleapis.com/fcm/send"
     private val fcmServerKey =

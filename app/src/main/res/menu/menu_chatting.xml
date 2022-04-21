@@ -6,13 +6,15 @@
     <item
         android:id="@+id/trade"
         android:title="Trade"
-        app:showAsAction="never"
+        app:showAsAction="withText"
+        android:icon="@drawable/trade"
 
         />
     <item
         android:id="@+id/userProfile"
         android:title="User Profile"
-        app:showAsAction="never"
+        app:showAsAction="withText"
+        android:icon="@drawable/ic_person"
       />
 
 

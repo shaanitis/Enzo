@@ -21,9 +21,8 @@ class BuyerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_buyer)
 
 
-        val accountInfoApear:TextView=findViewById(R.id.accountInfoAppear)
-        val addPaymentAmount:EditText=findViewById(R.id.addPaymentAmount)
-        val paymentDoneBtn:Button=findViewById(R.id.paymentDoneBtn)
+        val accountInfoApear:TextView=findViewById(R.id.getAccountInfoTextView)
+        val paymentDoneBtn:Button=findViewById(R.id.payWithEasypaisaBtn)
         val confirmBuyerBtn:Button=findViewById(R.id.confirmBuyerBtn)
         val askInfoAgainBtn:Button=findViewById(R.id.askInfoAgainBtn)
         ///rev btns
@@ -35,6 +34,8 @@ class BuyerActivity : AppCompatActivity() {
 
         val fStore:FirebaseFirestore= FirebaseFirestore.getInstance()
         val auth:FirebaseAuth= FirebaseAuth.getInstance()
+
+        val recieverId:String= intent.getStringExtra("recieverID").toString()
 
         val sellerID=intent.getStringExtra("sellerID")
         val buyerID=intent.getStringExtra("buyerID")

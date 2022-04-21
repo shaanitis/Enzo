@@ -6,73 +6,139 @@
     android:layout_height="match_parent"
     tools:context=".SellerActivity">
 
-    <TextView
-        android:id="@+id/tagAddDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/chatTitle"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="15dp"
-        android:text="Provide Details"
-        android:textSize="28sp"
-        android:textColor="@color/black"
-        android:fontFamily="@font/acme"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:backgroundTint="@color/orange_200"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/detailsToBuyerText"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:maxWidth="300dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Provide details to the buyer"
+                android:fontFamily="@font/arimo"
+                android:textStyle="bold"
+                android:layout_marginStart="15dp"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+
+                />
+    <ImageView
+      app:layout_constraintRight_toLeftOf="@+id/detailsToBuyerText"
+                app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/trade"
+                app:tint="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <EditText
         android:id="@+id/addSellingAccountId"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/email_bg"
-        android:hint="Id/Email of account to sell"
-        android:paddingLeft="10dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        app:layout_constraintTop_toBottomOf="@id/tagAddDetails"
+        android:hint="Id/Email of account"
+       android:drawableStart="@drawable/ic_baseline_email_24"
+        android:drawableTint="@color/orange_200"
+        android:paddingStart="10dp"
+        android:drawablePadding="10dp"
+       app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintTop_toBottomOf="@id/chatTitle"
         android:layout_marginTop="20dp"/>
     <EditText
         android:id="@+id/addSellingAccountPassword"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/email_bg"
-        android:hint="Password of account to sell"
-        android:paddingLeft="10dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:hint="Password of account"
+        android:drawableTint="@color/orange_200"
+        android:drawableStart="@drawable/ic_baseline_vpn_key_24"
+        android:paddingStart="10dp"
+        android:drawablePadding="10dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintTop_toBottomOf="@id/addSellingAccountId"
         android:layout_marginTop="20dp"/>
 
     <EditText
         android:id="@+id/addSellingAccountDetails"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:background="@drawable/email_bg"
-        android:hint="Other Details of account to sell"
-        android:paddingLeft="10dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:hint="Other Details of account"
+        android:drawableTint="@color/orange_200"
+        android:drawableStart="@drawable/detailicon"
+        android:paddingStart="10dp"
+        android:drawablePadding="10dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintTop_toBottomOf="@id/addSellingAccountPassword"
         android:layout_marginTop="20dp"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/uploadSellingAccountInfo"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:layout_constraintTop_toBottomOf="@id/addSellingAccountDetails"
-        android:layout_marginTop="40dp"
-        android:text="Upload Details"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/orange_200"
+        android:text="Send Details"
+        android:fontFamily="@font/arimo"
+        android:textStyle="bold"
+        app:cornerRadius="20dp"
+        android:textSize="18sp"
         android:textAllCaps="false"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"/>
+       />
     <Button
         android:id="@+id/confirmSellerBtn"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="85dp"
+      android:drawableLeft="@drawable/tick_icon"
+        android:drawableTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="Confirm Order"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="-15dp"
+    android:paddingBottom="15dp"
+        android:backgroundTint="@color/orange_main"
+
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:fontFamily="@font/arimo"
+
+        android:text="Confirm Account Transfer"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

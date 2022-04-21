@@ -26,6 +26,15 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import android.os.Build
+import android.view.View
+import com.example.enzo.NotificationWork.DataNotification
+import com.example.enzo.NotificationWork.PushNotification
+import com.example.enzo.NotificationWork.RetrofitInstance
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.gson.Gson
+
 
 class ChattingScreen : AppCompatActivity() {
     lateinit var uploaderImgChatting: RoundedImageView
@@ -40,6 +49,7 @@ class ChattingScreen : AppCompatActivity() {
     lateinit var idOfAdUploaderSeller:String
     lateinit var goBackBtn:ImageButton
     lateinit var toolBarChatScreen:Toolbar
+    lateinit var nameOfOtherUser:String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +57,7 @@ class ChattingScreen : AppCompatActivity() {
         setContentView(R.layout.activity_chatting_screen)
 
 
-
+FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 /////initializing
 
         auth= FirebaseAuth.getInstance()
@@ -69,14 +79,13 @@ class ChattingScreen : AppCompatActivity() {
         }
 
 /////getting uploader img and name from chat frag
-        uploaderNameChatting.text=intent.getStringExtra("nameOfAdUploaderSeller")
-        Picasso.get().load(intent.getStringExtra("imgOfAdUploaderSeller")).into(uploaderImgChatting)
+        nameOfOtherUser=intent.getStringExtra("nameOfWhoseChatClicked").toString()
+        uploaderNameChatting.text=nameOfOtherUser
+        Picasso.get().load(intent.getStringExtra("imgOfWhoseChatClicked")).into(uploaderImgChatting)
 
  //////from view ad activity
         ///id of seller ad uploader
-        idOfAdUploaderSeller= intent.getStringExtra("idOfAdUploaderSeller").toString()
-        ///id of buyer who clicked chat
-        val idOfBuyerWhoClickedChat= intent.getStringExtra("idOfBuyerWhoClickedChat")
+        idOfAdUploaderSeller= intent.getStringExtra("idOfWhoseChatClicked").toString()
 
       lifecycleScope.launch(Dispatchers.IO) {
           try {
@@ -104,12 +113,14 @@ class ChattingScreen : AppCompatActivity() {
         chatRView.adapter = chattingAdapter
 
 
+
         val senderId= auth.currentUser?.uid.toString()
         val recieverId=idOfAdUploaderSeller
         val senderRoom= senderId+ recieverId
         val recieverRoom= recieverId + senderId
 
-
+////
+      scrollToLastWhenKeyboardIsUp()
 
 ////getting messages from firestore
         fStore.collection("chats").document(senderId).collection(senderRoom).orderBy("timeStamp")
@@ -122,10 +133,12 @@ class ChattingScreen : AppCompatActivity() {
                         val userId: String=qds.getString("userID").toString()
                         val timeOfText: String= qds.getString("timeOfText").toString()
                         val recieverIde: String= qds.getString("recieverID").toString()
-                        val timeStmap: String= qds.getString("timeStamp").toString()
+                        val timeStamp: String= qds.getString("timeStamp").toString()
 
                         chatRView.startLayoutAnimation()
-                        msgList.add(MessageModel(userId, msg, timeOfText,recieverIde, timeStmap))
+                        msgList.add(MessageModel(userId, msg, timeOfText,recieverIde, timeStamp))
+                        //scroll to last
+                        chatRView.scrollToPosition(chattingAdapter.getItemCount()-1);
 
                     }
                     chattingAdapter.notifyDataSetChanged()
@@ -142,7 +155,7 @@ class ChattingScreen : AppCompatActivity() {
            var chatTextString:String?=  chatText.text.toString()
 
             if (chatTextString==""){
-                Toast.makeText(this, "Type message first", Toast.LENGTH_SHORT).show()
+                Log.d("","")
             }else {
                 val currentUserId: String = auth.currentUser?.uid.toString()
 
@@ -171,10 +184,7 @@ class ChattingScreen : AppCompatActivity() {
                 chattingAdapter.notifyDataSetChanged()
 
                 val user = hashMapOf(
-                    "idOfUploaderChats" to currentUserId,
-                    "idOfAdUploaderSeller" to idOfAdUploaderSeller ,
-                    "idOfUserWhoClickedChatBuyer" to idOfBuyerWhoClickedChat
-                )
+                    "idOfUploaderChats" to currentUserId)
                 val zR: DocumentReference = fStore.collection("users")
                     .document(recieverId).collection("idOfUploaderChats")
                     .document(currentUserId)
@@ -192,7 +202,17 @@ class ChattingScreen : AppCompatActivity() {
                 rR.set(msgModel)
                 chatText.setText("")
 
+                //scroll to last
+                chatRView.scrollToPosition(chattingAdapter.itemCount - 1 )
 
+         ////notification work
+                var TOPIC = "/topics/myTopic"
+                val title="Hello"
+                val msg="Guys"
+                  PushNotification(DataNotification(title, msg), TOPIC).also {
+
+                      sendNotification(it)
+                  }
             }
 
 
@@ -203,31 +223,38 @@ class ChattingScreen : AppCompatActivity() {
         tradeBtn.setOnClickListener {
 
 
-           fStore.collection("users").document(auth.currentUser?.uid.toString())
-               .collection("idOfUploaderChats").document(recieverId).get().addOnSuccessListener {
 
-                   if (auth.currentUser?.uid.toString() == it.getString("idOfAdUploaderSeller")) {
-                       val intent = Intent(this, SellerActivity::class.java)
-                       intent.putExtra("yourID", auth.currentUser!!.uid.toString())
-                       intent.putExtra("recieverID", recieverId)
-                       startActivity(intent)
-                   } else if (auth.currentUser?.uid.toString() == it.getString("idOfUserWhoClickedChatBuyer")) {
-                       val intent = Intent(this, BuyerActivity::class.java)
-                       intent.putExtra("yourID", auth.currentUser!!.uid.toString())
-                       intent.putExtra("recieverID", recieverId)
-                       startActivity(intent)
-                   } else {
-                       Log.d("h", "h")
-                   }
+            val intent = Intent(this, BuyerOrSeller::class.java)
+            intent.putExtra("yourID", auth.currentUser!!.uid.toString())
+            intent.putExtra("recieverID", idOfAdUploaderSeller)
+            intent.putExtra("nameOfOther",nameOfOtherUser)
+            startActivity(intent)
 
 
 
-
-
-       }
         }
 
     }///onCreate
+
+    private fun scrollToLastWhenKeyboardIsUp() {
+        if (Build.VERSION.SDK_INT >= 11) {
+            chatRView.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
+                override fun onLayoutChange(
+                    v: View?,
+                    left: Int, top: Int, right: Int, bottom: Int,
+                    oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int
+                ) {
+                    if (bottom < oldBottom) {
+                        chatRView.postDelayed(java.lang.Runnable {
+                            chatRView.smoothScrollToPosition(
+                                chatRView.getAdapter()!!.getItemCount()
+                            )
+                        }, 100)
+                    }
+                }
+            })
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_chatting, menu)
@@ -239,25 +266,27 @@ class ChattingScreen : AppCompatActivity() {
 
         if (item.getItemId() == R.id.trade) {
 
-            fStore.collection("users").document(auth.currentUser?.uid.toString())
-                .collection("idOfUploaderChats").document(idOfAdUploaderSeller).get().addOnSuccessListener {
+            val intent = Intent(this, BuyerOrSeller::class.java)
+            intent.putExtra("recieverID", idOfAdUploaderSeller)
+            intent.putExtra("nameOfOther",nameOfOtherUser)
+            startActivity(intent)
 
-                    if (auth.currentUser?.uid.toString() == it.getString("idOfAdUploaderSeller")) {
-                        val intent = Intent(this, SellerActivity::class.java)
-                        intent.putExtra("yourID", auth.currentUser!!.uid.toString())
-                        intent.putExtra("recieverID", idOfAdUploaderSeller)
-                        startActivity(intent)
-                    } else if (auth.currentUser?.uid.toString() == it.getString("idOfUserWhoClickedChatBuyer")) {
-                        val intent = Intent(this, BuyerActivity::class.java)
-                        intent.putExtra("yourID", auth.currentUser!!.uid.toString())
-                        intent.putExtra("recieverID", idOfAdUploaderSeller)
-                        startActivity(intent)
-                    } else {
-                        Log.d("h", "h")
-                    }
-        }
 
     }
         return super.onOptionsItemSelected(item)
 }
+
+    private fun sendNotification(notification: PushNotification)= CoroutineScope(Dispatchers.IO).launch{
+try {
+    val response=RetrofitInstance.api.postNotification(notification)
+    if (response.isSuccessful){
+        Log.d("defy","response:${response.toString()}")
+    } else{
+        Log.d("defy","${response.errorBody().toString()}")
+    }
+
+}catch (e:Exception){
+    Log.d("","")
+}
+    }
 }//main

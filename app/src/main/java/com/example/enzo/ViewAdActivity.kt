@@ -123,21 +123,16 @@ try {
         chatWithUploaderBtn.setOnClickListener {
 
             if (idOfUploader == auth.currentUser?.uid.toString()) {
-                Snackbar.make(
-                    chatWithUploaderBtn,
-                    "Cannot Chat if its your own Ad",
-                    Snackbar.LENGTH_LONG
-                ).show()
+                val sb=Snackbar.make(chatWithUploaderBtn, "Cannot chat if its your own Ad", Snackbar.LENGTH_SHORT)
+                sb.setAction("Got It"){
+                    sb.dismiss()
+                }.show()
             } else {
 
                 lifecycleScope.launch(Dispatchers.IO) {
 
-                    val user = hashMapOf(
-                        "idOfUploaderChats" to idOfUploader,
-                        "idOfAdUploaderSeller" to idOfUploader,
-                        "idOfUserWhoClickedChatBuyer" to auth.currentUser?.uid
+                    val user = hashMapOf("idOfUploaderChats" to idOfUploader)
 
-                        )
                     val sR: DocumentReference = fStore.collection("users")
                         .document(auth.currentUser!!.uid).collection("idOfUploaderChats")
                         .document(idOfUploader.toString())
@@ -146,8 +141,7 @@ try {
 
                 }
                 val intent = Intent(this, ChattingScreen::class.java)
-                intent.putExtra("idOfAdUploaderSeller", idOfUploader)
-                intent.putExtra("idOfBuyerWhoClickedChat", auth.currentUser?.uid.toString())
+                intent.putExtra("idOfWhoseChatClicked", idOfUploader)
                 startActivity(intent)
             }
 
