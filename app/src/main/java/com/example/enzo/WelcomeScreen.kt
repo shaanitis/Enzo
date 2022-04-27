@@ -25,6 +25,7 @@ class WelcomeScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_Enzo)
         setContentView(R.layout.activity_welcome_screen)
         this.supportActionBar?.hide()
 
@@ -111,11 +112,8 @@ class WelcomeScreen : AppCompatActivity() {
             val currentPage: Int= viewPager.currentItem
             if(currentPage== 3){
                 val i = Intent(this, LoginActivity::class.java)
-                val p2: Pair<View, String>
-                p2= Pair(next, "start")
 
-                val extra= ActivityOptionsCompat.makeSceneTransitionAnimation(this, p2)
-                startActivity(i, extra.toBundle())
+                startActivity(i)
                 finish()
 
                 //////////////////////// checkFirstTime//////////
@@ -136,11 +134,8 @@ class WelcomeScreen : AppCompatActivity() {
             {
 
                 val i = Intent(this, LoginActivity::class.java)
-                val p2: Pair<View, String>
-                p2= Pair(next, "start")
 
-                val extras= ActivityOptionsCompat.makeSceneTransitionAnimation(this, p2)
-                startActivity(i, extras.toBundle())
+                startActivity(i)
                 finish()
             }
 

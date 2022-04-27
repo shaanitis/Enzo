@@ -50,6 +50,7 @@ class ChatFrag : Fragment(), UserChatOnClick {
     lateinit var chatList: ArrayList<AllChatsModel>
     lateinit var searchNothingImage: ImageView
     lateinit var searchNothingText: TextView
+    lateinit var adId:String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -167,6 +168,7 @@ class ChatFrag : Fragment(), UserChatOnClick {
                                for (qds: QueryDocumentSnapshot in qs!!) {
                                    val idOfUploaderChats: String =
                                        qds.getString("idOfUploaderChats").toString()
+                                   adId=qds.getString("adId").toString()
                                    idsOfChats.add("$idOfUploaderChats")
 
                                }
@@ -221,7 +223,7 @@ class ChatFrag : Fragment(), UserChatOnClick {
          intent.putExtra("nameOfWhoseChatClicked", allChatsList[pos].nameOfUserChatClicked)
          //buyer id
          intent.putExtra("idOfBuyerWhoClickedChat", auth.currentUser?.uid.toString())
-
+           intent.putExtra("adId", adId)
          val p1: Pair<View, String>
          p1 = Pair(userName, "userChatNameTrans")
 

@@ -25,16 +25,16 @@
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintGuide_end="16dp"
+            app:layout_constraintGuide_end="10dp"
             android:orientation="vertical" />
 
         <TextView
             android:id="@+id/senderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="7dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="3dp"
             android:fontFamily="sans-serif"
            android:backgroundTint="#F4CAAE"

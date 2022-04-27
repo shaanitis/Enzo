@@ -21,10 +21,12 @@ import com.facebook.login.LoginBehavior
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.iid.FirebaseInstanceIdReceiver
 import com.google.firebase.iid.internal.FirebaseInstanceIdInternal
+import com.google.firebase.messaging.FirebaseMessaging
 import java.util.*
 
 public class LoginActivity : AppCompatActivity() {
@@ -38,6 +40,7 @@ public class LoginActivity : AppCompatActivity() {
     lateinit var progressBar: ProgressBar
     lateinit var googleSignInClient: GoogleSignInClient
     lateinit var cbManager: CallbackManager
+    var token: String? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,15 +180,28 @@ public class LoginActivity : AppCompatActivity() {
                     progressBar.visibility=View.GONE
 
                     val userId= auth.currentUser?.uid
-///////////uploading user data to firestore
-                    val LoginModel= LoginModel(profileName = user!!.displayName .toString(), profileUrl = user?.photoUrl.toString())
-                        val documentReference: DocumentReference= fStore.collection("users").document(userId.toString())
-                    documentReference.set(LoginModel).addOnSuccessListener {
-                        Toast.makeText(this, "Welcome "+ user!!.displayName , Toast.LENGTH_SHORT).show()
-                    }
-                    val intent = Intent(applicationContext, MainActivity::class.java)
-                    startActivity(intent)
+///token for notification
+                    FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                        if (!task.isSuccessful) {
+                            Log.d(TAG, "Fetching FCM registration token failed", task.exception)
 
+                        }
+
+                       token = task.result
+                        val LoginModel= LoginModel(profileName = user!!.displayName .toString(),
+                            profileUrl = user?.photoUrl.toString(),
+                        token = token.toString())
+                        val documentReference: DocumentReference= fStore.collection("users").document(userId.toString())
+                        documentReference.set(LoginModel).addOnSuccessListener {
+                                  }
+                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        startActivity(intent)
+                        Toast.makeText(this, "Welcome "+ user!!.displayName , Toast.LENGTH_SHORT).show()
+
+
+                    })
+
+///////////uploading user data to firestore
 
                 }
              else {
@@ -225,19 +241,29 @@ public class LoginActivity : AppCompatActivity() {
 
                     ///////////adding user to firstore/////////
                     val userId= auth.currentUser?.uid
+                    FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                        if (!task.isSuccessful) {
+                            Log.d(TAG, "Fetching FCM registration token failed", task.exception)
 
-                    val LoginModel= LoginModel(profileName = user!!.displayName .toString(), profileUrl = user?.photoUrl.toString())
-                    val documentReference: DocumentReference= fStore.collection("users").document(userId.toString())
-                    documentReference.set(LoginModel).addOnSuccessListener {
-                       }
+                        }
 
-                    progressBar.visibility=View.GONE
+                       val tkn = task.result
+                        val LoginModel = LoginModel(
+                            profileName = user!!.displayName.toString(),
+                            profileUrl = user?.photoUrl.toString(),
+                            tkn.toString()
+                        )
+                        val documentReference: DocumentReference =
+                            fStore.collection("users").document(userId.toString())
+                        documentReference.set(LoginModel).addOnSuccessListener {
+                        }
 
-                    val intent = Intent(applicationContext, MainActivity::class.java)
+                        progressBar.visibility = View.GONE
 
-                    startActivity(intent)
+                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        startActivity(intent)
 
-
+                    })
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "failure", task.exception)

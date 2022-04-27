@@ -1,5 +1,6 @@
 package com.example.enzo
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -31,6 +32,8 @@ import android.view.View
 import com.example.enzo.NotificationWork.DataNotification
 import com.example.enzo.NotificationWork.PushNotification
 import com.example.enzo.NotificationWork.RetrofitInstance
+import com.example.enzo.NotificationWork.SenderNotification
+import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.gson.Gson
@@ -50,6 +53,8 @@ class ChattingScreen : AppCompatActivity() {
     lateinit var goBackBtn:ImageButton
     lateinit var toolBarChatScreen:Toolbar
     lateinit var nameOfOtherUser:String
+    lateinit var adId:String
+    var userToken:String?= null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +62,8 @@ class ChattingScreen : AppCompatActivity() {
         setContentView(R.layout.activity_chatting_screen)
 
 
-FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+        FirebaseMessaging.getInstance().subscribeToTopic("all")
+
 /////initializing
 
         auth= FirebaseAuth.getInstance()
@@ -86,6 +92,8 @@ FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
  //////from view ad activity
         ///id of seller ad uploader
         idOfAdUploaderSeller= intent.getStringExtra("idOfWhoseChatClicked").toString()
+        adId= intent.getStringExtra("adId").toString()
+
 
       lifecycleScope.launch(Dispatchers.IO) {
           try {
@@ -96,6 +104,8 @@ FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
                   uploaderNameChatting.text = it.getString("profileName")
                   val uploaderImgChattingUrl: String = it.getString("profileUrl").toString()
                   Picasso.get().load(uploaderImgChattingUrl).into(uploaderImgChatting)
+
+                  userToken=it.getString("token")
               }
           }catch (r:Exception){
               Log.d("h","")
@@ -183,42 +193,51 @@ FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
                 )
                 chattingAdapter.notifyDataSetChanged()
 
-                val user = hashMapOf(
-                    "idOfUploaderChats" to currentUserId)
-                val zR: DocumentReference = fStore.collection("users")
-                    .document(recieverId).collection("idOfUploaderChats")
-                    .document(currentUserId)
+                lifecycleScope.async(Dispatchers.IO) {
+                    val user = hashMapOf(
+                        "idOfUploaderChats" to currentUserId,
+                        "adId" to adId
+                    )
 
-                zR.set(user)
+                    val zR: DocumentReference = fStore.collection("users")
+                        .document(recieverId).collection("idOfUploaderChats")
+                        .document(currentUserId)
 
-                val sR: DocumentReference = fStore.collection("chats")
-                    .document(currentUserId).collection(senderRoom).document()
-
-                sR.set(msgModel)
-
-                val rR: DocumentReference = fStore.collection("chats")
-                    .document(recieverId.toString()).collection(recieverRoom).document()
-
-                rR.set(msgModel)
-                chatText.setText("")
-
-                //scroll to last
-                chatRView.scrollToPosition(chattingAdapter.itemCount - 1 )
-
-         ////notification work
-                var TOPIC = "/topics/myTopic"
-                val title="Hello"
-                val msg="Guys"
-                  PushNotification(DataNotification(title, msg), TOPIC).also {
-
-                      sendNotification(it)
-                  }
-            }
+                    zR.set(user)
 
 
+                    val sR: DocumentReference = fStore.collection("chats")
+                        .document(currentUserId).collection(senderRoom).document()
+
+                    sR.set(msgModel)
+
+                    val rR: DocumentReference = fStore.collection("chats")
+                        .document(recieverId.toString()).collection(recieverRoom).document()
+
+                    rR.set(msgModel)
+                }
+                    chatText.setText("")
+
+                    //scroll to last
+                    chatRView.scrollToPosition(chattingAdapter.itemCount - 1)
+
+                    ////notification work
+                    fStore.collection("users").document(auth.currentUser!!.uid).get()
+                        .addOnSuccessListener {
+                            val nameOfSender = it.get("profileName").toString()
+                            val send: SenderNotification = SenderNotification(
+                                userToken.toString(), nameOfSender,
+                                chatTextString!!, applicationContext, this
+                            )
+                            send.SendNotifications()
+                        }
 
 
 
+
+
+
+        }
         }////sendBtn End
         tradeBtn.setOnClickListener {
 

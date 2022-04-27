@@ -14,11 +14,13 @@ import com.example.enzo.NotificationWork.PushNotification
 import com.example.enzo.NotificationWork.RetrofitInstance
 import com.example.enzo.NotificationWork.SenderNotification
 import com.facebook.share.Share
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -67,23 +69,25 @@ class SellerActivity : AppCompatActivity() {
         detailsToBuyerText.text="Provide details to $recieverName"
         sellerConfirmBtn=findViewById(R.id.confirmSellerBtn)
 
-        var sellerRevNo=1
+
         ////putting seller rev to shared preferences
-        val tp:SharedPreferences=getSharedPreferences("sellerRevNo", MODE_PRIVATE)
-        if (tp.contains("revNo")){
-            if (tp.getInt("revNo",1)>=1){
-                 sellerRevNo=sellerRevNo+1
-                val tpEdit:SharedPreferences.Editor=tp.edit()
-                tpEdit.putInt("revNo", sellerRevNo)
-                tpEdit.commit()
-            }
-        }
+
 
 
 
         uploadSellingAccountInfo.setOnClickListener {
 
-                 /*   val accountInfoModel: AccountInfo = AccountInfo(
+          var sellerRevNo:Int=1
+            fStore.collection("users").document(recieverId).collection("accountDetails").get()
+                .addOnSuccessListener(object :OnSuccessListener<QuerySnapshot>{
+                    override fun onSuccess(qs: QuerySnapshot?) {
+
+                    }
+
+                })
+
+
+                    val accountInfoModel: AccountInfo = AccountInfo(
                                      accountID = sellingAccountId.text.toString(),
                                      accountPassword = sellingAccountPassword.text.toString(),
                                      accountDetail = sellingAccountDetails.text.toString(),
@@ -93,10 +97,7 @@ class SellerActivity : AppCompatActivity() {
                                  val sR: DocumentReference = fStore.collection("users")
                                      .document(recieverId).collection("accountDetails").document()
 
-                                 sR.set(accountInfoModel)*/
-
-
-                Toast.makeText(this, sellerRevNo.toString(), Toast.LENGTH_SHORT).show()
+                                 sR.set(accountInfoModel)
 
 
             }

@@ -16,12 +16,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Enzo">
         <activity
-            android:name=".WelcomeScreen"
-            android:exported="false" />
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:theme="@style/noActionBar"/>
         <activity
-            android:name=".SplashEnzo"
+            android:name=".WelcomeScreen"
             android:exported="true"
-            android:theme="@style/noActionBar">
+            android:theme="@style/SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,7 +43,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false" />
 
-        <service
+    <!--    <service
             android:name=".NotificationWork.FirebaseService"
             android:enabled="true"
             android:exported="false"
@@ -51,7 +52,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
                 <action android:name="com.google.android.c2dm.intent.RECIEVE" />
             </intent-filter>
-        </service>
+        </service>-->
 
         <activity
             android:name=".SellerActivity"
@@ -94,12 +95,20 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
+        <service
+            android:name=".NotificationWork.ServiceJava"
+            android:permission="TODO"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="preloaded_fonts"

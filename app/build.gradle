@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.enzo"
-        minSdk 19
+        minSdk 21
         targetSdk 30
         versionCode 1
         versionName "1.0"
@@ -60,7 +60,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     // Declare the dependency for the Realtime Database library
     implementation 'com.google.firebase:firebase-database-ktx'
-    implementation 'com.android.volley:volley:1.2.0'
+    implementation 'com.android.volley:volley:1.1.1'
     ///swipe rv decorator
     implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
@@ -94,6 +94,8 @@ dependencies {
     //shhimmer
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     //mvvm
+    //splash screen
+    implementation "androidx.core:core-splashscreen:1.0.0-alpha01"
 /////meow navbar
     implementation 'com.etebarian:meow-bottom-navigation:1.2.0'
     //retrofit

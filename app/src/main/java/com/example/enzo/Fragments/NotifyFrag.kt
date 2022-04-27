@@ -60,8 +60,6 @@ class NotifyFrag : Fragment(), SavedAdsOnClick {
         shimmerSavedAds=view.findViewById(R.id.shimmerSavedAds)
         searchNothingImage=view.findViewById(R.id.searchNothingImage)
         searchNothingText=view.findViewById(R.id.searchNothingText)
-        searchNothingImage.visibility=View.GONE
-        searchNothingText.visibility=View.GONE
         adList= arrayListOf()
         savedAdIds= arrayListOf()
         adIds= arrayListOf()
@@ -122,7 +120,7 @@ class NotifyFrag : Fragment(), SavedAdsOnClick {
                             .setPositiveButton("Yes, delete"){dialog, it->
 
                                 savedAdsRVAdapter.deleteItem(viewHolder.position)
-                                val sb=Snackbar.make(savedAdsRV, "Ad removed from your list", Snackbar.LENGTH_SHORT)
+                                val sb= Snackbar.make(savedAdsRV, "Ad removed from your list", Snackbar.LENGTH_SHORT)
                                 sb.setAction("Got It"){
                                     sb.dismiss()
                                 }.show()

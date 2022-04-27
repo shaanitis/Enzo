@@ -15,6 +15,7 @@ import com.example.enzo.Models.AdModel
 import com.example.enzo.OnClickRV.SavedAdsOnClick
 import com.example.enzo.R
 import com.example.enzo.ViewAdActivity
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
@@ -71,6 +72,7 @@ class SavedAdsAdapter(var context: Context,
             adList.removeAt(i)
             notifyDataSetChanged()
         fStore.collection("savedAds").document(adIds[i]).delete().addOnSuccessListener {
+
 
 
 }

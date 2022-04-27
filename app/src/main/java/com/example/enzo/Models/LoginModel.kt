@@ -1,5 +1,5 @@
 package com.example.enzo.Models
 
-data class LoginModel(val profileName:String="", val profileUrl:String="") {
+data class LoginModel(val profileName:String="", val profileUrl:String="", val token:String="") {
 
 }

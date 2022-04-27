@@ -131,7 +131,8 @@ try {
 
                 lifecycleScope.launch(Dispatchers.IO) {
 
-                    val user = hashMapOf("idOfUploaderChats" to idOfUploader)
+                    val user = hashMapOf("idOfUploaderChats" to idOfUploader,
+                    "adId" to adId)
 
                     val sR: DocumentReference = fStore.collection("users")
                         .document(auth.currentUser!!.uid).collection("idOfUploaderChats")
@@ -142,12 +143,18 @@ try {
                 }
                 val intent = Intent(this, ChattingScreen::class.java)
                 intent.putExtra("idOfWhoseChatClicked", idOfUploader)
+                intent.putExtra("adId", adId)
                 startActivity(intent)
             }
 
         }
 
-
+imageOfUploader.setOnClickListener {
+    val i=Intent(this, ProfileActivity::class.java)
+    i.putExtra("userId", idOfUploader)
+    startActivity(i)
+    finish()
+}
     }//oncreate
 
 }//main

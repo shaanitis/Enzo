@@ -25,6 +25,7 @@ class SenderNotification(
     private val postUrl = "https://fcm.googleapis.com/fcm/send"
     private val fcmServerKey =
         "AAAAIMHK9-o:APA91bED12hWPh5_WPYR39yom3fejI1ZtV14r45rwqCwaK4epziGDvCCOXb68m7GNynocZ5fH3p8KpwClwz1_1udyuaPf-pyuhNuA0G29gmToCnPC5mUrRzNVHIGAMi3Yd0m-nu3EgGa"
+
     fun SendNotifications() {
         requestQueue = Volley.newRequestQueue(mActivity)
         val mainObj = JSONObject()
