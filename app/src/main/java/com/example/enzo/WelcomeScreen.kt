@@ -8,8 +8,10 @@ import android.text.Html
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.window.SplashScreen
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.util.Pair
 import androidx.viewpager.widget.ViewPager
 import com.example.enzo.Adapters.WelcomeAdapter
@@ -24,10 +26,10 @@ class WelcomeScreen : AppCompatActivity() {
     lateinit var layouts: IntArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
+       this.setTheme(R.style.Theme_Enzo)
         super.onCreate(savedInstanceState)
-        setTheme(R.style.Theme_Enzo)
         setContentView(R.layout.activity_welcome_screen)
-        this.supportActionBar?.hide()
+      this.supportActionBar?.hide()
 
 
         ///////////////////////////check if app is not started first time///////

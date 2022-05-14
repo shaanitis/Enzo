@@ -9,4 +9,6 @@ data class AdModel(val adTitle:String?,
                    val adSearchTitle:String?,
                    val adAllImages:String?,
                    val adPhoneNo:String?,
-                   val adLocation:String?)
+                   val adLocLatitude:String?,
+                   val adLocLongitude:String?,
+                   val adId:String?)

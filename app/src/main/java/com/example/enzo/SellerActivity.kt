@@ -1,32 +1,18 @@
 package com.example.enzo
 
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import com.example.enzo.Models.AccountInfo
-import com.example.enzo.NotificationWork.DataNotification
-import com.example.enzo.NotificationWork.PushNotification
-import com.example.enzo.NotificationWork.RetrofitInstance
-import com.example.enzo.NotificationWork.SenderNotification
-import com.facebook.share.Share
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.Exception
 
 
 const val TOPIC="/topics/myTopic"

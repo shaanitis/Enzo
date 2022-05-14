@@ -46,7 +46,7 @@ class HomeSocialMediaAdapter(
         holder.displayAdTitle.text = currentItem.adTitle
         holder.displayAdPrice.text = "${currentItem.adPrice}" + " Rs"
         Picasso.get()
-            .load(currentItem.adImageUrl).fit().centerCrop().placeholder(R.drawable.gray)
+            .load(currentItem.adImageUrl).fit().centerCrop().placeholder(R.drawable.enzo_place_holder)
             .into(holder.displayAdImage)
 
 
@@ -60,9 +60,10 @@ class HomeSocialMediaAdapter(
               intent.putExtra("adViewDetail", currentItem.adDetail)
               intent.putExtra("idOfUploader", currentItem.adUserId)
               intent.putExtra("adAllImages", currentItem.adAllImages)
-            intent.putExtra("adLocation", currentItem.adLocation)
+            intent.putExtra("adLocLatitude", currentItem.adLocLatitude)
+            intent.putExtra("adLocLongitude", currentItem.adLocLongitude)
             intent.putExtra("adPhoneNo", currentItem.adPhoneNo)
-            intent.putExtra("adId", adIds[position])
+            intent.putExtra("adId", currentItem.adId)
 
               context.startActivity(intent)
 

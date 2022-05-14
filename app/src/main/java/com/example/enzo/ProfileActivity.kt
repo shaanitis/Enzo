@@ -9,11 +9,8 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.enzo.Adapters.HomeRVAdapter
-import com.example.enzo.Adapters.MyAdsAdapter
 import com.example.enzo.Adapters.SavedAdsAdapter
 import com.example.enzo.Models.AdModel
-import com.example.enzo.OnClickRV.HomeRVOnClick
 import com.example.enzo.OnClickRV.SavedAdsOnClick
 import com.example.enzo.databinding.ActivityProfileBinding
 import com.google.android.gms.tasks.OnSuccessListener
@@ -21,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.ktx.getField
 
 
 class ProfileActivity : AppCompatActivity(),SavedAdsOnClick {
@@ -84,8 +80,8 @@ class ProfileActivity : AppCompatActivity(),SavedAdsOnClick {
                                     adSearchTitle = displayAdSearchTitle,
                                     adAllImages = allImagesUrl,
                                     adPhoneNo,
-                                    adLocation
-                                )
+                                    null
+                                ,null,adId)
                             )
                             adIds.add(adId)
                             userAllAdsAdapter.notifyDataSetChanged()
@@ -97,7 +93,7 @@ class ProfileActivity : AppCompatActivity(),SavedAdsOnClick {
         binding.userAllAds.layoutManager= LinearLayoutManager(this)
         binding.userAllAds.setHasFixedSize(true)
 
-        userAllAdsAdapter= SavedAdsAdapter(this, userAdsList, adIds, this)
+        userAllAdsAdapter= SavedAdsAdapter(this, userAdsList, this)
         binding.userAllAds.adapter=userAllAdsAdapter
 
 
@@ -110,7 +106,8 @@ class ProfileActivity : AppCompatActivity(),SavedAdsOnClick {
         intent.putExtra("adViewDetail", userAdsList[pos].adDetail)
         intent.putExtra("idOfUploader", userAdsList[pos].adUserId)
         intent.putExtra("adAllImages", userAdsList[pos].adAllImages)
-        intent.putExtra("adLocation", userAdsList[pos].adLocation)
+        intent.putExtra("adLocLatitude", userAdsList[pos].adLocLatitude)
+        intent.putExtra("adLocLongitude", userAdsList[pos].adLocLongitude)
         intent.putExtra("adPhoneNo",  userAdsList[pos].adPhoneNo)
         intent.putExtra("adId", adIds[pos])
 

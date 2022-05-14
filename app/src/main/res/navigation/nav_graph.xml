@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/notifyFrag"
-        android:name="com.example.enzo.Fragments.NotifyFrag"
+        android:name="com.example.enzo.Fragments.SavedAdsFrag"
         android:label="fragment_notify"
         tools:layout="@layout/fragment_notify" >
         <action

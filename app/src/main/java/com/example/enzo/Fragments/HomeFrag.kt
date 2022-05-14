@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +19,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +35,8 @@ import com.example.enzo.R
 import com.example.enzo.SearchResult
 import com.example.enzo.TryActivity
 import com.example.enzo.ViewAdActivity
+import com.example.enzo.ViewModels.ChatFragViewModel
+import com.example.enzo.ViewModels.HomeFragViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -42,6 +48,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
 import java.lang.Exception
+import java.lang.Runnable
 import kotlin.coroutines.suspendCoroutine
 
 
@@ -141,10 +148,42 @@ try {
 
 /////setting user profile pic to dashboard pic
         displayingUserProfileDashboard()
-////displaying all ads in first RV
-        displayAllAdsScrollRV()
-///displaying socialMediaAds
-        displaySocialMediaAds()
+
+        //////Using VIEWMODEL to Prevent data reloading on fragment change or screen rotation
+
+        val viewModel = ViewModelProvider(this)[HomeFragViewModel::class.java]
+        viewModel.getAllAds().observe(viewLifecycleOwner, Observer { userList ->
+
+            adList.clear()
+            adList.addAll(userList)
+            if (adList.isEmpty()) {
+
+
+                shimmerHomeAds.visibility = View.VISIBLE
+                homeRVAdapter.notifyDataSetChanged()
+            } else {
+
+               shimmerHomeAds.visibility = View.GONE
+                homeRVAdapter.notifyDataSetChanged()
+            }
+        })
+
+
+        viewModel.getSocialMediaAds().observe(viewLifecycleOwner, Observer { userList ->
+
+            socialMediaAdsList.clear()
+            socialMediaAdsList.addAll(userList)
+            if (socialMediaAdsList.isEmpty()) {
+
+
+                socialMediaShimmer.visibility = View.VISIBLE
+                socialMediaAdapter.notifyDataSetChanged()
+            } else {
+
+                socialMediaShimmer.visibility = View.GONE
+                socialMediaAdapter.notifyDataSetChanged()
+            }
+        })
 
   profilePicHomeFrag.setOnClickListener {
     findNavController().navigate(R.id.action_homeFrag_to_profileFrag2)
@@ -173,102 +212,6 @@ try {
         return view
     }//oncreate
 
-    private fun displaySocialMediaAds() {
-        lifecycleScope.async (Dispatchers.IO) {
-
-
-            val job=async {
-                try {
-
-
-                    fStore.collection("ads")
-                        .get().addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                            override fun onSuccess(querySnapshot: QuerySnapshot?) {
-                                for (qds: QueryDocumentSnapshot in querySnapshot!!) {
-
-                                    val adId: String = qds.id.toString()
-                                    val displayAdTitle: String = qds.getString("adTitle").toString()
-                                    var displayAdPrice: String = qds.getString("adPrice").toString()
-                                    var displayAdImage: String = qds.getString("adImageUrl").toString()
-                                    var displayAdDetail: String = qds.getString("adDetail").toString()
-                                    var displayAdType: String = qds.getString("adType").toString()
-                                    var displayAdUserId: String = qds.getString("adUserId").toString()
-                                    var displayAdSearchTitle: String = qds.getString("adSearchTitle").toString()
-                                    var allImagesUrl: String = qds.getString("adAllImages").toString()
-                                    var adPhoneNo: String = qds.getString("adPhoneNo").toString()
-                                    var adLocation: String = qds.getString("adLocation").toString()
-
-                                   if (displayAdType.contains("facebook")) {
-
-                                       socialMediaAdsList.add(
-                                           AdModel(
-                                               adTitle = displayAdTitle,
-                                               adDetail = displayAdDetail,
-                                               adPrice = displayAdPrice,
-                                               adImageUrl = displayAdImage,
-                                               adType = displayAdType,
-                                               adUserId = displayAdUserId,
-                                               adSearchTitle = displayAdSearchTitle,
-                                               adAllImages = allImagesUrl,
-                                               adPhoneNo,
-                                               adLocation
-                                           )
-                                       )
-
-                                       socialMediaAdapter.notifyDataSetChanged()
-                                       socialMediaAdIds.add(adId)
-                                   }else if (displayAdType.contains("instagram")){
-                                       socialMediaAdsList.add(
-                                           AdModel(
-                                               adTitle = displayAdTitle,
-                                               adDetail = displayAdDetail,
-                                               adPrice = displayAdPrice,
-                                               adImageUrl = displayAdImage,
-                                               adType = displayAdType,
-                                               adUserId = displayAdUserId,
-                                               adSearchTitle = displayAdSearchTitle,
-                                               adAllImages = allImagesUrl,
-                                               adPhoneNo,
-                                               adLocation
-                                           )
-                                       )
-
-                                       socialMediaAdapter.notifyDataSetChanged()
-                                       socialMediaAdIds.add(adId)
-                                   } else if (displayAdType.contains("youtube")){
-                                       socialMediaAdsList.add(
-                                           AdModel(
-                                               adTitle = displayAdTitle,
-                                               adDetail = displayAdDetail,
-                                               adPrice = displayAdPrice,
-                                               adImageUrl = displayAdImage,
-                                               adType = displayAdType,
-                                               adUserId = displayAdUserId,
-                                               adSearchTitle = displayAdSearchTitle,
-                                               adAllImages = allImagesUrl,
-                                               adPhoneNo,
-                                               adLocation
-                                           )
-                                       )
-
-                                       socialMediaAdapter.notifyDataSetChanged()
-                                       socialMediaAdIds.add(adId)
-                                   }else{
-
-                                   }
-
-
-                                }
-
-                                socialMediaShimmer.visibility = View.GONE
-                            }
-                        })
-                } catch (e: Exception) {
-                    Log.d("err", "")
-                }
-            }
-        }
-    }
 
     private fun sharedElementTransitionSearchBar() {
        //to send Image as shared element to next activity
@@ -279,61 +222,6 @@ try {
         val intent= Intent(requireContext(), SearchResult::class.java)
         startActivity(intent, extras.toBundle())
 
-    }
-
-    private fun displayAllAdsScrollRV() {
-
-        lifecycleScope.async(Dispatchers.IO) {
-            try {
-
-          val job1=async {
-                fStore.collection("ads")
-                    .get()
-                    .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                        override fun onSuccess(qs: QuerySnapshot?) {
-
-                            for (qds: QueryDocumentSnapshot in qs!!) {
-                                var adsId: String = qds.id.toString()
-                                var displayAdTitle: String = qds.getString("adTitle").toString()
-                                var displayAdPrice: String = qds.getString("adPrice").toString()
-                                var displayAdImage: String = qds.getString("adImageUrl").toString()
-                                var displayAdDetail: String = qds.getString("adDetail").toString()
-                                var displayAdType: String = qds.getString("adType").toString()
-                                var displayAdUserId: String = qds.getString("adUserId").toString()
-                                var adSearchTitle: String = qds.getString("adSearchTitle").toString()
-                                var adAllImages: String = qds.getString("adAllImages").toString()
-                                var adPhoneNo:String=qds.getString("adPhoneNo").toString()
-                                var adLocation:String=qds.getString("adLocation").toString()
-
-                                adList.add(
-                                    AdModel(
-                                        displayAdTitle,
-                                        displayAdDetail,
-                                        displayAdPrice,
-                                        displayAdImage,
-                                        displayAdType,
-                                        displayAdUserId,
-                                        adSearchTitle,
-                                        adAllImages,
-                                        adPhoneNo,
-                                        adLocation
-                                    )
-                                )
-                                homeRVAdapter.notifyDataSetChanged()
-
-                                adIds.add(adsId)
-                            }
-
-                            shimmerHomeAds.stopShimmer()
-                            shimmerHomeAds.hideShimmer()
-                            shimmerHomeAds.visibility = View.GONE
-                        }
-                    })
-          }
-            }catch (e:Exception){
-                Log.e("","")
-            }
-        }
     }
 
 
@@ -371,9 +259,10 @@ try {
         intent.putExtra("adViewDetail", adList[pos].adDetail)
         intent.putExtra("idOfUploader", adList[pos].adUserId)
         intent.putExtra("adAllImages", adList[pos].adAllImages)
-        intent.putExtra("adLocation", adList[pos].adLocation)
+        intent.putExtra("adLocLatitude", adList[pos].adLocLatitude)
+        intent.putExtra("adLocLongitude", adList[pos].adLocLongitude)
         intent.putExtra("adPhoneNo",  adList[pos].adPhoneNo)
-        intent.putExtra("adId", adIds[pos])
+        intent.putExtra("adId", adList[pos].adId)
 
 
 ///to send image as shared element

@@ -54,8 +54,6 @@ class SearchResult : AppCompatActivity(), SearchAdOnClick {
         mtSearchView=findViewById(R.id.mtSearchView)
         searchNothingImage=findViewById(R.id.searchNothingImage)
         searchNothingText=findViewById(R.id.searchNothingText)
-        searchNothingImage.visibility=View.GONE
-        searchNothingText.visibility=View.GONE
         list= arrayListOf()
         adIds= arrayListOf()
         fStore= FirebaseFirestore.getInstance()
@@ -129,8 +127,6 @@ class SearchResult : AppCompatActivity(), SearchAdOnClick {
 
       val job=async {      mtSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
               override fun onQueryTextSubmit(query: String?): Boolean {
-                  searchNothingImage.visibility = View.GONE
-                  searchNothingText.visibility = View.GONE
                   searchResultList.clear()
                   searchResultAdapter.notifyDataSetChanged()
                   mtSearchView.clearFocus()
@@ -139,51 +135,58 @@ class SearchResult : AppCompatActivity(), SearchAdOnClick {
                       .get()
                       .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
                           override fun onSuccess(querySnapshot: QuerySnapshot?) {
-                              for (qds: QueryDocumentSnapshot in querySnapshot!!) {
-                                  val adId: String = qds.id.toString()
-                                  val displayAdTitle: String = qds.getString("adTitle").toString()
-                                  var displayAdPrice: String = qds.getString("adPrice").toString()
-                                  var displayAdImage: String =
-                                      qds.getString("adImageUrl").toString()
-                                  var displayAdDetail: String = qds.getString("adDetail").toString()
-                                  var displayAdType: String = qds.getString("adType").toString()
-                                  var displayAdUserId: String = qds.getString("adUserId").toString()
-                                  var displayAdSearchTitle: String =
-                                      qds.getString("adSearchTitle").toString()
-                                  var allImagesUrl: String = qds.getString("adAllImages").toString()
-                                  var adPhoneNo: String = qds.getString("adPhoneNo").toString()
-                                  var adLocation: String = qds.getString("adLocation").toString()
+                              if (querySnapshot!!.isEmpty){
+                                  searchNothingImage.visibility=View.VISIBLE
+                                  searchNothingText.visibility=View.VISIBLE
+                              }else {
+                                  for (qds: QueryDocumentSnapshot in querySnapshot!!) {
+                                      val adId: String = qds.id.toString()
+                                      val displayAdTitle: String =
+                                          qds.getString("adTitle").toString()
+                                      var displayAdPrice: String =
+                                          qds.getString("adPrice").toString()
+                                      var displayAdImage: String =
+                                          qds.getString("adImageUrl").toString()
+                                      var displayAdDetail: String =
+                                          qds.getString("adDetail").toString()
+                                      var displayAdType: String = qds.getString("adType").toString()
+                                      var displayAdUserId: String =
+                                          qds.getString("adUserId").toString()
+                                      var displayAdSearchTitle: String =
+                                          qds.getString("adSearchTitle").toString()
+                                      var allImagesUrl: String =
+                                          qds.getString("adAllImages").toString()
+                                      var adPhoneNo: String = qds.getString("adPhoneNo").toString()
+                                      var adLocation: String =
+                                          qds.getString("adLocation").toString()
 
-                                  list.add(displayAdSearchTitle)
-                                  if (displayAdSearchTitle.contains(query!!.trim().toLowerCase())) {
-                                      searchNothingImage.visibility = View.GONE
-                                      searchNothingText.visibility = View.GONE
-                                      searchResultList.add(
-                                          AdModel(
-                                              adTitle = displayAdTitle,
-                                              adDetail = displayAdDetail,
-                                              adPrice = displayAdPrice,
-                                              adImageUrl = displayAdImage,
-                                              adType = displayAdType,
-                                              adUserId = displayAdUserId,
-                                              adSearchTitle = displayAdSearchTitle,
-                                              adAllImages = allImagesUrl,
-                                              adPhoneNo,
-                                              adLocation
+                                      list.add(displayAdSearchTitle)
+                                      if (displayAdSearchTitle.contains(
+                                              query!!.trim().toLowerCase()) ){
+
+                                          searchResultList.add(
+                                              AdModel(
+                                                  adTitle = displayAdTitle,
+                                                  adDetail = displayAdDetail,
+                                                  adPrice = displayAdPrice,
+                                                  adImageUrl = displayAdImage,
+                                                  adType = displayAdType,
+                                                  adUserId = displayAdUserId,
+                                                  adSearchTitle = displayAdSearchTitle,
+                                                  adAllImages = allImagesUrl,
+                                                  adPhoneNo,
+                                                  null,
+                                              null, adId)
                                           )
-                                      )
 
-                                      adIds.add(adId)
-                                      searchRecyclerView.startLayoutAnimation()
-                                      searchResultAdapter.notifyDataSetChanged()
-                                  } else {
-                                      searchNothingImage.visibility = View.VISIBLE
-                                      searchNothingText.visibility = View.VISIBLE
+                                          adIds.add(adId)
+                                          searchRecyclerView.startLayoutAnimation()
+                                          searchResultAdapter.notifyDataSetChanged()
+                                      }
+
+
                                   }
-
-
                               }
-
                           }
 
                       })

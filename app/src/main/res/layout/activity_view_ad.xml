@@ -7,6 +7,7 @@
     tools:context=".ViewAdActivity">
 
 
+
     <ScrollView
         android:id="@+id/adScrollView"
         android:layout_width="match_parent"
@@ -43,6 +44,7 @@
               app:layout_constraintLeft_toLeftOf="parent"
               app:layout_constraintRight_toRightOf="parent"
               app:cardElevation="0dp"
+              app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintTop_toBottomOf="@id/adViewImage">
 
 <LinearLayout
@@ -78,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="#696666"
                 android:text="Price:"
-                android:textSize="16sp"
+                android:fontFamily="@font/arimo"
+                android:textSize="13sp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"/>
             <TextView
@@ -86,8 +89,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="15000"
-                android:textSize="18sp"
-
+                android:textSize="16sp"
+                android:fontFamily="@font/arimo"
                 android:textColor="@color/black"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
@@ -106,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#696666"
                 android:text="Description:"
-                android:textSize="16sp"
+                android:textSize="13sp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"/>
             <TextView
@@ -117,7 +120,8 @@
                 android:textColor="@color/black"
                 android:scrollbars="vertical"
                 android:fillViewport="true"
-                android:textSize="18sp"
+                android:fontFamily="@font/arimo"
+                android:textSize="16sp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
@@ -136,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#696666"
                 android:text="Ad by"
-                android:textSize="16sp"
+                android:textSize="13sp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"/>
 
@@ -154,15 +158,60 @@
             <TextView
                 android:id="@+id/nameOfUploader"
                 android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:maxHeight="60dp"
-                android:maxLines="2"
+                android:layout_height="wrap_content"
+                android:maxHeight="30dp"
+                android:maxWidth="200dp"
                 android:ellipsize="end"
+                android:fontFamily="@font/arimo"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:text=""/>
+                android:textSize="16sp"
+                android:text="Shaan"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="#D0CCCC"
+        android:layout_marginTop="7dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#696666"
+        android:text="Contact No"
+        android:fontFamily="@font/arimo"
+        android:textSize="13sp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/contactNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxHeight="30dp"
+        android:maxWidth="150dp"
+        android:fontFamily="@font/arimo"
+        android:ellipsize="end"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:text="03335946691"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="#D0CCCC"
+        android:layout_marginTop="7dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#696666"
+        android:text="Location"
+        android:fontFamily="@font/arimo"
+        android:textSize="13sp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"/>
+
 </LinearLayout>
 
           </androidx.cardview.widget.CardView>
@@ -256,8 +305,8 @@
             android:src="@drawable/saveborder" />
     </androidx.cardview.widget.CardView>
 
-
     </RelativeLayout>
+
 
     <ImageButton
         android:id="@+id/goBackBtn"
@@ -269,4 +318,5 @@
         android:layout_marginStart="7dp"
         android:layout_marginTop="7dp"
         android:src="@drawable/backicon"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

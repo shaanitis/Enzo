@@ -49,7 +49,7 @@ class HomeRVAdapter(
         holder.displayAdTitle.text = currentItem.adTitle
         holder.displayAdPrice.text = "${currentItem.adPrice}" + " Rs"
         Picasso.get()
-            .load(currentItem.adImageUrl).fit().centerCrop().placeholder(R.drawable.gray)
+            .load(currentItem.adImageUrl).fit().centerCrop().placeholder(R.drawable.enzo_place_holder)
             .into(holder.displayAdImage)
 
 
@@ -83,7 +83,7 @@ class HomeRVAdapter(
             }.show()
 
             holder.saveAdBtn.setImageResource(R.drawable.saveicon)
-            val strRef: DocumentReference = fStore.collection("savedAds").document(adIds[position])
+            val strRef: DocumentReference = fStore.collection("savedAds").document(currentItem.adId.toString())
             val hash = hashMapOf("userId" to auth.currentUser?.uid.toString())
             strRef.set(hash)
 

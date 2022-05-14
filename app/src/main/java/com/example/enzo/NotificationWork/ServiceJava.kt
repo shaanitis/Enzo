@@ -19,12 +19,11 @@ import com.google.firebase.messaging.RemoteMessage
 
 class ServiceJava : FirebaseMessagingService() {
     var mNotificationManager: NotificationManager?=null
+
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-
-
-        // vibration
 
         val resourceImage = resources.getIdentifier(
             remoteMessage.getNotification()?.getIcon(),
@@ -34,16 +33,17 @@ class ServiceJava : FirebaseMessagingService() {
         val builder= NotificationCompat.Builder(this, "CHANNEL_ID")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            builder.setSmallIcon(R.drawable.ic_baseline_email_24)
+            builder.setSmallIcon(R.drawable.egnoti)
         } else {
 
-            builder.setSmallIcon(R.drawable.ic_baseline_email_24)
+            builder.setSmallIcon(R.drawable.egnoti)
         }
         val resultIntent = Intent(this, WelcomeScreen::class.java)
         val pendingIntent: PendingIntent =
             PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentTitle(remoteMessage.getNotification()?.getTitle())
         builder.setContentText(remoteMessage.getNotification()?.getBody())
+         builder.setSmallIcon(R.drawable.egnoti)
         builder.setContentIntent(pendingIntent)
         builder.setStyle(NotificationCompat.BigTextStyle().bigText(remoteMessage.getNotification()
             ?.getBody()))
@@ -55,11 +55,11 @@ class ServiceJava : FirebaseMessagingService() {
             val channelId = "channelId"
             val channel = NotificationChannel(
                 channelId,
-                "all",
-                NotificationManager.IMPORTANCE_HIGH
+                "Chats",NotificationManager.IMPORTANCE_MAX
             )
             mNotificationManager!!.createNotificationChannel(channel)
             builder.setChannelId(channelId)
+
         }
 
 

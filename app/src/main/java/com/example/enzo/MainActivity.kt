@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -20,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
              this.supportActionBar?.hide()
         setContentView(R.layout.activity_main)
-
 
 
 
@@ -50,5 +50,13 @@ class MainActivity : AppCompatActivity() {
 
     }//onCreate
 
+    class Ali{
+        companion object{
+            @JvmStatic
+            fun show(){
+                Log.d("frag","Companionnnnnnnnn")
+            }
+        }
+    }
 
 }//Main

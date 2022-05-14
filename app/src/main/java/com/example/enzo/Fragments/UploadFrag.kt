@@ -6,6 +6,7 @@ import android.app.ProgressDialog
 import android.content.ClipData
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +22,10 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.findNavController
 import com.example.enzo.Models.AdModel
 import com.example.enzo.R
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -38,7 +42,7 @@ import kotlin.collections.HashMap
 
 class UploadFrag : Fragment() {
 
-    lateinit var adLocation:EditText
+    lateinit var adLocation:CardView
     lateinit var adUploadBtn: Button
     lateinit var adPhoneNo:EditText
     lateinit var adDetailImages: CardView
@@ -49,6 +53,9 @@ class UploadFrag : Fragment() {
     lateinit var storageReference: StorageReference
     lateinit var fStore: FirebaseFirestore
     lateinit var pD:ProgressDialog
+    lateinit var fusedLocation:FusedLocationProviderClient
+    var adLocLatitude:String=""
+    var adLocLongitude:String=""
 
 
 
@@ -106,6 +113,11 @@ class UploadFrag : Fragment() {
                 startActivityForResult(Intent.createChooser(intent, "Select Images"), 100)
 
             }}
+fusedLocation=LocationServices.getFusedLocationProviderClient(requireContext())
+adLocation.setOnClickListener {
+    checkPermission()
+
+}
 
 
         val adTitle= requireArguments().getString("adTitle")
@@ -115,9 +127,8 @@ class UploadFrag : Fragment() {
         val adCategory= requireArguments().getString("adCategory")
         var adNo= requireArguments().getString("imgsUrl")
         adUploadBtn.setOnClickListener {
-            if (adLocation.text.toString().isEmpty()) {
-                adLocation.requestFocus()
-                adLocation.setError("Add Location")
+            if (adLocLatitude==null && adLocLongitude==null) {
+                Toast.makeText(requireContext(), "Add Location First", Toast.LENGTH_SHORT).show()
             } else if (adPhoneNo.text.toString().isEmpty()) {
                 adPhoneNo.requestFocus()
                 adPhoneNo.setError("Add Phone No")
@@ -168,8 +179,9 @@ class UploadFrag : Fragment() {
                     adTitle?.toLowerCase(),
                     adAllImages = adNo.toString(),
                     adPhoneNo.text.toString(),
-                    adLocation.text.toString()
-                )
+                    adLocLatitude,
+                    adLocLongitude,
+                null)
 //////uploading to firestore
                 val dR: DocumentReference = fStore.collection("ads")
                     .document()
@@ -191,6 +203,23 @@ class UploadFrag : Fragment() {
 
 
         return view
+    }
+
+    private fun checkPermission() {
+        val task=fusedLocation.lastLocation
+        if(ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)!=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 101)
+            return
+        }
+      task.addOnSuccessListener {
+          if (it!=null){
+              adLocLatitude= it.latitude.toString()
+              adLocLongitude= it.longitude.toString()
+              Toast.makeText(requireContext(), "${it.latitude}, ${it.longitude}", Toast.LENGTH_SHORT).show()
+          }
+      }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

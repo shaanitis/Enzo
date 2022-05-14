@@ -1,16 +1,14 @@
 package com.example.enzo.Adapters
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.enzo.Fragments.SavedAdsFrag
 import com.example.enzo.Models.AdModel
 import com.example.enzo.OnClickRV.SavedAdsOnClick
 import com.example.enzo.R
@@ -21,10 +19,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 
-class SavedAdsAdapter(var context: Context,
+class SavedAdsAdapter(
+    var context: Context,
     private var adList: ArrayList<AdModel>,
-    var adIds: ArrayList<String>,
-    val onCLick:SavedAdsOnClick?): RecyclerView.Adapter<SavedAdsAdapter.MyViewHolder>()  {
+    val onCLick: SavedAdsOnClick
+): RecyclerView.Adapter<SavedAdsAdapter.MyViewHolder>()  {
 
     val auth: FirebaseAuth = FirebaseAuth.getInstance()
     val fStore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -41,7 +40,7 @@ class SavedAdsAdapter(var context: Context,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentItem= adList.get(position)
 
-        Picasso.get().load(currentItem.adImageUrl).placeholder(R.drawable.gray).into(holder.adImage)
+        Picasso.get().load(currentItem.adImageUrl).placeholder(R.drawable.enzo_place_holder).into(holder.adImage)
         holder.adTitle.text= currentItem.adTitle
         holder.adPrice.text= "Rs ${currentItem.adPrice}"
 
@@ -66,12 +65,18 @@ class SavedAdsAdapter(var context: Context,
         val clickListenerView: View?= itemView
 
     }
-    fun deleteItem(i: Int){
-        try {
 
+    fun add(savedAds:ArrayList<AdModel>){
+        adList.addAll(savedAds)
+        notifyDataSetChanged()
+    }
+    fun deleteItem(i: Int){
+
+        try {
+            val currentItem= adList.get(i)
             adList.removeAt(i)
             notifyDataSetChanged()
-        fStore.collection("savedAds").document(adIds[i]).delete().addOnSuccessListener {
+        fStore.collection("savedAds").document(currentItem.adId.toString()).delete().addOnSuccessListener {
 
 
 

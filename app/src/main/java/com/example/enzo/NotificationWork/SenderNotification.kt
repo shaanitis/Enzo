@@ -8,6 +8,7 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.enzo.R
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.HashMap
@@ -34,7 +35,7 @@ class SenderNotification(
             val notiObject = JSONObject()
             notiObject.put("title", title)
             notiObject.put("body", body)
-            notiObject.put("icon", "icon") // enter icon that exists in drawable only
+            notiObject.put("icon", R.drawable.egnoti) // enter icon that exists in drawable only
             mainObj.put("notification", notiObject)
             val request: JsonObjectRequest = object : JsonObjectRequest(
                 Method.POST, postUrl, mainObj,

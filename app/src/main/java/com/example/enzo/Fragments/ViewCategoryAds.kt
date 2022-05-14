@@ -168,8 +168,8 @@ class ViewCategoryAds : Fragment(), ViewCategoryRVOnClick {
                                           adSearchTitle = displayAdSearchTitle,
                                           adAllImages = allImagesUrl,
                                           adPhoneNo,
-                                          adLocation
-                                      )
+                                          null
+                                      ,null, adId)
                                   )
                                   categoryAdsRV.startLayoutAnimation()
                                   categoryAdsRVAdapter.notifyDataSetChanged()

@@ -1,5 +1,6 @@
 package com.example.enzo.Repository
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.MutableLiveData
@@ -32,8 +33,7 @@ class ChatRepository() {
                 .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
                     override fun onSuccess(qs: QuerySnapshot?) {
                         for (qds: QueryDocumentSnapshot in qs!!) {
-                            val idOfUploaderChats: String =
-                                qds.getString("idOfUploaderChats").toString()
+                            val idOfUploaderChats: String = qds.getString("idOfUploaderChats").toString()
                             idsOfChats.add(idOfUploaderChats)
 
                         }
@@ -53,12 +53,14 @@ class ChatRepository() {
                                         idOfUserChatClicked
                                     )
                                 )
-
                                 liveData.postValue(allChatsList)
+
                             }
 
 
                         }
+
+                        Log.d("viewModel","Repository Ran")
 
                     }
 

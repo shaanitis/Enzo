@@ -13,6 +13,8 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -24,6 +26,8 @@ import com.example.enzo.Models.AdModel
 import com.example.enzo.OnClickRV.MyAdsOnClick
 import com.example.enzo.R
 import com.example.enzo.ViewAdActivity
+import com.example.enzo.ViewModels.MyAdsVM
+import com.example.enzo.ViewModels.SavedAdsVM
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,7 +46,7 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
    
     lateinit var fStore: FirebaseFirestore
     lateinit var auth: FirebaseAuth
-    lateinit var adList:ArrayList<AdModel>
+    lateinit var myAdList:ArrayList<AdModel>
     lateinit var adIds:ArrayList<String>
     lateinit var imgLinks:ArrayList<String>
     lateinit var adAllImgLinkList:ArrayList<String>
@@ -66,7 +70,7 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
         searchNothingText=view.findViewById(R.id.searchNothingText)
         searchNothingImage.visibility=View.GONE
         searchNothingText.visibility=View.GONE
-        adList= arrayListOf()
+        myAdList= arrayListOf()
         adIds= arrayListOf()
         imgLinks= arrayListOf()
         adAllImgLinkList= arrayListOf()
@@ -77,14 +81,30 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
         myAdsRV.layoutManager= LinearLayoutManager(requireContext())
         myAdsRV.setHasFixedSize(true)
 
-        myAdsRVAdapter= MyAdsAdapter(requireContext(), adList, adIds, adAllImgLinkList , this)
+        myAdsRVAdapter= MyAdsAdapter(requireContext(), myAdList, adIds, adAllImgLinkList , this)
         myAdsRV.adapter=myAdsRVAdapter
 
-        adList.clear()
+        myAdList.clear()
         adIds.clear()
 
-///getting my Ads
-     getMyAds()
+///getting My Ads through ViewModel
+        val viewModel = ViewModelProvider(this)[MyAdsVM::class.java]
+        viewModel.getMyAds().observe(viewLifecycleOwner, Observer { userList ->
+
+            myAdList.clear()
+            myAdList.addAll(userList)
+            if (myAdList.isEmpty()) {
+
+
+                shimmerMyAds.visibility = View.VISIBLE
+                myAdsRVAdapter.notifyDataSetChanged()
+            } else {
+
+                shimmerMyAds.visibility = View.GONE
+                myAdsRVAdapter.notifyDataSetChanged()
+            }
+        })
+
 
 ////on Back Press
         val callback=object : OnBackPressedCallback(true){
@@ -131,97 +151,16 @@ class MyAdsFrag : Fragment(), MyAdsOnClick {
         return view
     }///////////////onCreate
 
-    private fun getMyAds() {
-        lifecycleScope.async(Dispatchers.IO) {
-            try {
-
-
-
-                val job = async {
-                    fStore.collection("ads")
-                        .whereEqualTo("adUserId", auth.currentUser?.uid.toString())
-                        .get()
-                        .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                            override fun onSuccess(qs: QuerySnapshot?) {
-                                if (qs!!.isEmpty){
-                                    searchNothingImage.visibility=View.VISIBLE
-                                    searchNothingText.visibility=View.VISIBLE
-                                    shimmerMyAds.visibility = View.GONE
-                                } else {
-
-                                    for (qds: QueryDocumentSnapshot in qs!!) {
-
-
-                                            var adsId: String = qds.id.toString()
-                                            var displayAdTitle: String =
-                                                qds.getString("adTitle").toString()
-                                            var displayAdPrice: String =
-                                                qds.getString("adPrice").toString()
-                                            var displayAdImage: String =
-                                                qds.getString("adImageUrl").toString()
-                                            var displayAdDetail: String =
-                                                qds.getString("adDetail").toString()
-                                            var displayAdType: String =
-                                                qds.getString("adType").toString()
-                                            var displayAdUserId: String =
-                                                qds.getString("adUserId").toString()
-                                            var adSearchTitle: String =
-                                                qds.getString("adSearchTitle").toString()
-                                            var adAllImages: String =
-                                                qds.getString("adAllImages").toString()
-                                            var adLocation: String =
-                                                qds.getString("adLocation").toString()
-                                            var adPhoneNo: String =
-                                                qds.getString("adPhoneNo").toString()
-
-
-                                            myAdsRV.startLayoutAnimation()
-                                            adList.add(
-                                                AdModel(
-                                                    displayAdTitle,
-                                                    displayAdDetail,
-                                                    displayAdPrice,
-                                                    displayAdImage,
-                                                    displayAdType,
-                                                    displayAdUserId,
-                                                    adSearchTitle,
-                                                    adAllImages,
-                                                    adLocation,
-                                                    adPhoneNo
-                                                )
-                                            )
-                                            adIds.add(adsId)
-                                            adAllImgLinkList.add(adAllImages)
-                                            myAdsRVAdapter.notifyDataSetChanged()
-                                            searchNothingImage.visibility = View.GONE
-                                            searchNothingText.visibility = View.GONE
-                                            shimmerMyAds.visibility = View.GONE
-
-                                        }
-
-
-
-                                myAdsRVAdapter.notifyDataSetChanged()
-                                }
-                            }
-                        })
-                }.await()
-            }catch (e:Exception){
-                Log.d("hi","")
-            }
-            myAdsRVAdapter.notifyDataSetChanged()
-        }
-    }
 
     override fun onAdItemClick(pos: Int, adImage: ImageView) {
         val intent= Intent(requireContext(), ViewAdActivity::class.java)
-        intent.putExtra("adViewImage", adList[pos].adImageUrl)
-        intent.putExtra("adViewTitle", adList[pos].adTitle)
-        intent.putExtra("adViewPrice", adList[pos].adPrice)
-        intent.putExtra("adViewDetail", adList[pos].adDetail)
-        intent.putExtra("idOfUploader", adList[pos].adUserId)
-        intent.putExtra("adAllImages", adList[pos].adAllImages)
-
+        intent.putExtra("adViewImage", myAdList[pos].adImageUrl)
+        intent.putExtra("adViewTitle", myAdList[pos].adTitle)
+        intent.putExtra("adViewPrice", myAdList[pos].adPrice)
+        intent.putExtra("adViewDetail", myAdList[pos].adDetail)
+        intent.putExtra("idOfUploader", myAdList[pos].adUserId)
+        intent.putExtra("adAllImages", myAdList[pos].adAllImages)
+        intent.putExtra("adId", myAdList[pos].adId)
 
 
         val p2: Pair<View, String>

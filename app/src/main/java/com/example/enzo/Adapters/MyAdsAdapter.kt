@@ -49,7 +49,7 @@ class MyAdsAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentItem= searchResultList.get(position)
-        Picasso.get().load(currentItem.adImageUrl).placeholder(R.drawable.gray).into(holder.adImage)
+        Picasso.get().load(currentItem.adImageUrl).placeholder(R.drawable.enzo_place_holder).into(holder.adImage)
         holder.adTitle.text= currentItem.adTitle
         holder.adPrice.text= "Rs ${currentItem.adPrice}"
 

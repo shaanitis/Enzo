@@ -1,6 +1,5 @@
 package com.example.enzo
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,7 +12,6 @@ import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.enzo.Adapters.ChattingAdapter
 import com.example.enzo.Models.MessageModel
 import com.google.android.gms.tasks.OnSuccessListener
@@ -21,22 +19,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.makeramen.roundedimageview.RoundedImageView
 import com.squareup.picasso.Picasso
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.*
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.view.View
-import com.example.enzo.NotificationWork.DataNotification
-import com.example.enzo.NotificationWork.PushNotification
-import com.example.enzo.NotificationWork.RetrofitInstance
 import com.example.enzo.NotificationWork.SenderNotification
-import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.gson.Gson
+import java.lang.Runnable
 
 
 class ChattingScreen : AppCompatActivity() {
@@ -53,7 +47,10 @@ class ChattingScreen : AppCompatActivity() {
     lateinit var goBackBtn:ImageButton
     lateinit var toolBarChatScreen:Toolbar
     lateinit var nameOfOtherUser:String
+    lateinit var chattingAdapter: ChattingAdapter
+    lateinit var senderRoom:String
     lateinit var adId:String
+    var check:Boolean=true
     var userToken:String?= null
 
 
@@ -94,7 +91,7 @@ class ChattingScreen : AppCompatActivity() {
         idOfAdUploaderSeller= intent.getStringExtra("idOfWhoseChatClicked").toString()
         adId= intent.getStringExtra("adId").toString()
 
-
+////displaying chatting friend name and pic
       lifecycleScope.launch(Dispatchers.IO) {
           try {
 
@@ -119,42 +116,28 @@ class ChattingScreen : AppCompatActivity() {
         chatRView.layoutManager= LinearLayoutManager(applicationContext)
         chatRView.setHasFixedSize(true)
 
-        var chattingAdapter = ChattingAdapter(applicationContext, msgList)
+        chattingAdapter = ChattingAdapter(applicationContext, msgList)
         chatRView.adapter = chattingAdapter
-
 
 
         val senderId= auth.currentUser?.uid.toString()
         val recieverId=idOfAdUploaderSeller
-        val senderRoom= senderId+ recieverId
+        senderRoom= senderId+ recieverId
         val recieverRoom= recieverId + senderId
 
 ////
       scrollToLastWhenKeyboardIsUp()
 
-////getting messages from firestore
-        fStore.collection("chats").document(senderId).collection(senderRoom).orderBy("timeStamp")
-            .get()
-            .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                override fun onSuccess(qs: QuerySnapshot?) {
-                    msgList.clear()
-                    for (qds: QueryDocumentSnapshot in qs!!) {
-                        val msg: String=qds.getString ("messageText").toString()
-                        val userId: String=qds.getString("userID").toString()
-                        val timeOfText: String= qds.getString("timeOfText").toString()
-                        val recieverIde: String= qds.getString("recieverID").toString()
-                        val timeStamp: String= qds.getString("timeStamp").toString()
+////getting messages from firestore and refreshing
+        displayMessagesOnStart()
+        val mainHandler = Handler(Looper.getMainLooper())
 
-                        chatRView.startLayoutAnimation()
-                        msgList.add(MessageModel(userId, msg, timeOfText,recieverIde, timeStamp))
-                        //scroll to last
-                        chatRView.scrollToPosition(chattingAdapter.getItemCount()-1);
-
-                    }
-                    chattingAdapter.notifyDataSetChanged()
-                }
-            })
-
+        mainHandler.post(object : Runnable {
+            override fun run() {
+                refreshMessages()
+                mainHandler.postDelayed(this, 1000)
+            }
+        })
 
 ///////clicking send message button and uploading msg
         sendTextBtn.setOnClickListener {
@@ -166,9 +149,9 @@ class ChattingScreen : AppCompatActivity() {
 
             if (chatTextString==""){
                 Log.d("","")
-            }else {
+            }
+            else {
                 val currentUserId: String = auth.currentUser?.uid.toString()
-
                 val calendar: Calendar = Calendar.getInstance()
                 val format: SimpleDateFormat = SimpleDateFormat("hh:mm a")
                 val timeOfText: String = format.format(calendar.time)
@@ -196,8 +179,7 @@ class ChattingScreen : AppCompatActivity() {
                 lifecycleScope.async(Dispatchers.IO) {
                     val user = hashMapOf(
                         "idOfUploaderChats" to currentUserId,
-                        "adId" to adId
-                    )
+                        "adId" to adId)
 
                     val zR: DocumentReference = fStore.collection("users")
                         .document(recieverId).collection("idOfUploaderChats")
@@ -232,12 +214,7 @@ class ChattingScreen : AppCompatActivity() {
                             send.SendNotifications()
                         }
 
-
-
-
-
-
-        }
+            }
         }////sendBtn End
         tradeBtn.setOnClickListener {
 
@@ -255,6 +232,61 @@ class ChattingScreen : AppCompatActivity() {
 
     }///onCreate
 
+    private fun displayMessagesOnStart() {
+        val senderId= auth.currentUser?.uid.toString()
+        fStore.collection("chats").document(senderId).collection(senderRoom).orderBy("timeStamp")
+            .get()
+            .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
+                override fun onSuccess(qs: QuerySnapshot?) {
+                    msgList.clear()
+                    for (qds: QueryDocumentSnapshot in qs!!) {
+                        val msg: String=qds.getString ("messageText").toString()
+                        val userId: String=qds.getString("userID").toString()
+                        val timeOfText: String= qds.getString("timeOfText").toString()
+                        val recieverIde: String= qds.getString("recieverID").toString()
+                        val timeStamp: String= qds.getString("timeStamp").toString()
+
+                        chatRView.startLayoutAnimation()
+                        msgList.add(MessageModel(userId, msg, timeOfText,recieverIde, timeStamp))
+                        //scroll to last
+                        chatRView.scrollToPosition(chattingAdapter.getItemCount() - 1);
+
+
+
+
+                    }
+                    chattingAdapter.notifyDataSetChanged()
+
+
+                }
+            })
+    }
+
+    private fun refreshMessages() {
+        val senderId= auth.currentUser?.uid.toString()
+        fStore.collection("chats").document(senderId).collection(senderRoom).orderBy("timeStamp")
+            .get()
+            .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
+                override fun onSuccess(qs: QuerySnapshot?) {
+                    msgList.clear()
+                    for (qds: QueryDocumentSnapshot in qs!!) {
+                        val msg: String=qds.getString ("messageText").toString()
+                        val userId: String=qds.getString("userID").toString()
+                        val timeOfText: String= qds.getString("timeOfText").toString()
+                        val recieverIde: String= qds.getString("recieverID").toString()
+                        val timeStamp: String= qds.getString("timeStamp").toString()
+
+                        chatRView.startLayoutAnimation()
+                        msgList.add(MessageModel(userId, msg, timeOfText,recieverIde, timeStamp))
+
+                    }
+
+
+                }
+            })
+
+    }
+
     private fun scrollToLastWhenKeyboardIsUp() {
         if (Build.VERSION.SDK_INT >= 11) {
             chatRView.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
@@ -268,17 +300,18 @@ class ChattingScreen : AppCompatActivity() {
                             chatRView.smoothScrollToPosition(
                                 chatRView.getAdapter()!!.getItemCount()
                             )
-                        }, 100)
+                        }, 0)
                     }
                 }
             })
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_chatting, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
 
@@ -295,17 +328,6 @@ class ChattingScreen : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
 }
 
-    private fun sendNotification(notification: PushNotification)= CoroutineScope(Dispatchers.IO).launch{
-try {
-    val response=RetrofitInstance.api.postNotification(notification)
-    if (response.isSuccessful){
-        Log.d("defy","response:${response.toString()}")
-    } else{
-        Log.d("defy","${response.errorBody().toString()}")
-    }
 
-}catch (e:Exception){
-    Log.d("","")
-}
-    }
+
 }//main

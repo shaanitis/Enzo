@@ -2,6 +2,7 @@ package com.example.enzo.Fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +13,8 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -85,33 +88,53 @@ class ChatFrag : Fragment(), UserChatOnClick {
 
         allChatsAdapter = AllChatsAdapter(requireContext(), allChatsList, this, idsOfChats)
         allChatsRV.adapter = allChatsAdapter
-        allChatsAdapter.notifyDataSetChanged()
+
         ///displaying chats
 
-        allChatsList.clear()
+
+        //////Using VIEWMODEL to Prevent data reloading on fragment change or screen rotation
+
+        viewModel = ViewModelProvider(this)[ChatFragViewModel::class.java]
+        viewModel.getAds().observe(viewLifecycleOwner, Observer { userList ->
+
+            allChatsList.clear()
+            allChatsList.addAll(userList)
+            if (allChatsList.isEmpty()) {
 
 
-        displayUserChats()
+                shimmerUserChat.visibility = View.VISIBLE
+                allChatsAdapter.notifyDataSetChanged()
+
+            } else {
+
+                shimmerUserChat.visibility = View.GONE
+                allChatsAdapter.notifyDataSetChanged()
+            }
+        })
 
         /////recycler view swipe gestures
-         val swipeGesture= object : SwipeGestures(requireContext()){
+        val swipeGesture = object : SwipeGestures(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                when(direction) {
+                when (direction) {
 
                     ItemTouchHelper.LEFT -> {
 
 
                         MaterialAlertDialogBuilder(requireContext()).setTitle("Want to delete this chat?")
                             .setMessage("All messages and trading data with the user will be cleared!")
-                            .setNegativeButton("No"){dialog, it->
+                            .setNegativeButton("No") { dialog, it ->
                                 allChatsAdapter.notifyDataSetChanged()
                             }
-                            .setPositiveButton("Yes, delete"){dialog, it->
+                            .setPositiveButton("Yes, delete") { dialog, it ->
 
                                 allChatsAdapter.deleteItem(viewHolder.position)
                                 allChatsAdapter.notifyDataSetChanged()
-                                val sb=Snackbar.make(allChatsRV, "Chat deleted Succesfully", Snackbar.LENGTH_SHORT)
-                                    sb.setAction("Got It"){
+                                val sb = Snackbar.make(
+                                    allChatsRV,
+                                    "Chat deleted Succesfully",
+                                    Snackbar.LENGTH_SHORT
+                                )
+                                sb.setAction("Got It") {
                                     sb.dismiss()
                                 }.show()
                             }
@@ -123,7 +146,7 @@ class ChatFrag : Fragment(), UserChatOnClick {
             }
         }
 
-        val touchHelper= ItemTouchHelper(swipeGesture)
+        val touchHelper = ItemTouchHelper(swipeGesture)
         touchHelper.attachToRecyclerView(allChatsRV)
 
 
@@ -141,77 +164,6 @@ class ChatFrag : Fragment(), UserChatOnClick {
         return view
     }
 
-    private fun displayUserChats() {
-
-
-    ///////getting ids of uploaders with whom user chatted and saving ids in array list idsOfChats
-
-        lifecycleScope.async(Dispatchers.IO) {
-
-            try {
-
-
-           val job=async {
-               fStore.collection("users")
-                   .document(auth.currentUser!!.uid)
-                   .collection("idOfUploaderChats")
-                   .get()
-                   .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                       override fun onSuccess(qs: QuerySnapshot?) {
-                           if (qs!!.isEmpty) {
-
-                               searchNothingImage.visibility = View.VISIBLE
-                               searchNothingText.visibility = View.VISIBLE
-                               shimmerUserChat.visibility = View.GONE
-
-                           } else {
-                               for (qds: QueryDocumentSnapshot in qs!!) {
-                                   val idOfUploaderChats: String =
-                                       qds.getString("idOfUploaderChats").toString()
-                                   adId=qds.getString("adId").toString()
-                                   idsOfChats.add("$idOfUploaderChats")
-
-                               }
-                           }
-////////looping through array of ids and getting info of each id and displaying chats overall
-                           for (i in idsOfChats) {
-
-                               val documentReference: DocumentReference =
-                                   fStore.collection("users").document(i)
-                               documentReference.get().addOnSuccessListener {
-                                   allChatsRV.startLayoutAnimation()
-                                   var nameOfUserChatclicked: String =
-                                       it.getString("profileName").toString()
-                                   var imgUrlOfUserChatClicked: String =
-                                       it.getString("profileUrl").toString()
-                                   var idOfUserChatClicked: String = it.id
-                                   allChatsList.add(
-                                       AllChatsModel(
-                                           nameOfUserChatclicked,
-                                           imgUrlOfUserChatClicked,
-                                           idOfUserChatClicked
-                                       )
-                                   )
-
-                                   shimmerUserChat.visibility = View.GONE
-                                   allChatsAdapter.notifyDataSetChanged()
-
-
-                               }
-
-                           }
-
-                       }
-
-                   })
-           }.await()
-                allChatsAdapter.notifyDataSetChanged()
-            } catch (e: Exception) {
-                Log.d("err", "")
-            }
-        }
-}
-
     override fun onAdItemClick(pos: Int, userName:TextView, userImg: ImageView ) {
 
 
@@ -223,7 +175,7 @@ class ChatFrag : Fragment(), UserChatOnClick {
          intent.putExtra("nameOfWhoseChatClicked", allChatsList[pos].nameOfUserChatClicked)
          //buyer id
          intent.putExtra("idOfBuyerWhoClickedChat", auth.currentUser?.uid.toString())
-           intent.putExtra("adId", adId)
+         /*  intent.putExtra("adId", adId)*/
          val p1: Pair<View, String>
          p1 = Pair(userName, "userChatNameTrans")
 

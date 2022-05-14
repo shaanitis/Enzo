@@ -2,10 +2,9 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@color/orange_200"/>
-    <item android:drawable="@drawable/enzoe"
+    <item android:drawable="@drawable/eg"
         android:gravity="center"
         android:width="480dp"
         android:height="450dp"/>
-
 
 </layer-list>

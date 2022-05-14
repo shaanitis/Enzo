@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.enzo.LoginActivity
 import com.example.enzo.R
+import com.example.enzo.TryActivity
 import com.facebook.login.LoginManager
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.button.MaterialButton
@@ -40,6 +41,7 @@ class ProfileFrag : Fragment() {
     lateinit var profileName: TextView
     lateinit var logoutView: TextView
     lateinit var myAdsBtn:TextView
+    lateinit var tryBtn:TextView
     lateinit var myList: ArrayList<String>
     lateinit var userID:String
     override fun onCreateView(
@@ -54,6 +56,7 @@ class ProfileFrag : Fragment() {
        profileName= view.findViewById(R.id.profileName)
         logoutView= view.findViewById(R.id.logoutView)
         myAdsBtn=view.findViewById(R.id.myAdsBtn)
+        tryBtn=view.findViewById(R.id.tryBtn)
         userID= "0"
         myList= arrayListOf()
         auth= FirebaseAuth.getInstance()
@@ -75,6 +78,10 @@ class ProfileFrag : Fragment() {
            }catch (e:Exception){
                Log.d("","")
            }
+        }
+        tryBtn.setOnClickListener {
+            Intent(requireContext(), TryActivity::class.java).also {
+                startActivity(it)  }
         }
         myAdsBtn.setOnClickListener {
 
