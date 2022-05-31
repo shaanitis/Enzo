@@ -25,104 +25,82 @@ class SavedAdsRepo() {
                .get()
                .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
                    override fun onSuccess(querySnapshot: QuerySnapshot?) {
-
-       for (it: QueryDocumentSnapshot in querySnapshot!!) {
-           val adId: String = it.id.toString()
+                          if (querySnapshot!!.isEmpty){
 
 
+                          }else {
 
-           savedAdIds.add(adId)
+                              for (it: QueryDocumentSnapshot in querySnapshot!!) {
+                                  val adId: String = it.id.toString()
 
-
-       }
-       for (i in 0 until savedAdIds.size) {
-           fStore.collection("ads").document(savedAdIds[i]).get().addOnSuccessListener {
-
-
-               val adId: String = it.id.toString()
-               val displayAdTitle: String = it.getString("adTitle").toString()
-               var displayAdPrice: String = it.getString("adPrice").toString()
-               var displayAdImage: String = it.getString("adImageUrl").toString()
-               var displayAdDetail: String = it.getString("adDetail").toString()
-               var displayAdType: String = it.getString("adType").toString()
-               var displayAdUserId: String = it.getString("adUserId").toString()
-               var displayAdSearchTitle: String = it.getString("adSearchTitle").toString()
-               var allImagesUrl: String = it.getString("adAllImages").toString()
-               var adPhoneNo: String = it.getString("adPhoneNo").toString()
-               var adLocation: String = it.getString("adLocation").toString()
+                                  savedAdIds.add(adId)
 
 
-               savedAdsList.add(
-                   AdModel(
-                       adTitle = displayAdTitle,
-                       adDetail = displayAdDetail,
-                       adPrice = displayAdPrice,
-                       adImageUrl = displayAdImage,
-                       adType = displayAdType,
-                       adUserId = displayAdUserId,
-                       adSearchTitle = displayAdSearchTitle,
-                       adAllImages = allImagesUrl,
-                       adPhoneNo = adPhoneNo,
-                      null, null, adId
-                   )
-               )
+                              }
+                              for (i in 0 until savedAdIds.size) {
+                                  fStore.collection("ads").document(savedAdIds[i]).get()
+                                      .addOnSuccessListener {
 
 
-               liveData?.postValue(savedAdsList)
+                                          val adId: String = it.id.toString()
+                                          val displayAdTitle: String =
+                                              it.getString("adTitle").toString()
+                                          var displayAdPrice: String =
+                                              it.getString("adPrice").toString()
+                                          val adBid: String = it.getString("adBid").toString()
+                                          var displayAdImage: String =
+                                              it.getString("adImageUrl").toString()
+                                          var displayAdDetail: String =
+                                              it.getString("adDetail").toString()
+                                          var displayAdType: String =
+                                              it.getString("adType").toString()
+                                          var displayAdUserId: String =
+                                              it.getString("adUserId").toString()
+                                          var displayAdSearchTitle: String =
+                                              it.getString("adSearchTitle").toString()
+                                          var allImagesUrl: String =
+                                              it.getString("adAllImages").toString()
+                                          var adPhoneNo: String =
+                                              it.getString("adPhoneNo").toString()
+                                          var adLocLatitude: String =
+                                              it.getString("adLocLatitude").toString()
+                                          var adLocLongitude: String =
+                                              it.getString("adLocLongitude").toString()
 
 
-           }.addOnFailureListener {
-               Log.e("hh", "")
-           }
+                                          savedAdsList.add(
+                                              AdModel(
+                                                  adTitle = displayAdTitle,
+                                                  adDetail = displayAdDetail,
+                                                  adPrice = displayAdPrice,
+                                                  adBid,
+                                                  adImageUrl = displayAdImage,
+                                                  adType = displayAdType,
+                                                  adUserId = displayAdUserId,
+                                                  adSearchTitle = displayAdSearchTitle,
+                                                  adAllImages = allImagesUrl,null,
+                                                  adPhoneNo = adPhoneNo,
+                                                  adLocLatitude, adLocLongitude, adId
+                                              )
+                                          )
 
-       }
 
+                                          liveData?.postValue(savedAdsList)
+
+
+                                      }.addOnFailureListener {
+                                      Log.e("hh", "")
+                                  }
+
+                              }
+                          }
 
                    }
 
                })
        }
 
-    fun fetchNewAds(liveData: MutableLiveData<ArrayList<AdModel>>) {
-        val adList= arrayListOf<AdModel>()
-        liveData.postValue(adList)
-    }
-    /*public fun fetchAllAds(){
-
-        fStore.collection("savedAds")
-            .whereEqualTo("userId", auth.currentUser?.uid.toString())
-            .get()
-            .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                override fun onSuccess(querySnapshot: QuerySnapshot?) {
-
-                    for (it: QueryDocumentSnapshot in querySnapshot!!) {
-                        val adId: String = it.id.toString()
 
 
 
-                        savedAdIds.add(adId)
-
-
-                    }
-                    for (i in 0 until savedAdIds.size) {
-                        fStore.collection("ads").document(savedAdIds[i]).get().addOnSuccessListener {
-
-                 *//* gg.gotAllAds(it.toObject(AdModel::class.java))
-*//*
-                        }.addOnFailureListener {
-                            Log.e("hh", "")
-                        }
-
-                    }
-
-
-                }
-
-            })
-
-    }
- interface gotAds{
-    fun gotAllAds(allAdsList:ArrayList<AdModel>)
-    fun onError(e:Exception)
-}*/
     }

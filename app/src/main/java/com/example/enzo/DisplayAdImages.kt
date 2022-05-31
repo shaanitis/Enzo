@@ -19,6 +19,7 @@ import android.view.WindowManager
 import android.os.Build
 import android.view.Window
 import android.widget.ImageButton
+import android.widget.Toast
 
 
 class DisplayAdImages : AppCompatActivity() {
@@ -86,7 +87,6 @@ class DisplayAdImages : AppCompatActivity() {
                       } else {
 
                       }.apply {
-                          val noOfImgs = noOfImages
 
 
                           fStore.collection("adAllImages").document(allImagesUrl).get()
@@ -114,7 +114,10 @@ class DisplayAdImages : AppCompatActivity() {
       }
     }
 
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition( 0,0)
+    }
 }
 
 

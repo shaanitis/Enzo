@@ -124,7 +124,7 @@ class SearchResult : AppCompatActivity(), SearchAdOnClick {
     private fun searchBarQueryListener() {
 
       lifecycleScope.async(Dispatchers.IO) {
-
+          searchRecyclerView.startLayoutAnimation()
       val job=async {      mtSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
               override fun onQueryTextSubmit(query: String?): Boolean {
                   searchResultList.clear()
@@ -145,6 +145,8 @@ class SearchResult : AppCompatActivity(), SearchAdOnClick {
                                           qds.getString("adTitle").toString()
                                       var displayAdPrice: String =
                                           qds.getString("adPrice").toString()
+                                      var displayAdBid: String =
+                                          qds.getString("adBid").toString()
                                       var displayAdImage: String =
                                           qds.getString("adImageUrl").toString()
                                       var displayAdDetail: String =
@@ -157,10 +159,10 @@ class SearchResult : AppCompatActivity(), SearchAdOnClick {
                                       var allImagesUrl: String =
                                           qds.getString("adAllImages").toString()
                                       var adPhoneNo: String = qds.getString("adPhoneNo").toString()
-                                      var adLocation: String =
-                                          qds.getString("adLocation").toString()
+                                      var adLocLatitide:String=qds.getString("adLocLatitude").toString()
+                                      var adLocLongitude:String=qds.getString("adLocLongitude").toString()
 
-                                      list.add(displayAdSearchTitle)
+
                                       if (displayAdSearchTitle.contains(
                                               query!!.trim().toLowerCase()) ){
 
@@ -169,18 +171,19 @@ class SearchResult : AppCompatActivity(), SearchAdOnClick {
                                                   adTitle = displayAdTitle,
                                                   adDetail = displayAdDetail,
                                                   adPrice = displayAdPrice,
+                                                  displayAdBid,
                                                   adImageUrl = displayAdImage,
                                                   adType = displayAdType,
                                                   adUserId = displayAdUserId,
                                                   adSearchTitle = displayAdSearchTitle,
-                                                  adAllImages = allImagesUrl,
+                                                  adAllImages = allImagesUrl,null,
                                                   adPhoneNo,
-                                                  null,
-                                              null, adId)
+                                                  adLocLatitide,
+                                              adLocLongitude, adId)
                                           )
 
                                           adIds.add(adId)
-                                          searchRecyclerView.startLayoutAnimation()
+
                                           searchResultAdapter.notifyDataSetChanged()
                                       }
 
@@ -222,6 +225,7 @@ class SearchResult : AppCompatActivity(), SearchAdOnClick {
         intent.putExtra("adViewImage", searchResultList[pos].adImageUrl)
         intent.putExtra("adViewTitle", searchResultList[pos].adTitle)
         intent.putExtra("adViewPrice", searchResultList[pos].adPrice)
+        intent.putExtra("adViewBid", searchResultList[pos].adBid)
         intent.putExtra("adViewDetail", searchResultList[pos].adDetail)
         intent.putExtra("idOfUploader", searchResultList[pos].adUserId)
         intent.putExtra("adAllImages", searchResultList[pos].adAllImages)

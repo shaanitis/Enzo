@@ -30,8 +30,7 @@ import java.lang.Exception
 class AllChatsAdapter(
     var context: Context,
     private var allChatsList: ArrayList<AllChatsModel>,
-    val onCLick: UserChatOnClick?,
-   var idsOfChats: ArrayList<String>
+    val onCLick: UserChatOnClick?
 ): RecyclerView.Adapter<AllChatsAdapter.MyViewHolder>()  {
 
     val auth:FirebaseAuth= FirebaseAuth.getInstance()
@@ -80,50 +79,42 @@ class AllChatsAdapter(
     fun deleteItem(i:Int){
 
 
-  GlobalScope.async(Dispatchers.IO) {
-      try {
+        val currentItem = allChatsList.get(i)
+        allChatsList.removeAt(i)
+        notifyDataSetChanged()
 
-
-          val job1 = async {
               fStore.collection("users").document(auth.currentUser?.uid.toString())
-                  .collection("idOfUploaderChats").document(idsOfChats[i]).delete()
+                  .collection("idOfUploaderChats").document(currentItem.idOfUserChatClicked).delete()
 
-          }
 
-          val job2 = async {
+
+
 ///removing all docs from a collection
-         try {
+
 
              fStore.collection("chats").document(auth.currentUser?.uid.toString())
-                 .collection(auth.currentUser?.uid.toString()+idsOfChats[i])
+                 .collection(auth.currentUser?.uid.toString() + currentItem.idOfUserChatClicked)
                  .get().addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
                      override fun onSuccess(qs: QuerySnapshot?) {
                          for (qds: QueryDocumentSnapshot in qs!!) {
                              val id = qds.id
                              fStore.collection("chats").document(auth.currentUser?.uid.toString())
-                                 .collection(auth.currentUser?.uid.toString()+idsOfChats[i])
+                                 .collection(auth.currentUser?.uid.toString() + currentItem.idOfUserChatClicked)
                                  .document(id).delete()
 
                          }
-                         allChatsList.removeAt(i)
-                         idsOfChats.removeAt(i)
-                         notifyDataSetChanged()
+
 
 
                      }
 
                  })
-         }catch (e:Exception){
-             Log.d("h","h")
-         }    }
-
-      }catch (e:Exception){
-          Log.d("err","")
-      }
-      }
 
 
-}
+         }
+
+
+
 //////if unable to detect and assign layouts or views, remove the import library .R////////
 
 }

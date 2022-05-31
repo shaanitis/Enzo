@@ -10,12 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.util.Pair
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +38,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class SavedAdsFrag : Fragment(), SavedAdsOnClick {
@@ -60,6 +65,7 @@ class SavedAdsFrag : Fragment(), SavedAdsOnClick {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[SavedAdsVM::class.java]
 
+
         fStore= FirebaseFirestore.getInstance()
         auth= FirebaseAuth.getInstance()
         savedAdList= arrayListOf()
@@ -79,83 +85,28 @@ class SavedAdsFrag : Fragment(), SavedAdsOnClick {
 ////////getting Saved Ads through ViewModel
 
         bind.strSavedAds.setOnRefreshListener {
+            bind.savedAdsRV.startLayoutAnimation()
+            savedAdList.clear()
+        savedAdList.addAll(NewAds.getNewSavedAds(savedAdList))
+            Toast.makeText(requireContext(), savedAdList[0].toString(), Toast.LENGTH_SHORT).show()
 
-               savedAdList.clear()
-           Log.d("viewModel", "repoFirstSavedAds")
-           fStore.collection("savedAds")
-               .whereEqualTo("userId", auth.currentUser?.uid.toString())
-               .get()
-               .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                   override fun onSuccess(querySnapshot: QuerySnapshot?) {
-
-       for (it: QueryDocumentSnapshot in querySnapshot!!) {
-           val adId: String = it.id.toString()
-
-
-
-           savedAdIds.add(adId)
-
-
-       }
-       for (i in 0 until savedAdIds.size) {
-           fStore.collection("ads").document(savedAdIds[i]).get().addOnSuccessListener {
-
-
-               val adId: String = it.id.toString()
-               val displayAdTitle: String = it.getString("adTitle").toString()
-               var displayAdPrice: String = it.getString("adPrice").toString()
-               var displayAdImage: String = it.getString("adImageUrl").toString()
-               var displayAdDetail: String = it.getString("adDetail").toString()
-               var displayAdType: String = it.getString("adType").toString()
-               var displayAdUserId: String = it.getString("adUserId").toString()
-               var displayAdSearchTitle: String = it.getString("adSearchTitle").toString()
-               var allImagesUrl: String = it.getString("adAllImages").toString()
-               var adPhoneNo: String = it.getString("adPhoneNo").toString()
-               var adLocation: String = it.getString("adLocation").toString()
-
-
-               savedAdList.add(
-                   AdModel(
-                       adTitle = displayAdTitle,
-                       adDetail = displayAdDetail,
-                       adPrice = displayAdPrice,
-                       adImageUrl = displayAdImage,
-                       adType = displayAdType,
-                       adUserId = displayAdUserId,
-                       adSearchTitle = displayAdSearchTitle,
-                       adAllImages = allImagesUrl,
-                       adPhoneNo = adPhoneNo,
-                       null,null, adId
-                   )
-               )
-               bind.savedAdsRV.startLayoutAnimation()
-savedAdsRVAdapter.notifyDataSetChanged()
-
-
-           }.addOnFailureListener {
-               Log.e("hh", "")
-           }
-
-       }
-
-                       savedAdsRVAdapter.notifyDataSetChanged()
-
-                   }
-
-               })
             bind.strSavedAds.isRefreshing=false
         }
 
+
+
+
        viewModel.getSavedAds().observe(this, Observer {
            savedAdList.clear()
+           bind.savedAdsRV.startLayoutAnimation()
            savedAdList.addAll(it)
            if (savedAdList.isEmpty()) {
 
                bind.shimmerSavedAds.visibility=View.GONE
 
-           }else{
-               bind.savedAdsRV.startLayoutAnimation()
+           }else {
                bind.shimmerSavedAds.visibility=View.GONE
+
                savedAdsRVAdapter.notifyDataSetChanged()
            }
        })
@@ -184,7 +135,6 @@ savedAdsRVAdapter.notifyDataSetChanged()
 
         }
         requireActivity().onBackPressedDispatcher.addCallback(callback)
-
 
 
     }
@@ -225,6 +175,7 @@ savedAdsRVAdapter.notifyDataSetChanged()
         touchHelper.attachToRecyclerView(bind.savedAdsRV)
 
 
+
     }
 
 
@@ -233,10 +184,13 @@ savedAdsRVAdapter.notifyDataSetChanged()
         intent.putExtra("adViewImage", savedAdList[pos].adImageUrl)
         intent.putExtra("adViewTitle", savedAdList[pos].adTitle)
         intent.putExtra("adViewPrice", savedAdList[pos].adPrice)
+        intent.putExtra("adViewBid", savedAdList[pos].adBid)
         intent.putExtra("adViewDetail", savedAdList[pos].adDetail)
         intent.putExtra("idOfUploader", savedAdList[pos].adUserId)
         intent.putExtra("adAllImages", savedAdList[pos].adAllImages)
         intent.putExtra("adId", savedAdList[pos].adId)
+        intent.putExtra("adLocLatitude", savedAdList[pos].adLocLatitude)
+        intent.putExtra("adLocLongitude", savedAdList[pos].adLocLongitude)
 
 
         val p2: Pair<View, String>
@@ -249,8 +203,90 @@ savedAdsRVAdapter.notifyDataSetChanged()
     }
 
 
+public class NewAds {
+    companion object{
+        fun getNewSavedAds( list:ArrayList<AdModel>):ArrayList<AdModel>{
+
+          var savedAdIds=ArrayList<String>()
 
 
+            GlobalScope.launch(Dispatchers.IO) {
+
+                Log.d("viewModel", "repoFirstSavedAds")
+                FirebaseFirestore.getInstance().collection("savedAds")
+                    .whereEqualTo("userId",
+                        FirebaseAuth.getInstance().currentUser?.uid.toString())
+                    .get()
+                    .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
+                        override fun onSuccess(querySnapshot: QuerySnapshot?) {
+
+                            for (it: QueryDocumentSnapshot in querySnapshot!!) {
+                                val adId: String = it.id.toString()
+
+
+                                savedAdIds.add(adId)
+
+
+                            }
+                            for (i in 0 until savedAdIds.size) {
+                                FirebaseFirestore.getInstance()
+                                    .collection("ads")
+                                    .document(savedAdIds[i]).get().addOnSuccessListener {
+
+
+                                    val adId: String = it.id.toString()
+                                    val displayAdTitle: String = it.getString("adTitle").toString()
+                                    var displayAdPrice: String = it.getString("adPrice").toString()
+                                    val adBid:String=it.getString("adBid").toString()
+                                    var displayAdImage: String = it.getString("adImageUrl").toString()
+                                    var displayAdDetail: String = it.getString("adDetail").toString()
+                                    var displayAdType: String = it.getString("adType").toString()
+                                    var displayAdUserId: String = it.getString("adUserId").toString()
+                                    var displayAdSearchTitle: String = it.getString("adSearchTitle").toString()
+                                    var allImagesUrl: String = it.getString("adAllImages").toString()
+                                    var adPhoneNo: String = it.getString("adPhoneNo").toString()
+                                    var adLocLatitide: String = it.getString("adLocLatitude").toString()
+                                    var adLocLongitude: String = it.getString("adLocLongitude").toString()
+
+
+                                   list.add(
+                                        AdModel(
+                                            adTitle = displayAdTitle,
+                                            adDetail = displayAdDetail,
+                                            adPrice = displayAdPrice,
+                                            adBid=adBid,
+                                            adImageUrl = displayAdImage,
+                                            adType = displayAdType,
+                                            adUserId = displayAdUserId,
+                                            adSearchTitle = displayAdSearchTitle,
+                                            adAllImages = allImagesUrl,
+                                            adPhoneNo = adPhoneNo,
+                                            attachedImages = null,
+                                            adLocLatitude = adLocLatitide,
+                                            adLocLongitude = adLocLongitude,
+                                            adId = adId
+                                        )
+                                    )
+
+
+
+
+                                }.addOnFailureListener {
+                                    Log.e("hh", "")
+                                }
+
+                            }
+
+
+
+                        }
+
+                    })
+            }
+            return list
+        }
+    }
+}
 
 }
 

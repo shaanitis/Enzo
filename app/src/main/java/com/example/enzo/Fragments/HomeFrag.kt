@@ -1,5 +1,6 @@
 package com.example.enzo.Fragments
 
+import android.animation.Animator
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -10,11 +11,9 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.GridView
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
@@ -87,12 +86,7 @@ try {
 }catch (e:Exception){
     Log.d("","")
 }
-    /*    val goTry:Button=view.findViewById(R.id.goTry)
-        goTry.setOnClickListener {
-            Intent(requireContext(), TryActivity::class.java).apply {
-                startActivity(this)
-        }
-        }*/
+
 ///////////initializing/////////
         auth= FirebaseAuth.getInstance()
         fStore= FirebaseFirestore.getInstance()
@@ -239,6 +233,28 @@ try {
                           Picasso.get().load(picUrl).placeholder(R.drawable.blankuser)
                               .into(profilePicHomeFrag)
 
+               try {
+
+                   val cx: Int = profilePicHomeFrag.getMeasuredWidth() / 2
+                   val cy: Int = profilePicHomeFrag.getMeasuredHeight() / 2
+
+                   val finalRadius: Int =
+                       Math.max(profilePicHomeFrag.getWidth(), profilePicHomeFrag.getHeight()) / 2
+
+                   val anim: Animator =
+                       ViewAnimationUtils.createCircularReveal(
+                           profilePicHomeFrag,
+                           cx,
+                           cy,
+                           0f,
+                           finalRadius.toFloat()
+                       )
+
+                   anim.start()
+               }catch (e:Exception){
+                   Log.d("err","hey")
+               }
+                      profilePicHomeFrag.setVisibility(View.VISIBLE)
                   }
           }
 
@@ -256,6 +272,7 @@ try {
         intent.putExtra("adViewImage", adList[pos].adImageUrl)
         intent.putExtra("adViewTitle", adList[pos].adTitle)
         intent.putExtra("adViewPrice", adList[pos].adPrice)
+        intent.putExtra("adViewBid", adList[pos].adBid)
         intent.putExtra("adViewDetail", adList[pos].adDetail)
         intent.putExtra("idOfUploader", adList[pos].adUserId)
         intent.putExtra("adAllImages", adList[pos].adAllImages)

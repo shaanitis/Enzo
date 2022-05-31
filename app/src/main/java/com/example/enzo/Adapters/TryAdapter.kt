@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.enzo.Models.AdModel
-import com.example.enzo.Models.AllChatsModel
 import com.example.enzo.Models.LoginModel
 import com.example.enzo.R
 import com.squareup.picasso.Picasso
 
-class TryAdapter( var context: Context,
-                  private var userList: ArrayList<AllChatsModel>): RecyclerView.Adapter<TryAdapter.MyViewHolder>()  {
+class TryAdapter(var context: Context,
+                 private var userList: ArrayList<LoginModel>?
+): RecyclerView.Adapter<TryAdapter.MyViewHolder>()  {
 
    /* private val userData= arrayListOf<LoginModel>()*/
     override fun onCreateViewHolder(
@@ -27,15 +26,15 @@ class TryAdapter( var context: Context,
 
 
     override fun getItemCount(): Int {
-        return userList.size
+        return userList!!.size
     }
 
 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentItem= userList.get(position)
-        holder.userName.text=currentItem.nameOfUserChatClicked .toString()
-        Picasso.get().load(currentItem.imgOfUserChatClicked).into(holder.userImg)
+        val currentItem= userList!!.get(position)
+        holder.userName.text=currentItem.profileName
+        Picasso.get().load(currentItem.profileUrl).into(holder.userImg)
     }
 
 

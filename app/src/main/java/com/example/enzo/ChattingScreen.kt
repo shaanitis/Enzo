@@ -1,6 +1,8 @@
 package com.example.enzo
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -50,7 +52,7 @@ class ChattingScreen : AppCompatActivity() {
     lateinit var chattingAdapter: ChattingAdapter
     lateinit var senderRoom:String
     lateinit var adId:String
-    var check:Boolean=true
+    lateinit var myDialog:Dialog
     var userToken:String?= null
 
 
@@ -80,16 +82,20 @@ class ChattingScreen : AppCompatActivity() {
         goBackBtn.setOnClickListener {
             finish()
         }
+        val fromChatFrag:Boolean=intent.getBooleanExtra("fromChatFrag", false)
+if (fromChatFrag==true){
+    /////getting uploader img and name from chat frag
+    nameOfOtherUser=intent.getStringExtra("nameOfWhoseChatClicked").toString()
+    uploaderNameChatting.text=nameOfOtherUser
+    Picasso.get().load(intent.getStringExtra("imgOfWhoseChatClicked")).into(uploaderImgChatting)
 
-/////getting uploader img and name from chat frag
-        nameOfOtherUser=intent.getStringExtra("nameOfWhoseChatClicked").toString()
-        uploaderNameChatting.text=nameOfOtherUser
-        Picasso.get().load(intent.getStringExtra("imgOfWhoseChatClicked")).into(uploaderImgChatting)
+}
 
- //////from view ad activity
+ //////from view ad activity or anywhere else
         ///id of seller ad uploader
         idOfAdUploaderSeller= intent.getStringExtra("idOfWhoseChatClicked").toString()
         adId= intent.getStringExtra("adId").toString()
+
 
 ////displaying chatting friend name and pic
       lifecycleScope.launch(Dispatchers.IO) {
@@ -108,7 +114,16 @@ class ChattingScreen : AppCompatActivity() {
               Log.d("h","")
           }
       }
-
+uploaderImgChatting.setOnClickListener {
+    val intent=Intent(this, ProfileActivity::class.java)
+    intent.putExtra("userId", idOfAdUploaderSeller)
+    startActivity(intent)
+}
+        uploaderNameChatting.setOnClickListener {
+            val intent=Intent(this, ProfileActivity::class.java)
+            intent.putExtra("userId", idOfAdUploaderSeller)
+            startActivity(intent)
+        }
 //////////setting chatting adapter///
         chatRView= findViewById(R.id.chatRView)
         msgList= arrayListOf<MessageModel>()
@@ -220,11 +235,7 @@ class ChattingScreen : AppCompatActivity() {
 
 
 
-            val intent = Intent(this, BuyerOrSeller::class.java)
-            intent.putExtra("yourID", auth.currentUser!!.uid.toString())
-            intent.putExtra("recieverID", idOfAdUploaderSeller)
-            intent.putExtra("nameOfOther",nameOfOtherUser)
-            startActivity(intent)
+           showPopUp()
 
 
 
@@ -318,16 +329,32 @@ class ChattingScreen : AppCompatActivity() {
 
         if (item.getItemId() == R.id.trade) {
 
-            val intent = Intent(this, BuyerOrSeller::class.java)
-            intent.putExtra("recieverID", idOfAdUploaderSeller)
-            intent.putExtra("nameOfOther",nameOfOtherUser)
-            startActivity(intent)
+           showPopUp()
 
 
     }
         return super.onOptionsItemSelected(item)
 }
 
+fun showPopUp(){
+    myDialog= Dialog(this)
+    myDialog.setContentView(R.layout.popup_buyer_or_seller)
+    //////For transparent Background/////////
+    myDialog.window?.setBackgroundDrawable(ColorDrawable(0))
+    myDialog.show()
 
+    val buyerTab: TextView= myDialog.findViewById(R.id.buyerTab)
+    val sellerTab: TextView= myDialog.findViewById(R.id.sellerTab)
+    buyerTab.setOnClickListener {
+       val intent=Intent(this, BuyerActivity::class.java)
+        intent.putExtra("recieverId", idOfAdUploaderSeller)
+        startActivity(intent)
+    }
+    sellerTab.setOnClickListener {
+        val intent=Intent(this, SellerActivity::class.java)
+        intent.putExtra("recieverId", idOfAdUploaderSeller)
+        startActivity(intent)
+    }
+}
 
 }//main

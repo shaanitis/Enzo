@@ -19,7 +19,7 @@ class SavedAdsVM:ViewModel() {
     private val auth= FirebaseAuth.getInstance()
 
     private val savedAdsData: MutableLiveData<ArrayList<AdModel>>
-    lateinit var newAdsData: MutableLiveData<ArrayList<AdModel>>
+
     private var isRefreshing:MutableLiveData<Boolean>
 
     private lateinit var loadTrigger:MutableLiveData<Unit>
@@ -60,7 +60,6 @@ class SavedAdsVM:ViewModel() {
     fun refreshing():LiveData<Boolean>{
         return isRefreshing
     }
-
 
 
 

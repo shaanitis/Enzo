@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.example.enzo.Models.AllChatsModel
+import com.facebook.all.All
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -18,12 +19,13 @@ import kotlinx.coroutines.async
 import kotlin.coroutines.coroutineContext
 
 class ChatRepository() {
-    private val fStore= FirebaseFirestore.getInstance()
-    private val auth= FirebaseAuth.getInstance()
-    val idsOfChats=ArrayList<String>()
-    var allChatsList=ArrayList<AllChatsModel>()
 
-    fun fetchAds(liveData: MutableLiveData<ArrayList<AllChatsModel>>) {
+        val fStore= FirebaseFirestore.getInstance()
+        val auth= FirebaseAuth.getInstance()
+        val idsOfChats=ArrayList<String>()
+        var allChats=ArrayList<AllChatsModel>()
+
+        fun fetchAds(liveData: MutableLiveData<ArrayList<AllChatsModel>>){
 
 
             fStore.collection("users")
@@ -49,12 +51,11 @@ class ChatRepository() {
                                 var imgUrlOfUserChatClicked: String =
                                     it.getString("profileUrl").toString()
                                 var idOfUserChatClicked: String = it.id
-                                allChatsList.add(AllChatsModel(nameOfUserChatclicked, imgUrlOfUserChatClicked,
-                                        idOfUserChatClicked
-                                    )
+                                allChats.add(AllChatsModel(nameOfUserChatclicked, imgUrlOfUserChatClicked,
+                                    idOfUserChatClicked
                                 )
-                                liveData.postValue(allChatsList)
-
+                                )
+                     liveData.postValue(allChats)
                             }
 
 
@@ -67,5 +68,6 @@ class ChatRepository() {
                 })
 
         }
+
 
 }

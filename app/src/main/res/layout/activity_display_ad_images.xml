@@ -25,6 +25,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="7dp"
         android:layout_marginTop="7dp"
-        android:src="@drawable/backicon"/>
+        android:src="@drawable/back_btn"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

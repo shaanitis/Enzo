@@ -13,6 +13,10 @@ abstract class SwipeGestures(context: Context): ItemTouchHelper.SimpleCallback(
     0,
     ItemTouchHelper.LEFT
 ) {
+    val dltColor= ContextCompat.getColor(context, R.color.red)
+    val dlticon= R.drawable.dlt_icon
+    val typeFaceFont:Typeface= Typeface.DEFAULT_BOLD
+
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
@@ -21,9 +25,7 @@ abstract class SwipeGestures(context: Context): ItemTouchHelper.SimpleCallback(
         return false
     }
 
-    val dltColor= ContextCompat.getColor(context, R.color.red)
-    val dlticon= R.drawable.dlt_icon
-    val typeFaceFont:Typeface= Typeface.DEFAULT_BOLD
+
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
 
@@ -31,7 +33,7 @@ abstract class SwipeGestures(context: Context): ItemTouchHelper.SimpleCallback(
             .addSwipeLeftBackgroundColor(dltColor)
             .addSwipeLeftActionIcon(dlticon)
             .setIconHorizontalMargin(7)
-            .addSwipeLeftLabel("Ad will be deleted")
+            .addSwipeLeftLabel("Delete")
             .create()
             .decorate()
 

@@ -53,10 +53,11 @@ class UploadFrag : Fragment() {
     lateinit var storageReference: StorageReference
     lateinit var fStore: FirebaseFirestore
     lateinit var pD:ProgressDialog
+    lateinit var goBackBtn:ImageButton
     lateinit var fusedLocation:FusedLocationProviderClient
-    var adLocLatitude:String=""
-    var adLocLongitude:String=""
-
+    var adLocLatitude:String="11"
+    var adLocLongitude:String="33"
+lateinit var locationText:TextView
 
 
 
@@ -77,6 +78,9 @@ class UploadFrag : Fragment() {
         adUploadBtn=view.findViewById(R.id.adUploadBtn)
         adPhoneNo=view.findViewById(R.id.adPhoneNo)
         adDetailImages=view.findViewById(R.id.adDetailImgs)
+        locationText=view.findViewById(R.id.locationText)
+        goBackBtn=view.findViewById(R.id.goBackBtnUpload)
+
         imageList= arrayListOf()
         pD= ProgressDialog(requireContext())
 
@@ -113,19 +117,39 @@ class UploadFrag : Fragment() {
                 startActivityForResult(Intent.createChooser(intent, "Select Images"), 100)
 
             }}
-fusedLocation=LocationServices.getFusedLocationProviderClient(requireContext())
+        ///getting current location
+    fusedLocation=LocationServices.getFusedLocationProviderClient(requireContext())
+
 adLocation.setOnClickListener {
-    checkPermission()
+    val task=fusedLocation.lastLocation
+    if(ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)!=
+        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED){
+        ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 101)
+pD.hide()
+    }
+    task.addOnSuccessListener {
+        if (it!=null){
+            adLocLatitude= it.latitude.toString()
+            adLocLongitude= it.longitude.toString()
+            Toast.makeText(requireContext(), "Location added", Toast.LENGTH_SHORT).show()
+            locationText.text="Location Added"
+        }
+    }.addOnFailureListener {
+        Log.d("uploadLocError",it.message.toString())
+    }
 
 }
 
 
         val adTitle= requireArguments().getString("adTitle")
         val adPrice= requireArguments().getString("adPrice")
+        val adBid=requireArguments().getString("adBid")
         val adDetail= requireArguments().getString("adDetail")
         val adTitleImgUrl= requireArguments().getString("adTitleImgUrl")
         val adCategory= requireArguments().getString("adCategory")
         var adNo= requireArguments().getString("imgsUrl")
+
         adUploadBtn.setOnClickListener {
             if (adLocLatitude==null && adLocLongitude==null) {
                 Toast.makeText(requireContext(), "Add Location First", Toast.LENGTH_SHORT).show()
@@ -161,6 +185,7 @@ adLocation.setOnClickListener {
                                     .document(requireArguments().getString("imgsUrl").toString())
                                     .set(data, SetOptions.merge()).addOnSuccessListener {
                                         pD.hide()
+
                                     }
 
                             })
@@ -173,11 +198,13 @@ adLocation.setOnClickListener {
                     adTitle,
                     adDetail,
                     adPrice,
+                    adBid,
                     adTitleImgUrl,
                     adCategory,
                     userId,
                     adTitle?.toLowerCase(),
                     adAllImages = adNo.toString(),
+                    imageList.size.toString(),
                     adPhoneNo.text.toString(),
                     adLocLatitude,
                     adLocLongitude,
@@ -186,11 +213,24 @@ adLocation.setOnClickListener {
                 val dR: DocumentReference = fStore.collection("ads")
                     .document()
 
-                dR.set(adModel)
+                dR.set(adModel).addOnSuccessListener {
+                    findNavController().navigate(R.id.action_uploadFrag_to_profileFrag)
+             navBar.visibility=View.VISIBLE
+                    Log.d("","")
+                }.addOnFailureListener {
+                    Toast.makeText(requireContext(), "Something went wrong, Try again!", Toast.LENGTH_SHORT).show()
+                }
 
             }
         }
 
+///onBackBtn
+        goBackBtn.setOnClickListener {
+
+                    findNavController().navigate(R.id.action_uploadFrag_to_addFrag)
+
+
+        }
 
 ////navigating back to addFragon onBackPress
         val callback=object : OnBackPressedCallback(true){
@@ -205,22 +245,7 @@ adLocation.setOnClickListener {
         return view
     }
 
-    private fun checkPermission() {
-        val task=fusedLocation.lastLocation
-        if(ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)!=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 101)
-            return
-        }
-      task.addOnSuccessListener {
-          if (it!=null){
-              adLocLatitude= it.latitude.toString()
-              adLocLongitude= it.longitude.toString()
-              Toast.makeText(requireContext(), "${it.latitude}, ${it.longitude}", Toast.LENGTH_SHORT).show()
-          }
-      }
-    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 

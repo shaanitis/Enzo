@@ -1,12 +1,14 @@
 package com.example.enzo.Fragments
 
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -26,6 +28,7 @@ import com.example.enzo.R
 import com.example.enzo.SearchResult
 import com.example.enzo.ViewAdActivity
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
@@ -46,16 +49,20 @@ class ViewCategoryAds : Fragment(), ViewCategoryRVOnClick {
     lateinit var searchBar:CardView
     lateinit var viewCategoryAdIocn:ImageView
    lateinit var categoryAdsRVAdapter:ViewCategoryAdsAdapter
+   lateinit var goBackBtn:ImageButton
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view= inflater.inflate(R.layout.fragment_view_category_ads, container, false)
+        val navBar: BottomNavigationView = requireActivity().findViewById(R.id.navBar)
+        navBar.visibility=View.GONE
         categoryAdsRV= view.findViewById(R.id.categoryAdsRV)
         categoryTitleText=view.findViewById(R.id.categoryTitleBarText)
         viewCategoryAdIocn=view.findViewById(R.id.viewCategortAdIcon)
         searchBar=view.findViewById(R.id.searchBar)
+        goBackBtn=view.findViewById(R.id.goBackBtnViewCads)
         fStore= FirebaseFirestore.getInstance()
         auth= FirebaseAuth.getInstance()
 
@@ -110,6 +117,13 @@ class ViewCategoryAds : Fragment(), ViewCategoryRVOnClick {
         }catch (e:Exception){
             Log.d("", "")
         }
+///onBackBtn
+        goBackBtn.setOnClickListener {
+
+                    findNavController().navigate(R.id.action_viewCategoryAds_to_homeFrag)
+
+
+        }
 
 ////navigating back to homeFrag on onBackPress
         val callback=object : OnBackPressedCallback(true){
@@ -144,6 +158,7 @@ class ViewCategoryAds : Fragment(), ViewCategoryRVOnClick {
                                   val adId: String = qds.id.toString()
                                   val displayAdTitle: String = qds.getString("adTitle").toString()
                                   var displayAdPrice: String = qds.getString("adPrice").toString()
+                                  val adBid:String=qds.getString("adBid").toString()
                                   var displayAdImage: String =
                                       qds.getString("adImageUrl").toString()
                                   var displayAdDetail: String = qds.getString("adDetail").toString()
@@ -162,11 +177,12 @@ class ViewCategoryAds : Fragment(), ViewCategoryRVOnClick {
                                           adTitle = displayAdTitle,
                                           adDetail = displayAdDetail,
                                           adPrice = displayAdPrice,
+                                          adBid,
                                           adImageUrl = displayAdImage,
                                           adType = displayAdType,
                                           adUserId = displayAdUserId,
                                           adSearchTitle = displayAdSearchTitle,
-                                          adAllImages = allImagesUrl,
+                                          adAllImages = allImagesUrl,null,
                                           adPhoneNo,
                                           null
                                       ,null, adId)
@@ -208,6 +224,7 @@ class ViewCategoryAds : Fragment(), ViewCategoryRVOnClick {
         intent.putExtra("adViewImage", adList[pos].adImageUrl)
         intent.putExtra("adViewTitle", adList[pos].adTitle)
         intent.putExtra("adViewPrice", adList[pos].adPrice)
+        intent.putExtra("adViewBid", adList[pos].adBid)
         intent.putExtra("adViewDetail", adList[pos].adDetail)
         intent.putExtra("idOfUploader", adList[pos].adUserId)
         intent.putExtra("adAllImages", adList[pos].adAllImages)

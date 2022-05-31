@@ -30,6 +30,7 @@ class HomeRepository {
                         var adsId: String = qds.id.toString()
                         var displayAdTitle: String = qds.getString("adTitle").toString()
                         var displayAdPrice: String = qds.getString("adPrice").toString()
+                        val adBid:String=qds.getString("adBid").toString()
                         var displayAdImage: String = qds.getString("adImageUrl").toString()
                         var displayAdDetail: String = qds.getString("adDetail").toString()
                         var displayAdType: String = qds.getString("adType").toString()
@@ -37,20 +38,24 @@ class HomeRepository {
                         var adSearchTitle: String = qds.getString("adSearchTitle").toString()
                         var adAllImages: String = qds.getString("adAllImages").toString()
                         var adPhoneNo:String=qds.getString("adPhoneNo").toString()
-                        var adLocation:String=qds.getString("adLocation").toString()
+                        var adLocLatitide:String=qds.getString("adLocLatitude").toString()
+                        var adLocLongitude:String=qds.getString("adLocLongitude").toString()
 
                         allAdsList.add(
                             AdModel(
                                 displayAdTitle,
                                 displayAdDetail,
                                 displayAdPrice,
+                                adBid,
                                 displayAdImage,
                                 displayAdType,
                                 displayAdUserId,
                                 adSearchTitle,
                                 adAllImages,
+                                null,
                                 adPhoneNo,
-                                null,null,
+                                adLocLatitide,
+                                adLocLongitude,
                                 adsId
                             )
                         )
@@ -75,6 +80,7 @@ class HomeRepository {
                         val adId: String = qds.id.toString()
                         val displayAdTitle: String = qds.getString("adTitle").toString()
                         var displayAdPrice: String = qds.getString("adPrice").toString()
+                        val adBid:String=qds.getString("adBid").toString()
                         var displayAdImage: String = qds.getString("adImageUrl").toString()
                         var displayAdDetail: String = qds.getString("adDetail").toString()
                         var displayAdType: String = qds.getString("adType").toString()
@@ -91,11 +97,12 @@ class HomeRepository {
                                     adTitle = displayAdTitle,
                                     adDetail = displayAdDetail,
                                     adPrice = displayAdPrice,
+                                    adBid,
                                     adImageUrl = displayAdImage,
                                     adType = displayAdType,
                                     adUserId = displayAdUserId,
                                     adSearchTitle = displayAdSearchTitle,
-                                    adAllImages = allImagesUrl,
+                                    adAllImages = allImagesUrl,null,
                                     adPhoneNo,
                                     null,null,
                                     adId
@@ -109,11 +116,12 @@ class HomeRepository {
                                     adTitle = displayAdTitle,
                                     adDetail = displayAdDetail,
                                     adPrice = displayAdPrice,
+                                    adBid,
                                     adImageUrl = displayAdImage,
                                     adType = displayAdType,
                                     adUserId = displayAdUserId,
                                     adSearchTitle = displayAdSearchTitle,
-                                    adAllImages = allImagesUrl,
+                                    adAllImages = allImagesUrl,null,
                                     adPhoneNo,
                                     null,null,
                                     adId
@@ -127,11 +135,12 @@ class HomeRepository {
                                     adTitle = displayAdTitle,
                                     adDetail = displayAdDetail,
                                     adPrice = displayAdPrice,
+                                    adBid,
                                     adImageUrl = displayAdImage,
                                     adType = displayAdType,
                                     adUserId = displayAdUserId,
                                     adSearchTitle = displayAdSearchTitle,
-                                    adAllImages = allImagesUrl,
+                                    adAllImages = allImagesUrl,null,
                                     adPhoneNo,
                                     null,null,
                                     adId

@@ -22,7 +22,7 @@
         android:id="@+id/searchNothingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nothing here"
+        android:text="NO PUBLISHED ADS"
         android:textColor="#C5C1C1"
         android:textSize="16sp"
         android:visibility="gone"
@@ -30,29 +30,28 @@
         app:layout_constraintTop_toBottomOf="@id/searchNothingImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/profilePicLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.15" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/profilePicLine"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:backgroundTint="@color/orange_200"
-        app:cardCornerRadius="100dp"
         android:elevation="8dp"
-        android:layout_marginTop="-200dp"/>
+     />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileActivityPic"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:elevation="9dp"
         app:civ_border_width="1dp"
         app:civ_border_color="@color/white"
@@ -60,32 +59,37 @@
         app:layout_constraintBottom_toBottomOf="@+id/profilePicLine"
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/blankuser"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginStart="20dp" />
+
+
     <TextView
         android:id="@+id/profileActivityName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="@+id/profileActivityPic"
+        app:layout_constraintBottom_toBottomOf="@+id/profileActivityPic"
+        app:layout_constraintStart_toEndOf="@+id/profileActivityPic"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="25dp"
+        android:textColor="@color/white"
         android:textSize="24sp"
         android:fontFamily="@font/arimo"
+        android:elevation="10dp"
         android:textStyle="bold"
         android:maxWidth="150dp"
-        android:maxHeight="60dp"
+        android:maxHeight="35dp"
         android:ellipsize="end"
-        android:maxLines="2"
-        app:layout_constraintTop_toBottomOf="@+id/profileActivityPic"
-        android:layout_marginTop="15dp"/>
-
+        android:maxLines="1"
+        android:text=""
+/>
     <TextView
         android:id="@+id/adsprofileactivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileActivityName"
+        app:layout_constraintTop_toBottomOf="@+id/profileActivityPic"
         android:layout_marginTop="15dp"
-        android:text="Ads"
+        android:text="Published Ads"
         android:textSize="24sp"
         android:textColor="@color/black"
         app:cornerRadius="10dp"
@@ -96,13 +100,46 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userAllAds"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/adsprofileactivity"
+          android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:layout_marginStart="3dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <com.facebook.shimmer.ShimmerFrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/shimmerProfileAds"
         app:layout_constraintTop_toBottomOf="@+id/adsprofileactivity"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <include layout="@layout/shimmer_my_ads_item"/>
+            <include layout="@layout/shimmer_my_ads_item"/>
+            <include layout="@layout/shimmer_my_ads_item"/>
+            <include layout="@layout/shimmer_my_ads_item"/>
+
+
+
+        </LinearLayout>
+
+
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

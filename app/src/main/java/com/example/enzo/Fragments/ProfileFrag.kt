@@ -1,11 +1,13 @@
 package com.example.enzo.Fragments
 
+import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -64,7 +66,9 @@ class ProfileFrag : Fragment() {
         ////////////getting user id of current user from auth
 
 //////getting detail of current user from firestore
+
         showUserProfile()
+
 
 ///////////logging out
         logoutView.setOnClickListener {
@@ -138,6 +142,31 @@ try {
                 val picUrl: String = it.getString("profileUrl").toString()
                 Picasso.get().load(picUrl).placeholder(R.drawable.ic_person)
                     .into(profilePic)
+                ///anim
+                try {
+
+
+                val cx: Int = profilePic.getMeasuredWidth() / 2
+                val cy: Int = profilePic.getMeasuredHeight() / 2
+
+                // get the final radius for the clipping circle
+
+                // get the final radius for the clipping circle
+                val finalRadius: Int = Math.max(profilePic.getWidth(), profilePic.getHeight()) / 2
+
+                // create the animator for this view (the start radius is zero)
+
+                // create the animator for this view (the start radius is zero)
+                val anim: Animator =
+                    ViewAnimationUtils.createCircularReveal(profilePic, cx, cy, 0f, finalRadius.toFloat())
+
+                // make the view visible and start the animation
+                anim.start()
+                // make the view visible and start the animation
+            }catch (e:Exception){
+               Log.d("err","hey")
+           }
+                profilePic.setVisibility(View.VISIBLE)
 
 
             }

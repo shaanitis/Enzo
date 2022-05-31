@@ -126,7 +126,7 @@
                app:layout_constraintStart_toStartOf="parent"
                app:layout_constraintTop_toTopOf="parent"
                app:layout_constraintBottom_toBottomOf="parent"
-               android:src="@drawable/backicon"/>
+               android:src="@drawable/back_btn"/>
 
            <com.makeramen.roundedimageview.RoundedImageView
                app:layout_constraintBottom_toBottomOf="parent"
@@ -143,12 +143,14 @@
 
            <TextView
                android:id="@+id/uploaderNameChatting"
-               android:layout_width="150dp"
-               android:layout_height="30dp"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
                android:transitionName="userChatNameTrans"
-               android:maxWidth="250dp"
+               android:maxWidth="150dp"
+               android:maxHeight="30dp"
                android:maxLines="1"
                android:ellipsize="end"
+               android:text=""
                app:layout_constraintTop_toTopOf="parent"
                app:layout_constraintBottom_toBottomOf="parent"
                app:layout_constraintLeft_toRightOf="@+id/uploaderImgChatting"

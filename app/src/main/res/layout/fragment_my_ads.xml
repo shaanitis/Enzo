@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="60dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.MyAdsFrag">
 
@@ -23,7 +22,7 @@
         android:id="@+id/searchNothingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nothing here"
+        android:text="YOU HAVEN't UPLOADED ANY AD YET"
         android:textColor="#C5C1C1"
         android:textSize="16sp"
         android:fontFamily="@font/arimo"
@@ -41,6 +40,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <ImageButton
+                android:id="@+id/goBackBtnMyAd"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="7dp"
+                app:tint="@color/white"
+                android:backgroundTint="#00ffffff"
+                android:src="@drawable/back_btn"/>
             <TextView
                 android:id="@+id/chatTitleText"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -113,4 +123,8 @@
     </com.facebook.shimmer.ShimmerFrameLayout>
 
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewBidsLayout"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

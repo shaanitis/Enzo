@@ -56,16 +56,7 @@ class HomeRVAdapter(
         //////on click listener used and ad details sent to next activity//////////
         holder.clickListenerView?.setOnClickListener {
              onClickHome.onAdItemClick(pos = position, adImage = holder.displayAdImage)
-           /* val intent= Intent(context, ViewAdActivity::class.java)
 
-            intent.putExtra("adViewImage", currentItem.adImageUrl)
-            intent.putExtra("adViewTitle", currentItem.adTitle)
-            intent.putExtra("adViewPrice", currentItem.adPrice)
-            intent.putExtra("adViewDetail", currentItem.adDetail)
-            intent.putExtra("idOfUploader", currentItem.adUserId)
-            intent.putExtra("adAllImages", currentItem.adAllImages)
-
-            context.startActivity(intent)*/
 
 //////to navigate to fragment from adapter class
         /*  val navController: NavController=Navigation.findNavController(holder.clickListenerView)

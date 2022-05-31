@@ -21,6 +21,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.findNavController
+import com.example.enzo.MainActivity
 import com.example.enzo.Models.AdModel
 import com.example.enzo.R
 import com.google.android.gms.tasks.OnFailureListener
@@ -58,6 +59,8 @@ class AddFrag : Fragment() {
  lateinit var uploadedImgView:ImageView
     lateinit var category: String
     lateinit var userId: String
+    lateinit var goBackBtn:ImageButton
+    lateinit var adBid:EditText
 
     var imageName = UUID.randomUUID().toString() + ".jpg"
 
@@ -82,6 +85,8 @@ class AddFrag : Fragment() {
         adPrice = view.findViewById(R.id.adPrice)
         adTitleImg = view.findViewById(R.id.adTitleImg)
         nextBtn = view.findViewById(R.id.nextBtn)
+        goBackBtn=view.findViewById(R.id.goBackBtnAdd)
+        adBid=view.findViewById(R.id.adBid)
         pD = ProgressDialog(requireContext())
         userId = auth.currentUser?.uid.toString()
 
@@ -140,8 +145,10 @@ class AddFrag : Fragment() {
                 adDetail.clearFocus()
                 adPrice.clearFocus()
                 adTitle.clearFocus()
+                adBid.clearFocus()
 
-                hideKeyboard(requireActivity())
+
+                MainActivity.HideKeyboard.hideKeyboard(requireActivity())
                 pD.show()
 
 
@@ -159,6 +166,7 @@ class AddFrag : Fragment() {
                                 adDetail.clearFocus()
                                 adPrice.clearFocus()
                                 adTitle.clearFocus()
+                                adBid.clearFocus()
                                 val adTitleImgUrl = downloadUrl.toString()
 
                                 findNavController().navigate(
@@ -166,6 +174,7 @@ class AddFrag : Fragment() {
                                     Bundle().apply {
                                         putString("adTitle", adTitle.text.toString())
                                         putString("adPrice", adPrice.text.toString())
+                                        putString("adBid", adBid.text.toString())
                                         putString("adDetail", adDetail.text.toString())
                                         putString("adTitleImgUrl", adTitleImgUrl)
                                         putString("adCategory", category)
@@ -176,7 +185,13 @@ class AddFrag : Fragment() {
             }
         }
 
+///onBackBtn
+        goBackBtn.setOnClickListener {
 
+                    findNavController().navigate(R.id.action_addFrag_to_adCategory)
+
+
+        }
 
 ////navigating back to adCategoryFrag on onBackPress
         val callback=object : OnBackPressedCallback(true){
@@ -191,7 +206,8 @@ class AddFrag : Fragment() {
 
 
         return view
-    }////////////////////////////////////////onnnnnnnnnnnnn createeeeeeeeeeeeeee//////////////////////////////////////////////
+
+    }/////on create/////////////
 
 
 /////onActivity result of opening gallery
@@ -210,19 +226,6 @@ class AddFrag : Fragment() {
 
 
 }
-    fun hideKeyboard(activity: Activity) {
-        val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        //Find the currently focused view, so we can grab the correct window token from it.
-        var view: View? = activity.currentFocus
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = View(activity)
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
-    }
-    private fun checkTextViews(){
-
-    }
 
 }
 

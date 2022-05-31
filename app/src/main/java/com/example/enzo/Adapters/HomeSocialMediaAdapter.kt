@@ -57,6 +57,7 @@ class HomeSocialMediaAdapter(
               intent.putExtra("adViewImage", currentItem.adImageUrl)
               intent.putExtra("adViewTitle", currentItem.adTitle)
               intent.putExtra("adViewPrice", currentItem.adPrice)
+            intent.putExtra("adViewBid", currentItem.adBid)
               intent.putExtra("adViewDetail", currentItem.adDetail)
               intent.putExtra("idOfUploader", currentItem.adUserId)
               intent.putExtra("adAllImages", currentItem.adAllImages)
@@ -73,7 +74,8 @@ class HomeSocialMediaAdapter(
         holder.saveAdBtn.setOnClickListener {
             Toast.makeText(context, "Ad saved to your list", Toast.LENGTH_SHORT).show()
             holder.saveAdBtn.setImageResource(R.drawable.hearticon)
-            val strRef: DocumentReference = fStore.collection("savedAds").document(adIds[position])
+            val strRef: DocumentReference = fStore.collection("savedAds")
+                .document(currentItem.adId.toString())
             val hash = hashMapOf("userId" to auth.currentUser?.uid.toString())
             strRef.set(hash)
 

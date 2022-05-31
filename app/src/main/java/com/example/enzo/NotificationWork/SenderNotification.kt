@@ -35,7 +35,7 @@ class SenderNotification(
             val notiObject = JSONObject()
             notiObject.put("title", title)
             notiObject.put("body", body)
-            notiObject.put("icon", R.drawable.egnoti) // enter icon that exists in drawable only
+            notiObject.put("icon", R.drawable.enzo_noti) // enter icon that exists in drawable only
             mainObj.put("notification", notiObject)
             val request: JsonObjectRequest = object : JsonObjectRequest(
                 Method.POST, postUrl, mainObj,

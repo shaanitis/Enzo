@@ -20,8 +20,8 @@ class ChatFragViewModel() : ViewModel() {
     private val auth= FirebaseAuth.getInstance()
 
     private val _userData: MutableLiveData<ArrayList<AllChatsModel>>
-   /* val userData: LiveData<ArrayList<AllChatsModel>>
-    get() = _userData*/
+    val userData: LiveData<ArrayList<AllChatsModel>>
+    get() = _userData
 
 
     init {
@@ -40,7 +40,6 @@ class ChatFragViewModel() : ViewModel() {
       allChatsList==_userData
         return allChatsList
     }
-
 
 }
 

@@ -32,6 +32,7 @@ class MyAdsRepo {
                                 qds.getString("adTitle").toString()
                             var displayAdPrice: String =
                                 qds.getString("adPrice").toString()
+                            val adBid:String=qds.getString("adBid").toString()
                             var displayAdImage: String =
                                 qds.getString("adImageUrl").toString()
                             var displayAdDetail: String =
@@ -44,11 +45,12 @@ class MyAdsRepo {
                                 qds.getString("adSearchTitle").toString()
                             var adAllImages: String =
                                 qds.getString("adAllImages").toString()
-                            var adLocation: String =
-                                qds.getString("adLocation").toString()
+                            var attachedImages: String =
+                                qds.getString("attachedImages").toString()
                             var adPhoneNo: String =
                                 qds.getString("adPhoneNo").toString()
-
+                            var adLocLatitide:String=qds.getString("adLocLatitude").toString()
+                            var adLocLongitude:String=qds.getString("adLocLongitude").toString()
 
 
                             myAdsList.add(
@@ -56,12 +58,13 @@ class MyAdsRepo {
                                     displayAdTitle,
                                     displayAdDetail,
                                     displayAdPrice,
+                                    adBid,
                                     displayAdImage,
                                     displayAdType,
                                     displayAdUserId,
                                     adSearchTitle,
-                                    adAllImages,
-                                    adPhoneNo,null, null, adsId)
+                                    adAllImages,attachedImages,
+                                    adPhoneNo,adLocLatitide, adLocLongitude, adsId)
                             )
 
                           liveData.postValue(myAdsList)

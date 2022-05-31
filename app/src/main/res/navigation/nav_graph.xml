@@ -90,6 +90,9 @@
         <argument
             android:name="adDetail"
             app:argType="string" />
+        <action
+            android:id="@+id/action_uploadFrag_to_profileFrag"
+            app:destination="@id/profileFrag" />
     </fragment>
     <fragment
         android:id="@+id/myAdsFrag"
@@ -99,6 +102,9 @@
         <action
             android:id="@+id/action_myAdsFrag_to_profileFrag"
             app:destination="@id/profileFrag" />
+        <action
+            android:id="@+id/action_myAdsFrag_to_viewBidsFrag"
+            app:destination="@id/viewBidsFrag" />
     </fragment>
     <fragment
         android:id="@+id/viewCategoryAds"
@@ -108,6 +114,15 @@
         <action
             android:id="@+id/action_viewCategoryAds_to_homeFrag"
             app:destination="@id/homeFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewBidsFrag"
+        android:name="com.example.enzo.Fragments.ViewBidsFrag"
+        android:label="fragment_view_bids"
+        tools:layout="@layout/fragment_view_bids" >
+        <action
+            android:id="@+id/action_viewBidsFrag_to_myAdsFrag"
+            app:destination="@id/myAdsFrag" />
     </fragment>
 
 </navigation>

@@ -29,7 +29,7 @@ class SavedAdsAdapter(
     val fStore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.my_ads_item, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.saved_ads_item, parent, false)
 
         return MyViewHolder(itemView)
 

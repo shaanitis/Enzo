@@ -23,8 +23,9 @@ import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult
 import org.json.JSONObject
 import android.content.Intent
-
-
+import android.os.Handler
+import androidx.core.os.HandlerCompat
+import androidx.core.os.HandlerCompat.postDelayed
 
 
 class BuyerActivity : AppCompatActivity() {
@@ -33,6 +34,7 @@ class BuyerActivity : AppCompatActivity() {
     lateinit var paymentSheet: PaymentSheet
     lateinit var customerConfig: PaymentSheet.CustomerConfiguration
     lateinit var paymentIntentClientSecret: String
+    lateinit var cardLoader:ProgressBar
      var customerId:String=""
      var ephericalKey:String=""
     var clientSecret:String=""
@@ -50,161 +52,32 @@ class BuyerActivity : AppCompatActivity() {
 
 
         val accountInfoApear:TextView=findViewById(R.id.getAccountInfoTextView)
-        val paymentDoneBtn:Button=findViewById(R.id.payWithEasypaisaBtn)
         val confirmBuyerBtn:Button=findViewById(R.id.confirmBuyerBtn)
         val askInfoAgainBtn:Button=findViewById(R.id.askInfoAgainBtn)
-        ///rev btns
-        val revBtnsLayout:LinearLayout=findViewById(R.id.revBtnsLayout)
-        val rev1Btn:Button=findViewById(R.id.rev1Btn)
-        val rev2Btn:Button=findViewById(R.id.rev2Btn)
-        val rev3Btn:Button=findViewById(R.id.rev3Btn)
-        val rev4Btn:Button=findViewById(R.id.rev4Btn)
+        cardLoader=findViewById(R.id.cardLoader)
+
 
         val fStore:FirebaseFirestore= FirebaseFirestore.getInstance()
         val auth:FirebaseAuth= FirebaseAuth.getInstance()
 
-        val recieverId:String= intent.getStringExtra("recieverID").toString()
+        val recieverId:String= intent.getStringExtra("recieverId").toString()
 
-        val sellerID=intent.getStringExtra("sellerID")
-        val buyerID=intent.getStringExtra("buyerID")
-         val buyerSellerRoom:String= buyerID+sellerID
+/////////////////Showing Account Info//////////////////////////////////
 
+
+//////////////////Card Payment///////////////////////////////////
         PaymentConfiguration.init(this,PUBLISH_KEY)
         paymentSheet= PaymentSheet(this) { paymentSheetResult -> onPaymentSheetResult(paymentSheetResult) }
 
 
-        buyerBind.payWithEasypaisaBtn.setOnClickListener {
-            val launchIntent=packageManager.getLaunchIntentForPackage("com.facebook.lite")
-            if (launchIntent!=null) {
-                startActivity(launchIntent)
-            }
-        }
         buyerBind.payWithCard.setOnClickListener {
-            paymentFlow()
+      cardLoader.visibility=View.VISIBLE
+            Handler().postDelayed({
+                paymentFlow()
+                cardLoader.visibility=View.GONE
+            }, 3000)
 }
- /*       paymentDoneBtn.setOnClickListener {
 
-            Toast.makeText(this, "Your payment is under processing and safe until all 4 revisions are complete", Toast.LENGTH_SHORT).show()
-            fStore.collection("users").document(auth.currentUser!!.uid).collection("AccountDetails")
-                .get()
-                .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                    override fun onSuccess(qs: QuerySnapshot?) {
-
-                        for (qds: QueryDocumentSnapshot in qs!!) {
-                            val accountID: String=qds.getString ("accountID").toString()
-                            val accountPassword: String=qds.getString("accountPassword").toString()
-                            val accountDetails: String= qds.getString("accountDetail").toString()
-                            val revNo: Int= qds.getDouble("revNo")!!.toInt()
-
-                            accountInfoApear.text="ID: $accountID \nPassword: $accountPassword \nDetails: $accountDetails \nRevision No: $revNo"
-                        }
-
-
-                    }
-                })
-            revBtnsLayout.visibility=View.VISIBLE
-
-        }
-
-        askInfoAgainBtn.setOnClickListener {
-           Toast.makeText(this, "We have asked the seller to provide details again. Kindly wait for response", Toast.LENGTH_LONG).show()
-
-        }
-        confirmBuyerBtn.setOnClickListener {
-            Toast.makeText(this, "Deal confirmed! Payment transferred to seller.", Toast.LENGTH_LONG).show()
-
-        }
-
-        ///rev Btns
-        rev1Btn.setOnClickListener {
-            fStore.collection("users").document(auth.currentUser!!.uid).collection("AccountDetails")
-                .whereEqualTo("revNo", 1)
-                .get()
-                .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                    override fun onSuccess(querySnapshot: QuerySnapshot?) {
-                        for (qds: QueryDocumentSnapshot in querySnapshot!!){
-                            val accountID: String=qds.getString ("accountID").toString()
-                            val accountPassword: String=qds.getString("accountPassword").toString()
-                            val accountDetails: String= qds.getString("accountDetail").toString()
-                            val revNo: Int= qds.getDouble("revNo")!!.toInt()
-
-                            if (revNo==1) {
-                                accountInfoApear.text =
-                                    "ID: $accountID \nPassword: $accountPassword \nDetails: $accountDetails \nRevision No: $revNo"
-                            }else accountInfoApear.text=="Not Provided Yet"
-                        }
-                    }
-
-                })
-
-        }
-        rev2Btn.setOnClickListener {
-            fStore.collection("users").document(auth.currentUser!!.uid).collection("AccountDetails")
-                .whereEqualTo("revNo", 2)
-                .get()
-                .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                    override fun onSuccess(querySnapshot: QuerySnapshot?) {
-                        for (qds: QueryDocumentSnapshot in querySnapshot!!){
-                            val accountID: String=qds.getString ("accountID").toString()
-                            val accountPassword: String=qds.getString("accountPassword").toString()
-                            val accountDetails: String= qds.getString("accountDetail").toString()
-                            val revNo: Int= qds.getDouble("revNo")!!.toInt()
-
-                              if (revNo==2) {
-                                  accountInfoApear.text =
-                                      "ID: $accountID \nPassword: $accountPassword \nDetails: $accountDetails \nRevision No: $revNo"
-                              } else accountInfoApear.text="Not provided Yet"
-                        }
-                    }
-
-                })
-
-        }
-        rev3Btn.setOnClickListener {
-            fStore.collection("users").document(auth.currentUser!!.uid).collection("AccountDetails")
-                .whereEqualTo("revNo", 3)
-                .get()
-                .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                    override fun onSuccess(querySnapshot: QuerySnapshot?) {
-                        for (qds: QueryDocumentSnapshot in querySnapshot!!){
-                            val accountID: String=qds.getString ("accountID").toString()
-                            val accountPassword: String=qds.getString("accountPassword").toString()
-                            val accountDetails: String= qds.getString("accountDetail").toString()
-                            val revNo: Int= qds.getDouble("revNo")!!.toInt()
-
-                            if (revNo==3) {
-                                accountInfoApear.text =
-                                    "ID: $accountID \nPassword: $accountPassword \nDetails: $accountDetails \nRevision No: $revNo"
-                            }else accountInfoApear.text=="Not Provided Yet"
-                        }
-                    }
-
-                })
-
-
-        }
-        rev4Btn.setOnClickListener {
-            fStore.collection("users").document(auth.currentUser!!.uid).collection("AccountDetails")
-                .whereEqualTo("revNo", 3)
-                .get()
-                .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                    override fun onSuccess(querySnapshot: QuerySnapshot?) {
-                        for (qds: QueryDocumentSnapshot in querySnapshot!!){
-                            val accountID: String=qds.getString ("accountID").toString()
-                            val accountPassword: String=qds.getString("accountPassword").toString()
-                            val accountDetails: String= qds.getString("accountDetail").toString()
-                            val revNo: Int= qds.getDouble("revNo")!!.toInt()
-
-                            if (revNo==4) {
-                                accountInfoApear.text =
-                                    "ID: $accountID \nPassword: $accountPassword \nDetails: $accountDetails \nRevision No: $revNo"
-                            }else accountInfoApear.text=="Not Provided Yet"
-                        }
-                    }
-
-                })
-
-        }*/
 
 
 
